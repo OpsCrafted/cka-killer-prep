@@ -34,7 +34,7 @@ A hands-on CKA prep platform built by a Senior SRE running Kubernetes in product
 
 ### Option 1: Use the hosted site (no setup)
 
-👉 **[Open the live site](https://yourusername.github.io/cka-killer-prep)**
+👉 **[Open the live site](https://opscrafted.github.io/cka-killer-prep/)**
 
 Everything runs in the browser. Progress is saved locally.
 
