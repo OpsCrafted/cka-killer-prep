@@ -94,6 +94,8 @@ pre{padding:14px;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-siz
 .sol-btn:hover{color:var(--ac);border-color:var(--ac)}
 .sol-content{display:none;margin-top:14px}
 .sol-content.visible{display:block}
+.model-content{display:none;margin-top:14px}
+.model-content.visible{display:block}
 
 /* TEXT STYLING */
 h3{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;color:var(--hd);margin:24px 0 10px}
@@ -154,7 +156,7 @@ kubectl config current-context
 # Script 2: without kubectl
 # /opt/course/1/context_default_no_kubectl.sh
 cat ~/.kube/config | grep current | sed -e "s/current-context: //"`,
-tip:`Knowing jsonpath and simple bash filtering is helpful for the real exam where you need to filter bigger resource lists.`},
+tip:`Knowing jsonpath and simple bash filtering is helpful for the real exam where you need to filter bigger resource lists.`, model:`Context = your bookmarks between different clusters/offices. Switch between them like switching windows.`},
 
 {n:2,t:"Schedule Pod on Controlplane Node",w:3,ctx:"k8s-c1-H",dom:"Scheduling",
 task:`Create a single <em>Pod</em> of image <code>httpd:2.4.41-alpine</code> in <em>Namespace</em> <code>default</code>. The <em>Pod</em> should be named <code>pod1</code> and the container should be named <code>pod1-container</code>. This <em>Pod</em> should <b>only</b> be scheduled on a controlplane node, do not add new labels to any nodes.`,
@@ -183,7 +185,7 @@ spec:
 
 k -f 2.yaml create
 k get pod pod1 -o wide  # verify node`,
-tip:`Important: add BOTH toleration AND nodeSelector. Toleration alone means the pod CAN run on controlplane, but might still land on a worker. nodeSelector ensures it ONLY runs on controlplane.`},
+tip:`Important: add BOTH toleration AND nodeSelector. Toleration alone means the pod CAN run on controlplane, but might still land on a worker. nodeSelector ensures it ONLY runs on controlplane.`, model:`Toleration = permission to enter, NodeSelector = which floor you actually go to. Need BOTH to land on controlplane.`},
 
 {n:3,t:"Scale down StatefulSet",w:1,ctx:"k8s-c1-H",dom:"Workloads",
 task:`There are two <em>Pods</em> named <code>o3db-*</code> in <em>Namespace</em> <code>project-c13</code>. C13 management asked you to scale the <em>Pods</em> down to one replica to save resources.`,
@@ -196,7 +198,7 @@ k -n project-c13 scale sts o3db --replicas 1
 
 # Verify
 k -n project-c13 get sts o3db`,
-tip:`If unsure what manages the pods, check labels: kubectl get pod --show-labels — look for statefulset.kubernetes.io/pod-name label.`},
+tip:`If unsure what manages the pods, check labels: kubectl get pod --show-labels — look for statefulset.kubernetes.io/pod-name label.`, model:`StatefulSet = numbered squad (pod-0, pod-1, pod-2). Scale down = send members home in reverse order.`},
 
 {n:4,t:"Pod Ready if Service is reachable",w:4,ctx:"k8s-c1-H",dom:"Workloads",
 task:`Create a single <em>Pod</em> named <code>ready-if-service-ready</code> of image <code>nginx:1.16.1-alpine</code>. Configure a LivenessProbe which simply executes command <code>true</code>. Also configure a ReadinessProbe which checks if the url <code>http://service-am-i-ready:80</code> is reachable, you can use <code>wget -T2 -O- http://service-am-i-ready:80</code> for this. Start the <em>Pod</em> and confirm it isn't ready because of the ReadinessProbe.\n\nCreate a second <em>Pod</em> named <code>am-i-ready</code> of image <code>nginx:1.16.1-alpine</code> with label <code>id: cross-server-ready</code>. The already existing <em>Service</em> <code>service-am-i-ready</code> should now have that second <em>Pod</em> as endpoint.\n\nNow the first <em>Pod</em> should be in ready state, confirm that.`,
@@ -226,7 +228,7 @@ k run am-i-ready --image=nginx:1.16.1-alpine --labels="id=cross-server-ready"
 
 k describe svc service-am-i-ready  # now has endpoint
 k get pod ready-if-service-ready   # 1/1 Running — ready!`,
-tip:`wget -T2 sets a 2 second timeout. The readinessProbe.httpGet doesn't work for absolute remote URLs, so we use exec with wget instead.`},
+tip:`wget -T2 sets a 2 second timeout. The readinessProbe.httpGet doesn't work for absolute remote URLs, so we use exec with wget instead.`, model:`ReadinessProbe = safety gate. Pod's not 'ready' for traffic until downstream service exists. Liveness = still alive?`},
 
 {n:5,t:"Kubectl sorting",w:1,ctx:"k8s-c1-H",dom:"Architecture",
 task:`Write a command into <code>/opt/course/5/find_pods.sh</code> which lists all <em>Pods</em> sorted by their AGE (<code>metadata.creationTimestamp</code>).\n\nWrite a second command into <code>/opt/course/5/find_pods_uid.sh</code> which lists all <em>Pods</em> sorted by field <code>metadata.uid</code>. Use <code>kubectl</code> sorting for both commands.`,
@@ -235,7 +237,7 @@ kubectl get pod -A --sort-by=.metadata.creationTimestamp
 
 # /opt/course/5/find_pods_uid.sh
 kubectl get pod -A --sort-by=.metadata.uid`,
-tip:`--sort-by uses JSONPath dot notation. Use full 'kubectl' in scripts, not alias 'k'.`},
+tip:`--sort-by uses JSONPath dot notation. Use full 'kubectl' in scripts, not alias 'k'.`, model:`JSONPath = map to nested values in YAML. Sorting = organizing by creation date or unique ID.`},
 
 {n:6,t:"Storage, PV, PVC, Pod volume",w:8,ctx:"k8s-c1-H",dom:"Storage",
 task:`Create a new <em>PersistentVolume</em> named <code>safari-pv</code>. It should have a capacity of <em>2Gi</em>, accessMode <em>ReadWriteOnce</em>, hostPath <code>/Volumes/Data</code> and no storageClassName defined.\n\nNext create a new <em>PersistentVolumeClaim</em> in <em>Namespace</em> <code>project-tiger</code> named <code>safari-pvc</code>. It should request <em>2Gi</em> storage, accessMode <em>ReadWriteOnce</em> and should not define a storageClassName. The <em>PVC</em> should bound to the <em>PV</em> correctly.\n\nFinally create a new <em>Deployment</em> <code>safari</code> in <em>Namespace</em> <code>project-tiger</code> which mounts that volume at <code>/tmp/safari-data</code>. The <em>Pods</em> of that <em>Deployment</em> should be of image <code>httpd:2.4.41-alpine</code>.`,
@@ -287,7 +289,7 @@ spec:
 # Verify
 k -n project-tiger get pv,pvc
 # Both should show STATUS: Bound`,
-tip:`PV capacity must be >= PVC request AND access modes must match. Don't define storageClassName at all (not even empty string) to let them bind via static provisioning.`},
+tip:`PV capacity must be >= PVC request AND access modes must match. Don't define storageClassName at all (not even empty string) to let them bind via static provisioning.`, model:`PV = apartment, PVC = rental application, Deployment = you moving in with furniture.`},
 
 {n:7,t:"Node and Pod Resource Usage",w:1,ctx:"k8s-c1-H",dom:"Troubleshooting",
 task:`The metrics-server has been installed in the cluster. Your colleague would like to know the kubectl commands to:\n\n1. show <em>Nodes</em> resource usage\n2. show <em>Pods</em> and their containers resource usage\n\nPlease write the commands into <code>/opt/course/7/node.sh</code> and <code>/opt/course/7/pod.sh</code>.`,
@@ -296,7 +298,7 @@ kubectl top node
 
 # /opt/course/7/pod.sh
 kubectl top pod --containers=true`,
-tip:`kubectl top pod --containers=true shows per-container usage. Without --containers it shows pod-level only.`},
+tip:`kubectl top pod --containers=true shows per-container usage. Without --containers it shows pod-level only.`, model:`kubectl top = taking cluster's pulse. Shows CPU/memory burned by nodes and pods.`},
 
 {n:8,t:"Get Controlplane Information",w:2,ctx:"k8s-c1-H",dom:"Architecture",
 task:`Ssh into the controlplane node with <code>ssh cluster1-controlplane1</code>. Check how the controlplane components kubelet, kube-apiserver, kube-scheduler, kube-controller-manager and etcd are started/installed on the controlplane node. Also find out the name of the DNS application and how it's started/installed.\n\nWrite your findings into file <code>/opt/course/8/controlplane-components.txt</code>. Choices of [TYPE] are: <code>not-installed</code>, <code>process</code>, <code>static-pod</code>, <code>pod</code>`,
@@ -320,7 +322,7 @@ kube-scheduler: static-pod
 kube-controller-manager: static-pod
 etcd: static-pod
 dns: pod coredns`,
-tip:`kubelet is ALWAYS a systemd process — never a pod. Static pods are in /etc/kubernetes/manifests/. CoreDNS runs as a Deployment-managed pod.`},
+tip:`kubelet is ALWAYS a systemd process — never a pod. Static pods are in /etc/kubernetes/manifests/. CoreDNS runs as a Deployment-managed pod.`, model:`Kubelet = systemd process (always), Static pods = /etc/kubernetes/manifests/, Deployments = managed by controller.`},
 
 {n:9,t:"Kill Scheduler, Manual Scheduling",w:5,ctx:"k8s-c2-AC",dom:"Scheduling",
 task:`Ssh into the controlplane node. <b>Temporarily</b> stop the kube-scheduler, this means in a way that you can start it again afterwards.\n\nCreate a single <em>Pod</em> named <code>manual-schedule</code> of image <code>httpd:2.4-alpine</code>, confirm it's created but not scheduled on any node.\n\nNow you're the scheduler — manually schedule that <em>Pod</em> on node <code>cluster2-controlplane1</code>. Make sure it's running.\n\nStart the kube-scheduler again and confirm it's running correctly by creating a second <em>Pod</em> named <code>manual-schedule2</code> of image <code>httpd:2.4-alpine</code> and check if it's running on <code>cluster2-node1</code>.`,
@@ -350,7 +352,7 @@ kubectl -n kube-system get pod | grep schedule  # Running
 # Test auto-scheduling
 k run manual-schedule2 --image=httpd:2.4-alpine
 k get pod manual-schedule2 -o wide  # scheduled automatically`,
-tip:`The only thing a scheduler does is set nodeName for a Pod. When you bypass the scheduler with nodeName directly, taints/tolerations/affinity are all ignored.`},
+tip:`The only thing a scheduler does is set nodeName for a Pod. When you bypass the scheduler with nodeName directly, taints/tolerations/affinity are all ignored.`, model:`Scheduler = autopilot. Kill it = you become autopilot. Manually assign pods to nodes like air traffic control.`},
 
 {n:10,t:"RBAC ServiceAccount Role RoleBinding",w:6,ctx:"k8s-c1-H",dom:"Security",
 task:`Create a new <em>ServiceAccount</em> <code>processor</code> in <em>Namespace</em> <code>project-hamster</code>. Create a <em>Role</em> and <em>RoleBinding</em>, both named <code>processor</code> as well. These should allow the new SA to only create <em>Secrets</em> and <em>ConfigMaps</em> in that <em>Namespace</em>.`,
@@ -377,7 +379,7 @@ k -n project-hamster auth can-i create pod \\
 k -n project-hamster auth can-i delete secret \\
   --as system:serviceaccount:project-hamster:processor
 # no`,
-tip:`4 RBAC combos exist: Role+RoleBinding (namespace), ClusterRole+ClusterRoleBinding (cluster-wide), ClusterRole+RoleBinding (cluster-wide perms scoped to namespace). Role+ClusterRoleBinding is NOT possible.`},
+tip:`4 RBAC combos exist: Role+RoleBinding (namespace), ClusterRole+ClusterRoleBinding (cluster-wide), ClusterRole+RoleBinding (cluster-wide perms scoped to namespace). Role+ClusterRoleBinding is NOT possible.`, model:`ServiceAccount = employee badge, Role = access level, RoleBinding = badge reader. All three needed for permission.`},
 
 {n:11,t:"DaemonSet on all Nodes",w:4,ctx:"k8s-c1-H",dom:"Workloads",
 task:`Use <em>Namespace</em> <code>project-tiger</code>. Create a <em>DaemonSet</em> named <code>ds-important</code> with image <code>httpd:2.4-alpine</code> and labels <code>id=ds-important</code> and <code>uuid=18426a0b-5f59-4e10-923f-c0e078e82462</code>. The <em>Pods</em> it creates should request 10 millicore cpu and 10 mebibyte memory. The <em>Pods</em> of that <em>DaemonSet</em> should run on all nodes, also controlplanes.`,
@@ -406,7 +408,7 @@ spec:
 k -f 11.yaml create
 k -n project-tiger get ds  # DESIRED: 3, READY: 3
 k -n project-tiger get pod -l id=ds-important -o wide`,
-tip:`To run DaemonSet on controlplane nodes, add toleration for node-role.kubernetes.io/control-plane:NoSchedule. Use kubectl explain daemonset.spec in the exam.`},
+tip:`To run DaemonSet on controlplane nodes, add toleration for node-role.kubernetes.io/control-plane:NoSchedule. Use kubectl explain daemonset.spec in the exam.`, model:`DaemonSet = one per node, like a security guard on every floor. Scales with cluster.`},
 
 {n:12,t:"Deployment on all Nodes",w:6,ctx:"k8s-c1-H",dom:"Scheduling",
 task:`Use <em>Namespace</em> <code>project-tiger</code>. Create a <em>Deployment</em> named <code>deploy-important</code> with label <code>id=very-important</code> and 3 replicas. It should contain two containers: <code>container1</code> with image <code>nginx:1.17.6-alpine</code> and <code>container2</code> with image <code>kubernetes/pause</code>.\n\nThere should be only ever <b>one Pod per worker node</b>. We have two worker nodes. The third Pod won't be scheduled unless a new worker node is added. (Simulating DaemonSet behavior with a Deployment)`,
@@ -439,7 +441,7 @@ spec:
 
 # Result: 2/3 READY, 1 pod Pending (no node available)
 k -n project-tiger get pod -o wide -l id=very-important`,
-tip:`Two methods work: podAntiAffinity (older, more verbose) or topologySpreadConstraints (modern). Both are valid in the exam.`},
+tip:`Two methods work: podAntiAffinity (older, more verbose) or topologySpreadConstraints (modern). Both are valid in the exam.`, model:`Deployment = many copies spread across nodes. Kubernetes scheduler decides where, how many where.`},
 
 {n:13,t:"Multi Containers and Pod shared Volume",w:4,ctx:"k8s-c1-H",dom:"Workloads",
 task:`Create a <em>Pod</em> named <code>multi-container-playground</code> with three containers, named <code>c1</code>, <code>c2</code> and <code>c3</code>. There should be a volume attached to that <em>Pod</em> and mounted into every container, but the volume shouldn't be persisted or shared with other <em>Pods</em>.\n\nContainer <code>c1</code>: image <code>nginx:1.17.6-alpine</code>, have the name of the node as env var MY_NODE_NAME.\nContainer <code>c2</code>: image <code>busybox:1.31.1</code>, write <code>date</code> every second to <code>/vol/date.log</code>.\nContainer <code>c3</code>: image <code>busybox:1.31.1</code>, tail <code>/vol/date.log</code>.`,
@@ -478,7 +480,7 @@ spec:
 # Verify
 k exec multi-container-playground -c c1 -- env | grep MY
 k logs multi-container-playground -c c3`,
-tip:`MY_NODE_NAME uses the Downward API (fieldRef: spec.nodeName). emptyDir volumes are ephemeral — created when pod starts, deleted when pod dies.`},
+tip:`MY_NODE_NAME uses the Downward API (fieldRef: spec.nodeName). emptyDir volumes are ephemeral — created when pod starts, deleted when pod dies.`, model:`Pod = apartment, containers = roommates sharing it, volume = shared closet. All containers in pod share volumes.`},
 
 {n:14,t:"Find out Cluster Information",w:2,ctx:"k8s-c1-H",dom:"Architecture",
 task:`Find out:\n1. How many controlplane nodes are available?\n2. How many worker nodes are available?\n3. What is the Service CIDR?\n4. Which CNI Plugin is configured and where is its config file?\n5. Which suffix will static pods have that run on cluster1-node1?`,
@@ -503,7 +505,7 @@ find /etc/cni/net.d/
 3: 10.96.0.0/12
 4: Weave, /etc/cni/net.d/10-weave.conflist
 5: -cluster1-node1`,
-tip:`Service CIDR is always in kube-apiserver manifest as --service-cluster-ip-range. CNI config is always under /etc/cni/net.d/.`},
+tip:`Service CIDR is always in kube-apiserver manifest as --service-cluster-ip-range. CNI config is always under /etc/cni/net.d/.`, model:`kubectl get = reading cluster's phone book. API server knows all resources.`},
 
 {n:15,t:"Cluster Event Logging",w:3,ctx:"k8s-c2-AC",dom:"Troubleshooting",
 task:`Write a command into <code>/opt/course/15/cluster_events.sh</code> which shows the latest events in the whole cluster, ordered by time. Use <code>kubectl</code> for it.\n\nKill the kube-proxy <em>Pod</em> running on node cluster2-node1 and write the events this caused into <code>/opt/course/15/pod_kill.log</code>.\n\nFinally kill the containerd container of the kube-proxy <em>Pod</em> on node cluster2-node1 using <code>crictl</code> and write those events into <code>/opt/course/15/container_kill.log</code>.`,
@@ -522,7 +524,7 @@ crictl ps | grep kube-proxy
 crictl rm <container-id>
 
 # Save events to container_kill.log`,
-tip:`Deleting the pod triggers: Killing → SuccessfulCreate (DaemonSet) → Scheduled → Created → Started. Killing just the container: only Created → Pulled → Started (pod still exists, less events).`},
+tip:`Deleting the pod triggers: Killing → SuccessfulCreate (DaemonSet) → Scheduled → Created → Started. Killing just the container: only Created → Pulled → Started (pod still exists, less events).`, model:`Audit log = cluster historian. Records every request: who did what when.`},
 
 {n:16,t:"Namespaces and Api Resources",w:2,ctx:"k8s-c1-H",dom:"Architecture",
 task:`Write the names of all namespaced Kubernetes resources into <code>/opt/course/16/resources.txt</code>.\n\nFind the <code>project-*</code> <em>Namespace</em> with the highest number of <code>Roles</code> defined in it and write its name and amount of <em>Roles</em> into <code>/opt/course/16/crowded-namespace.txt</code>.`,
@@ -538,7 +540,7 @@ k -n project-tiger get role --no-headers | wc -l     # 0
 
 # /opt/course/16/crowded-namespace.txt
 project-c14 with 300 resources`,
-tip:`--namespaced=true filters to namespace-scoped resources. --namespaced=false gives cluster-scoped. --no-headers is essential when piping to wc -l.`},
+tip:`--namespaced=true filters to namespace-scoped resources. --namespaced=false gives cluster-scoped. --no-headers is essential when piping to wc -l.`, model:`Namespace = filing cabinet, resources = files inside. Same name OK in different cabinets.`},
 
 {n:17,t:"Find Container of Pod and check info",w:3,ctx:"k8s-c1-H",dom:"Troubleshooting",
 task:`In <em>Namespace</em> <code>project-tiger</code> create a <em>Pod</em> named <code>tigers-reunite</code> of image <code>httpd:2.4.41-alpine</code> with labels <code>pod=container</code> and <code>container=pod</code>. Find out on which node the <em>Pod</em> is scheduled. Ssh into that node and find the containerd container belonging to that <em>Pod</em>.\n\nUsing <code>crictl</code>:\n1. Write the ID of the container and the <code>info.runtimeType</code> into <code>/opt/course/17/pod-container.txt</code>\n2. Write the logs of the container into <code>/opt/course/17/pod-container.log</code>`,
@@ -560,7 +562,7 @@ b01edbe6f89ed io.containerd.runc.v2
 
 # Write logs
 ssh <node> 'crictl logs b01edbe6f89ed' &> /opt/course/17/pod-container.log`,
-tip:`crictl operates at the container runtime level (containerd). &> redirects both stdout and stderr. You can also use 'kubectl logs' as an alternative.`},
+tip:`crictl operates at the container runtime level (containerd). &> redirects both stdout and stderr. You can also use 'kubectl logs' as an alternative.`, model:`Pod = box, containers = items inside, logs = reading what container said.`},
 
 {n:18,t:"Fix Kubelet",w:8,ctx:"k8s-c3-CCC",dom:"Troubleshooting",
 task:`There seems to be an issue with the kubelet not running on <code>cluster3-node1</code>. Fix it and confirm that cluster has node <code>cluster3-node1</code> available in Ready state afterwards.\n\nWrite the reason of the issue into <code>/opt/course/18/reason.txt</code>.`,
@@ -592,7 +594,7 @@ k get node  # cluster3-node1 → Ready
 
 # /opt/course/18/reason.txt
 wrong path to kubelet binary specified in service config`,
-tip:`Always check: systemctl status kubelet → journalctl -u kubelet → whereis kubelet. The most common exam break: wrong binary path, wrong config path, or kubelet simply stopped.`},
+tip:`Always check: systemctl status kubelet → journalctl -u kubelet → whereis kubelet. The most common exam break: wrong binary path, wrong config path, or kubelet simply stopped.`, model:`Kubelet = node's heartbeat, engine, heart. Restart it = revive the node.`},
 
 {n:19,t:"Create Secret and mount into Pod",w:3,ctx:"k8s-c3-CCC",dom:"Security",
 task:`In a new <em>Namespace</em> <code>secret</code>:\n\n1. Create a <em>Pod</em> named <code>secret-pod</code> of image <code>busybox:1.31.1</code> which should keep running for some time\n2. Mount the existing <em>Secret</em> at <code>/opt/course/19/secret1.yaml</code> readonly into the <em>Pod</em> at <code>/tmp/secret1</code>\n3. Create a new <em>Secret</em> <code>secret2</code> with <code>user=user1</code> and <code>pass=1234</code>. Expose as env vars <code>APP_USER</code> and <code>APP_PASS</code>`,
@@ -631,7 +633,7 @@ k -f 19.yaml create
 # Verify
 k -n secret exec secret-pod -- env | grep APP
 k -n secret exec secret-pod -- find /tmp/secret1`,
-tip:`Secrets mounted as volumes: each key becomes a file. Env vars use secretKeyRef. Verify with kubectl exec -- env | grep.`},
+tip:`Secrets mounted as volumes: each key becomes a file. Env vars use secretKeyRef. Verify with kubectl exec -- env | grep.`, model:`Secret = encrypted safe in etcd, mount = pod gets the key. Reading not like normal file.`},
 
 {n:20,t:"Update Kubernetes Version and join cluster",w:10,ctx:"k8s-c3-CCC",dom:"Architecture",
 task:`Node <code>cluster3-node2</code> is running an older Kubernetes version and is not even part of the cluster. Update Kubernetes on that node to the exact version that's running on <code>cluster3-controlplane1</code>. Then add this node to the cluster. Use kubeadm for this.`,
@@ -662,7 +664,7 @@ service kubelet status  # active (running)
 
 # Verify from main terminal
 k get node  # cluster3-node2 → Ready, v1.26.0`,
-tip:`kubeadm upgrade node is for nodes already in the cluster. For a new node: upgrade packages first, then kubeadm join. If join fails, try kubeadm reset first.`},
+tip:`kubeadm upgrade node is for nodes already in the cluster. For a new node: upgrade packages first, then kubeadm join. If join fails, try kubeadm reset first.`, model:`kubeadm upgrade = cluster ceremony, kubeadm join = initiation into the cluster. Both are infrastructure tasks.`},
 
 {n:21,t:"Create a Static Pod and Service",w:2,ctx:"k8s-c3-CCC",dom:"Architecture",
 task:`Create a <code>Static Pod</code> named <code>my-static-pod</code> on cluster3-controlplane1. It should be of image <code>nginx:1.16-alpine</code> and have resource requests for <code>10m</code> CPU and <code>20Mi</code> memory.\n\nThen create a NodePort <em>Service</em> named <code>static-pod-service</code> which exposes that static <em>Pod</em> on port 80 and check if it has <em>Endpoints</em> and if it's reachable.`,
@@ -688,7 +690,7 @@ kubectl expose pod my-static-pod-cluster3-controlplane1 \\
   --port 80
 
 k get svc,ep -l run=my-static-pod`,
-tip:`Static pod name = spec name + '-' + node name. Use that FULL name when running kubectl expose.`},
+tip:`Static pod name = spec name + '-' + node name. Use that FULL name when running kubectl expose.`, model:`Static Pod = runs directly on node (kubelet watches file), Service = receptionist directing traffic.`},
 
 {n:22,t:"Check how long certificates are valid",w:2,ctx:"k8s-c2-AC",dom:"Security",
 task:`Check how long the kube-apiserver server certificate is valid on <code>cluster2-controlplane1</code>. Do this with openssl or cfssl. Write the expiration date into <code>/opt/course/22/expiration</code>.\n\nAlso run the correct <code>kubeadm</code> command to list the expiration dates and confirm both methods show the same date.\n\nWrite the correct <code>kubeadm</code> command that would renew the apiserver server certificate into <code>/opt/course/22/kubeadm-renew-certs.sh</code>.`,
@@ -708,7 +710,7 @@ Dec 20 18:05:20 2023 GMT
 # Write renewal command
 # /opt/course/22/kubeadm-renew-certs.sh
 kubeadm certs renew apiserver`,
-tip:`kubeadm certs check-expiration shows all certs with human-readable expiry — much faster than running openssl on each file. After renewal, restart the apiserver static pod.`},
+tip:`kubeadm certs check-expiration shows all certs with human-readable expiry — much faster than running openssl on each file. After renewal, restart the apiserver static pod.`, model:`Cert expiry = passport expiration. Border guard (apiserver) checks it. Expired = denied entry.`},
 
 {n:23,t:"Kubelet client/server cert info",w:2,ctx:"k8s-c2-AC",dom:"Security",
 task:`Node cluster2-node1 has been added to the cluster using <code>kubeadm</code> and TLS bootstrapping.\n\nFind the "Issuer" and "Extended Key Usage" values of:\n1. kubelet <b>client</b> certificate (<code>/var/lib/kubelet/pki/kubelet-client-current.pem</code>)\n2. kubelet <b>server</b> certificate (<code>/var/lib/kubelet/pki/kubelet.crt</code>)`,
@@ -731,7 +733,7 @@ openssl x509 -noout -text \\
 openssl x509 -noout -text \\
   -in /var/lib/kubelet/pki/kubelet.crt | grep "Extended Key Usage" -A1
 # TLS Web Server Authentication`,
-tip:`Client cert (issued by kubernetes CA) = used to talk TO the apiserver. Server cert (self-signed by node) = used when apiserver connects TO the kubelet. Extended Key Usage tells you which is which.`},
+tip:`Client cert (issued by kubernetes CA) = used to talk TO the apiserver. Server cert (self-signed by node) = used when apiserver connects TO the kubelet. Extended Key Usage tells you which is which.`, model:`Kubelet certs = cluster ID card. Used for mutual authentication between kubelet and apiserver.`},
 
 {n:24,t:"NetworkPolicy",w:9,ctx:"k8s-c1-H",dom:"Networking",
 task:`There was a security incident where an intruder was able to access the whole cluster from a single hacked backend <em>Pod</em>.\n\nTo prevent this create a <em>NetworkPolicy</em> called <code>np-backend</code> in <em>Namespace</em> <code>project-snake</code>. It should allow the <code>backend-*</code> <em>Pods</em> only to:\n\n• connect to <code>db1-*</code> <em>Pods</em> on port 1111\n• connect to <code>db2-*</code> <em>Pods</em> on port 2222\n\nUse the <code>app</code> label of <em>Pods</em> in your policy.\n\nAfter implementation, connections from <code>backend-*</code> <em>Pods</em> to <code>vault-*</code> <em>Pods</em> on port 3333 should for example no longer work.`,
@@ -771,7 +773,7 @@ spec:
 
 k apply -f np.yaml
 k -n project-snake get netpol`,
-tip:`This is an EGRESS policy on backend pods (not ingress on db pods). Each egress rule (- to:) is a separate allowed destination. Without explicit DNS egress, backend pods also lose DNS resolution — in the exam, if DNS is needed, add a rule allowing UDP port 53 to kube-dns.`},
+tip:`This is an EGRESS policy on backend pods (not ingress on db pods). Each egress rule (- to:) is a separate allowed destination. Without explicit DNS egress, backend pods also lose DNS resolution — in the exam, if DNS is needed, add a rule allowing UDP port 53 to kube-dns.`, model:`NetworkPolicy = bouncer at club. Pods talk by default; policy = only if on the list.`},
 
 {n:25,t:"Etcd Snapshot Save and Restore",w:8,ctx:"k8s-c3-CCC",dom:"Architecture",
 task:`Make a backup of etcd running on <code>cluster3-controlplane1</code> and save it on the controlplane node at <code>/tmp/etcd-backup.db</code>.\n\nThen create a <em>Pod</em> of your choice in the cluster.\n\nFinally restore the backup, confirm the cluster is still working and that the created <em>Pod</em> is no longer running.`,
@@ -804,7 +806,7 @@ vim /etc/kubernetes/manifests/etcd.yaml
 # Wait for etcd to restart
 # The test pod should no longer exist
 kubectl get pod | grep test  # gone`,
-tip:`Always get the cert paths from the etcd manifest — don't guess. After restore, you MUST update the etcd manifest hostPath to the new data directory. The kubelet will automatically restart the etcd static pod when the manifest changes.`}
+tip:`Always get the cert paths from the etcd manifest — don't guess. After restore, you MUST update the etcd manifest hostPath to the new data directory. The kubelet will automatically restart the etcd static pod when the manifest changes.`, model:`Snapshot = backup film of cluster at one moment. Restore = rewind to that moment, lose all changes after.`}
 ];
 
 let done=new Array(Q.length).fill(false);
@@ -842,6 +844,10 @@ ${q.ctx!=='—'?`<span class="qb qb-ctx">ctx: ${q.ctx}</span>`:''}
 <div class="qbody">
 <div class="tp active" id="${i}-task">
 <div class="task"><h4>Task Description</h4>${taskHtml}</div>
+<button class="sol-btn" onclick="this.nextElementSibling.classList.toggle('visible')">💡 Concept Overview</button>
+<div class="model-content">
+<div class="co tip"><strong>Mental Model</strong>${q.model}</div>
+</div>
 <div class="co exam"><strong>Exam context</strong>${q.ctx!=='—'?`Switch context first: <code>kubectl config use-context ${q.ctx}</code>`:' This question does not require a specific context.'}</div>
 <div class="sol-wrap">
 <button class="sol-btn" onclick="this.nextElementSibling.classList.toggle('visible')">▶ Show Quick Answer</button>

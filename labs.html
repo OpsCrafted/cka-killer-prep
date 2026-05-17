@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CKA Break & Fix Labs — Visual Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;1,400&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0d1117;
+  --surface: #161b22;
+  --surface2: #1c2128;
+  --border: #30363d;
+  --accent: #58a6ff;
+  --accent2: #3fb950;
+  --accent3: #f78166;
+  --accent4: #d2a8ff;
+  --accent5: #ffa657;
+  --text: #c9d1d9;
+  --muted: #6e7681;
+  --heading: #f0f6fc;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'IBM Plex Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 24px 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header-left { display: flex; align-items: center; gap: 20px; }
+.site-name {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--heading);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+.site-name a { color: var(--accent); text-decoration: none; }
+.site-name a:hover { text-decoration: underline; }
+
+.nav-breadcrumb {
+  font-size: 12px;
+  color: var(--muted);
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+main { max-width: 920px; margin: 0 auto; padding: 48px 56px; }
+
+.page-title {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 32px;
+  font-weight: 600;
+  color: var(--heading);
+  margin-bottom: 8px;
+}
+
+.page-desc {
+  font-size: 15px;
+  color: var(--muted);
+  margin-bottom: 40px;
+}
+
+.lab-section {
+  margin-bottom: 56px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid var(--border);
+}
+
+.lab-section:last-child { border-bottom: none; }
+
+.lab-number {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+
+.lab-title {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--heading);
+  margin-bottom: 16px;
+}
+
+.concept-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 16px 0 24px;
+}
+
+.concept-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.concept-card-title {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--heading);
+  margin-bottom: 6px;
+}
+
+.concept-card-body {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.callout {
+  padding: 14px 18px;
+  border-radius: 8px;
+  margin: 16px 0 24px;
+  font-size: 13px;
+  line-height: 1.6;
+  border-left: 3px solid;
+}
+
+.callout.tip { background: rgba(63,185,80,0.06); border-color: var(--accent2); color: #a5d6a7; }
+.callout strong { display: block; font-weight: 600; margin-bottom: 4px; font-family: 'IBM Plex Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+.scenario-text {
+  font-size: 13px;
+  color: var(--text);
+  margin: 20px 0;
+  padding: 12px 16px;
+  background: var(--surface);
+  border-left: 3px solid var(--accent2);
+  border-radius: 4px;
+}
+
+.scenario-text strong { color: var(--heading); }
+
+.code-block {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin: 16px 0 20px;
+  overflow: hidden;
+}
+
+.code-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 14px;
+  background: var(--surface2);
+  border-bottom: 1px solid var(--border);
+}
+
+.code-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.copy-btn {
+  font-size: 11px;
+  color: var(--muted);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 2px 6px;
+}
+
+.copy-btn:hover { color: var(--accent); }
+
+pre {
+  padding: 12px 14px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  overflow-x: auto;
+  color: var(--text);
+  line-height: 1.5;
+}
+
+footer {
+  margin-top: 80px;
+  padding: 32px 56px;
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+  text-align: center;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+footer a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+footer a:hover { text-decoration: underline; }
+
+@media (max-width: 768px) {
+  header { padding: 16px 20px; flex-direction: column; align-items: flex-start; }
+  main { padding: 24px 20px; }
+  .concept-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="site-name"><a href="index.html">CKA</a> Labs</div>
+    <div class="nav-breadcrumb">Break & Fix Scenarios</div>
+  </div>
+</header>
+
+<main>
+
+<h1 class="page-title">Break & Fix Labs</h1>
+<p class="page-desc">10 hands-on scenarios covering all CKA exam domains. Each lab breaks a real cluster failure; you diagnose and fix it using only kubectl and ssh.</p>
+
+<!-- LAB 01 -->
+<div class="lab-section">
+  <div class="lab-number">Lab 01 of 10</div>
+  <div class="lab-title">Node NotReady</div>
+
+  <div class="callout tip"><strong>Mental model</strong> Node is like a worker who clocked out — kubelet is the time card. No heartbeat, no work.</div>
+
+  <div class="concept-grid">
+    <div class="concept-card">
+      <div class="concept-card-title">What breaks</div>
+      <div class="concept-card-body">A worker node stops heartbeating to the control plane. <b>kubelet service</b> stops running on the node.</div>
+    </div>
+    <div class="concept-card">
+      <div class="concept-card-title">How it manifests</div>
+      <div class="concept-card-body"><code>kubectl get nodes</code> shows <code>NotReady</code>. Pods on that node are evicted to other nodes.</div>
+    </div>
+  </div>
+
+  <div class="scenario-text"><strong>Scenario:</strong> Worker node is NotReady. SSH in, find kubelet crashed, restart it via systemd. Verify node returns to Ready.</div>
+
+  <div class="code-block">
+    <div class="code-header">
+      <div class="code-label">bash — diagnose</div>
+      <div class="copy-btn" onclick="copyCode(this)">copy</div>
+    </div>
+    <pre>kubectl get nodes
+kubectl describe node &lt;node-name&gt;
+ssh &lt;node-ip&gt;
+sudo systemctl status kubelet
+sudo systemctl restart kubelet</pre>
+  </div>
+</div>
+
+<!-- LAB 02 -->
+<div class="lab-section">
+  <div class="lab-number">Lab 02 of 10</div>
+  <div class="lab-title">Broken Service</div>
+
+  <div class="callout tip"><strong>Mental model</strong> Service selector is a postal address. Pod labels are the house number. Mismatch = mail never arrives.</div>
+
+  <div class="concept-grid">
+    <div class="concept-card">
+      <div class="concept-card-title">What breaks</div>
+      <div class="concept-card-body">Service selector <b>labels don't match pod labels</b>. Service can't find its endpoints.</div>
+    </div>
+    <div class="concept-card">
+      <div class="concept-card-title">How it manifests</div>
+      <div class="concept-card-body"><code>kubectl get endpoints &lt;svc&gt;</code> shows <code>&lt;none&gt;</code>. Traffic timeout when you connect to the service.</div>
+    </div>
+  </div>
+
+  <div class="scenario-text"><strong>Scenario:</strong> Service web-svc gets connection refused despite pods running. Fix the service selector or pod labels to match. Verify endpoints appear and traffic works.</div>
+
+  <div class="code-block">
+    <div class="code-header">
+      <div class="code-label">bash — diagnose</div>
+      <div class="copy-btn" onclick="copyCode(this)">copy</div>
+    </div>
+    <pre>kubectl get svc web-svc
+kubectl get endpoints web-svc
+kubectl describe svc web-svc
+kubectl get pods --show-labels
+kubectl edit svc web-svc</pre>
+  </div>
+</div>
+
+<!-- LAB 03 -->
+<div class="lab-section">
+  <div class="lab-number">Lab 03 of 10</div>
+  <div class="lab-title">CrashLoopBackOff</div>
+
+  <div class="callout tip"><strong>Mental model</strong> Container starts, looks for config file, finds nothing, crashes. Kubernetes retries—same wall, same crash.</div>
+
+  <div class="concept-grid">
+    <div class="concept-card">
+      <div class="concept-card-title">What breaks</div>
+      <div class="concept-card-body">Pod tries to read a <b>missing configuration file</b>. Container exits non-zero immediately on start.</div>
+    </div>
+    <div class="concept-card">
+      <div class="concept-card-title">How it manifests</div>
+      <div class="concept-card-body">Pod status shows <code>CrashLoopBackOff</code>. Restart count keeps increasing. Previous logs show the crash.</div>
+    </div>
+  </div>
+
+  <div class="scenario-text"><strong>Scenario:</strong> Pod app-server crashes because config file /etc/app/config.yaml is missing. Mount the ConfigMap or fix the pod command. Verify pod runs and stays Running.</div>
+
+  <div class="code-block">
+    <div class="code-header">
+      <div class="code-label">bash — diagnose</div>
+      <div class="copy-btn" onclick="copyCode(this)">copy</div>
+    </div>
+    <pre>kubectl logs &lt;pod&gt; --previous
+kubectl describe pod &lt;pod&gt;
+kubectl get cm
+kubectl edit pod &lt;pod&gt;</pre>
+  </div>
+</div>
+
+<!-- LAB 04 -->
+<div class="lab-section">
+  <div class="lab-number">Lab 04 of 10</div>
+  <div class="lab-title">Scheduler Down</div>
+
+  <div class="callout tip"><strong>Mental model</strong> Pods are planes waiting for a gate assignment. No scheduler = planes circle forever, never land.</div>
+
+  <div class="concept-grid">
+    <div class="concept-card">
+      <div class="concept-card-title">What breaks</div>
+      <div class="concept-card-body"><b>kube-scheduler static pod manifest</b> missing from control plane. Scheduler pod can't start.</div>
+    </div>
+    <div class="concept-card">
+      <div class="concept-card-title">How it manifests</div>
+      <div class="concept-card-body">New pods stuck in <code>Pending</code>. No scheduling events. Existing pods keep running.</div>
+    </div>
+  </div>
+
+  <div class="scenario-text"><strong>Scenario:</strong> Scheduler manifest deleted from /etc/kubernetes/manifests/. SSH to control plane, restore the manifest. Kubelet recreates the pod. Verify new pods now schedule.</div>
+
+  <div class="code-block">
+    <div class="code-header">
+      <div class="code-label">bash — diagnose</div>
+      <div class="copy-btn" onclick="copyCode(this)">copy</div>
+    </div>
+    <pre>kubectl get pods -n kube-system | grep scheduler
+kubectl describe pod &lt;scheduler&gt; -n kube-system
+ssh &lt;control-plane-ip&gt;
+ls /etc/kubernetes/manifests/</pre>
+  </div>
+</div>
+
+<!-- LAB 05 -->
+<div class="lab-section">
+  <div class="lab-number">Lab 05 of 10</div>
+  <div class="lab-title">Certificate Expiry</div>
+
+  <div class="callout tip"><strong>Mental model</strong> Cluster components check each other's certificates like a border agent checks passports. Expired = denied.</div>
+
+  <div class="concept-grid">
+    <div class="concept-card">
+      <div class="concept-card-title">What breaks</div>
+      <div class="concept-card-body">API server TLS <b>certificate is expired</b> or about to expire. Components can't verify each other.</div>
+    </div>
+    <div class="concept-card">
+      <div class="concept-card-title">How it manifests</div>
+      <div class="concept-card-body">kubectl auth errors, nodes NotReady, kubelet can't reach apiserver. Cluster communication fails.</div>
+    </div>
+  </div>
+
+  <div class="scenario-text"><strong>Scenario:</strong> Inspect TLS certificate expiry using openssl and kubeadm. Document the expiry date and steps to renew. This is a detection + documentation task, not a fix.</div>
+
+  <div class="code-block">
+    <div class="code-header">
+      <div class="code-label">bash — diagnose</div>
+      <div class="copy-btn" onclick="copyCode(this)">copy</div>
+    </div>
+    <pre>ssh &lt;control-plane&gt;
+kubeadm certs check-expiration
+openssl x509 -in /etc/kubernetes/pki/apiserver.crt -noout -dates</pre>
+  </div>
+</div>
+
+<!-- LAB 06 -->
+<div class="lab-section">
+  <div class="lab-number">Lab 06 of 10</div>
+  <div class="lab-title">NetworkPolicy</div>
+
+  <div class="callout tip"><strong>Mental model</strong> By default every pod talks to every pod. NetworkPolicy is the bouncer—you only get in if you're on the list.</div>
+
+  <div class="concept-grid">
+    <div class="concept-card">
+      <div class="concept-card-title">What breaks</div>
+      <div class="concept-card-body"><b>NetworkPolicy denies traffic</b> that should be allowed. Selector or port mismatch in the policy rule.</div>
+    </div>
+    <div class="concept-card">
+      <div class="concept-card-title">How it manifests</div>
+      <div class="concept-card-body">Pod-to-pod communication times out or is refused. Logs show connection timeout (not refused—just hangs).</div>
+    </div>
+  </div>
+
+  <div class="scenario-text"><strong>Scenario:</strong> Pod client-app can't reach server-app. NetworkPolicy is in place but has a misconfigured selector or missing port rule. Fix the policy and verify traffic flows.</div>
+
+  <div class="code-block">
+    <div class="code-header">
+      <div class="code-label">bash — diagnose</div>
+      <div class="copy-btn" onclick="copyCode(this)">copy</div>
+    </div>
+    <pre>kubectl get networkpolicies
+kubectl describe networkpolicy &lt;name&gt;
+kubectl exec &lt;pod&gt; -- curl &lt;target-pod&gt;:8080
+kubectl edit networkpolicy &lt;name&gt;</pre>
+  </div>
+</div>
+
+<!-- LAB 07 -->
+<div class="lab-section">
+  <div class="lab-number">Lab 07 of 10</div>
+  <div class="lab-title">PVC Pending</div>
+
+  <div class="callout tip"><strong>Mental model</strong> PVC is your rental contract. PV is the apartment. If no apartment matches your requirements, you wait indefinitely.</div>
+
+  <div class="concept-grid">
+    <div class="concept-card">
+      <div class="concept-card-title">What breaks</div>
+      <div class="concept-card-body"><b>PVC selector or StorageClass</b> doesn't match any available PV. PVC stays Pending forever.</div>
+    </div>
+    <div class="concept-card">
+      <div class="concept-card-title">How it manifests</div>
+      <div class="concept-card-body">PVC status shows <code>Pending</code>. Pod using the PVC is also Pending. No PV gets bound.</div>
+    </div>
+  </div>
+
+  <div class="scenario-text"><strong>Scenario:</strong> PVC data-pvc stuck in Pending. StorageClass name in PVC doesn't match any StorageClass. Fix the PVC spec or create the matching StorageClass. Verify PVC binds to a PV.</div>
+
+  <div class="code-block">
+    <div class="code-header">
+      <div class="code-label">bash — diagnose</div>
+      <div class="copy-btn" onclick="copyCode(this)">copy</div>
+    </div>
+    <pre>kubectl get pvc
+kubectl describe pvc &lt;pvc-name&gt;
+kubectl get storageclass
+kubectl get pv
+kubectl edit pvc &lt;pvc-name&gt;</pre>
+  </div>
+</div>
+
+<!-- LAB 08 -->
+<div class="lab-section">
+  <div class="lab-number">Lab 08 of 10</div>
+  <div class="lab-title">RBAC Denied</div>
+
+  <div class="callout tip"><strong>Mental model</strong> ServiceAccount is your employee badge. Role is the access level. Without the right binding, the door scanner says no.</div>
+
+  <div class="concept-grid">
+    <div class="concept-card">
+      <div class="concept-card-title">What breaks</div>
+      <div class="concept-card-body"><b>RoleBinding is missing</b> or refers to wrong ServiceAccount/Role. Pod can't call API.</div>
+    </div>
+    <div class="concept-card">
+      <div class="concept-card-title">How it manifests</div>
+      <div class="concept-card-body">Pod logs show "forbidden" error when calling apiserver. kubectl auth can-i shows false.</div>
+    </div>
+  </div>
+
+  <div class="scenario-text"><strong>Scenario:</strong> Pod app tries to list pods in the namespace via API. Gets forbidden. ServiceAccount exists but RoleBinding is missing. Create the RoleBinding to grant the role to the ServiceAccount.</div>
+
+  <div class="code-block">
+    <div class="code-header">
+      <div class="code-label">bash — diagnose</div>
+      <div class="copy-btn" onclick="copyCode(this)">copy</div>
+    </div>
+    <pre>kubectl get serviceaccount
+kubectl get role
+kubectl get rolebinding
+kubectl auth can-i list pods --as=system:serviceaccount:default:app
+kubectl create rolebinding &lt;name&gt; --role=&lt;role&gt; --serviceaccount=default:&lt;sa&gt;</pre>
+  </div>
+</div>
+
+<!-- LAB 09 -->
+<div class="lab-section">
+  <div class="lab-number">Lab 09 of 10</div>
+  <div class="lab-title">etcd Restore</div>
+
+  <div class="callout tip"><strong>Mental model</strong> etcd is the cluster's memory. Restore is like loading a brain backup—everything snaps back to that point in time.</div>
+
+  <div class="concept-grid">
+    <div class="concept-card">
+      <div class="concept-card-title">What breaks</div>
+      <div class="concept-card-body"><b>Data was deleted from etcd</b> (e.g., namespace deleted). etcd currently has the wrong state.</div>
+    </div>
+    <div class="concept-card">
+      <div class="concept-card-title">How it manifests</div>
+      <div class="concept-card-body">Namespace or resources gone. etcd is running fine. You have an etcd snapshot from before the deletion.</div>
+    </div>
+  </div>
+
+  <div class="scenario-text"><strong>Scenario:</strong> A namespace was accidentally deleted. Restore etcd from a snapshot backup to recover the deleted resources. Verify the namespace and its pods are back.</div>
+
+  <div class="code-block">
+    <div class="code-header">
+      <div class="code-label">bash — diagnose</div>
+      <div class="copy-btn" onclick="copyCode(this)">copy</div>
+    </div>
+    <pre>ssh &lt;control-plane&gt;
+sudo systemctl stop kubelet
+sudo mv /etc/kubernetes/manifests/kube-apiserver.yaml /tmp/
+sudo etcdctl snapshot restore /path/to/snapshot.db \
+  --data-dir=/var/lib/etcd-restore
+sudo rm -rf /var/lib/etcd && mv /var/lib/etcd-restore /var/lib/etcd
+sudo mv /tmp/kube-apiserver.yaml /etc/kubernetes/manifests/
+sudo systemctl start kubelet</pre>
+  </div>
+</div>
+
+<!-- LAB 10 -->
+<div class="lab-section">
+  <div class="lab-number">Lab 10 of 10</div>
+  <div class="lab-title">Kubelet Misconfigured</div>
+
+  <div class="callout tip"><strong>Mental model</strong> Kubelet is the engine of each node. Wrong config = engine misfires. Pods won't start, node reports garbage.</div>
+
+  <div class="concept-grid">
+    <div class="concept-card">
+      <div class="concept-card-title">What breaks</div>
+      <div class="concept-card-body"><b>Kubelet config file path is wrong</b> or the config itself has invalid settings. Kubelet can't start or runs with broken behavior.</div>
+    </div>
+    <div class="concept-card">
+      <div class="concept-card-title">How it manifests</div>
+      <div class="concept-card-body">Node is NotReady or in Unknown state. Kubelet is crashed or running incorrectly. Pods can't be created on that node.</div>
+    </div>
+  </div>
+
+  <div class="scenario-text"><strong>Scenario:</strong> Node kubelet is misconfigured. The --config flag points to a non-existent file or has syntax errors. Find the correct config path or fix the kubeconfig. Restart kubelet and verify node returns to Ready.</div>
+
+  <div class="code-block">
+    <div class="code-header">
+      <div class="code-label">bash — diagnose</div>
+      <div class="copy-btn" onclick="copyCode(this)">copy</div>
+    </div>
+    <pre>ssh &lt;node-ip&gt;
+sudo systemctl status kubelet
+sudo journalctl -u kubelet -n 50
+ps aux | grep kubelet
+sudo cat /etc/kubernetes/kubelet.conf
+sudo systemctl restart kubelet</pre>
+  </div>
+</div>
+
+</main>
+
+<footer>
+  <div>CKA Break & Fix Labs — <a href="index.html">back to home</a></div>
+  <div style="margin-top: 8px; font-size: 11px;">Built by <a href="https://github.com/opscrafted">Borislav Stancevic</a></div>
+</footer>
+
+<script>
+function copyCode(btn) {
+  const pre = btn.closest('.code-block').querySelector('pre');
+  const text = pre.innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'copied!';
+    setTimeout(() => btn.textContent = 'copy', 1500);
+  });
+}
+</script>
+
+</body>
+</html>

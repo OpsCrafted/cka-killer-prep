@@ -41,7 +41,7 @@ Everything runs in the browser. Progress is saved locally.
 ### Option 2: Run locally
 
 ```bash
-git clone https://github.com/yourusername/cka-killer-prep.git
+git clone https://github.com/opscrafted/cka-killer-prep.git
 cd cka-killer-prep
 
 # Open the main page
