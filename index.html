@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CKA Killer Prep</title>
+<meta name="description" content="Interactive CKA exam preparation — study guide, KillerShell labs, break-and-fix scenarios, progress tracking.">
+<meta property="og:title" content="CKA Killer Prep">
+<meta property="og:description" content="Interactive CKA exam preparation with 25 KillerShell labs, break-and-fix scenarios, and progress tracking.">
+<meta property="og:type" content="website">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0b0e14;--s1:#11151c;--s2:#151a23;--bd:#252d3a;--ac:#4d9bef;--g:#41b883;--y:#e5a746;--p:#d275d8;--r:#f07c5c;--tx:#b8c4d4;--mu:#5c6a7e;--hd:#e4e9f0}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--tx);font-size:14px;line-height:1.65}
+.wrap{max-width:880px;margin:0 auto;padding:60px 24px}
+
+h1{font-family:'JetBrains Mono',monospace;font-size:36px;font-weight:700;color:var(--hd);letter-spacing:-1px;line-height:1.1;margin-bottom:12px}
+h1 span{color:var(--ac)}
+.sub{font-size:16px;color:var(--mu);max-width:560px;line-height:1.7;margin-bottom:48px}
+
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:40px}
+
+.card{background:var(--s1);border:1px solid var(--bd);border-radius:12px;padding:28px;transition:all .2s;text-decoration:none;display:block;position:relative;overflow:hidden}
+.card:hover{border-color:var(--ac);transform:translateY(-2px)}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.card.blue::before{background:var(--ac)}
+.card.green::before{background:var(--g)}
+.card.yellow::before{background:var(--y)}
+.card.purple::before{background:var(--p)}
+
+.card-icon{font-size:28px;margin-bottom:12px}
+.card-title{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;color:var(--hd);margin-bottom:6px}
+.card-desc{font-size:13px;color:var(--mu);line-height:1.6}
+.card-meta{display:flex;gap:12px;margin-top:14px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--mu)}
+.card-meta span{display:flex;align-items:center;gap:4px}
+
+.domains{background:var(--s1);border:1px solid var(--bd);border-radius:12px;padding:28px;margin-bottom:40px}
+.domains h2{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;color:var(--hd);margin-bottom:16px}
+.domain-bar{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.domain-name{font-size:12px;color:var(--tx);min-width:200px}
+.domain-track{flex:1;height:6px;background:var(--bd);border-radius:6px;overflow:hidden}
+.domain-fill{height:100%;border-radius:6px}
+.domain-pct{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--mu);min-width:36px;text-align:right}
+
+.footer{margin-top:48px;padding-top:24px;border-top:1px solid var(--bd);font-size:12px;color:var(--mu);display:flex;justify-content:space-between;align-items:center}
+.footer a{color:var(--ac);text-decoration:none}
+.footer a:hover{text-decoration:underline}
+
+.badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;padding:3px 10px;border-radius:4px;margin-bottom:16px}
+.badge.new{background:rgba(65,184,131,.1);color:var(--g);border:1px solid rgba(65,184,131,.2)}
+
+.quick-start{background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:16px 20px;margin-bottom:40px;font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--tx);line-height:1.8}
+.quick-start code{color:var(--ac)}
+
+@media(max-width:600px){
+  .grid{grid-template-columns:1fr}
+  h1{font-size:26px}
+  .domain-name{min-width:120px;font-size:11px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<span class="badge new">v1.0 · CKA 2026</span>
+<h1>CKA <span>Killer</span> Prep</h1>
+<p class="sub">Interactive exam preparation with progress tracking, 25 KillerShell simulator labs, break-and-fix scenarios, and JSONPath drills. Built by an SRE running Kubernetes in production.</p>
+
+<div class="quick-start">
+<code>git clone https://github.com/yourusername/cka-killer-prep.git</code><br>
+<code>cd cka-killer-prep && open index.html</code>
+</div>
+
+<div class="grid">
+  <a href="study-guide.html" class="card blue">
+    <div class="card-icon">📖</div>
+    <div class="card-title">Study Guide</div>
+    <div class="card-desc">6 chapters covering all CKA domains. Lessons, hands-on exercises, quizzes, and cheatsheets. Track your progress chapter by chapter.</div>
+    <div class="card-meta">
+      <span>6 chapters</span>
+      <span>24 exercises</span>
+      <span>30 quiz questions</span>
+    </div>
+  </a>
+
+  <a href="killershell-25q.html" class="card green">
+    <div class="card-icon">🎯</div>
+    <div class="card-title">KillerShell 25Q</div>
+    <div class="card-desc">All 25 KillerShell simulator questions with exam weights, step-by-step solutions, and tips. Sorted by difficulty and domain.</div>
+    <div class="card-meta">
+      <span>25 questions</span>
+      <span>Weighted scoring</span>
+      <span>Full solutions</span>
+    </div>
+  </a>
+
+  <a href="jsonpath-drills.html" class="card yellow">
+    <div class="card-icon">⌨️</div>
+    <div class="card-title">JSONPath Drills</div>
+    <div class="card-desc">20 type-to-check drills for kubectl JSONPath and bash filtering. The skill most people skip — and lose points on.</div>
+    <div class="card-meta">
+      <span>20 drills</span>
+      <span>3 difficulty levels</span>
+      <span>Instant feedback</span>
+    </div>
+  </a>
+
+  <a href="labs/" class="card purple">
+    <div class="card-icon">💥</div>
+    <div class="card-title">Break & Fix Labs</div>
+    <div class="card-desc">10 shell scripts that break a kind cluster in realistic ways. You diagnose and fix. Automated verification tells you if you got it right.</div>
+    <div class="card-meta">
+      <span>10 scenarios</span>
+      <span>kind clusters</span>
+      <span>Auto-verify</span>
+    </div>
+  </a>
+</div>
+
+<div class="domains">
+  <h2>CKA exam domains</h2>
+  <div class="domain-bar">
+    <div class="domain-name">Troubleshooting</div>
+    <div class="domain-track"><div class="domain-fill" style="width:30%;background:var(--r)"></div></div>
+    <div class="domain-pct">30%</div>
+  </div>
+  <div class="domain-bar">
+    <div class="domain-name">Cluster Architecture</div>
+    <div class="domain-track"><div class="domain-fill" style="width:25%;background:var(--ac)"></div></div>
+    <div class="domain-pct">25%</div>
+  </div>
+  <div class="domain-bar">
+    <div class="domain-name">Services & Networking</div>
+    <div class="domain-track"><div class="domain-fill" style="width:20%;background:var(--g)"></div></div>
+    <div class="domain-pct">20%</div>
+  </div>
+  <div class="domain-bar">
+    <div class="domain-name">Workloads & Scheduling</div>
+    <div class="domain-track"><div class="domain-fill" style="width:15%;background:var(--y)"></div></div>
+    <div class="domain-pct">15%</div>
+  </div>
+  <div class="domain-bar">
+    <div class="domain-name">Storage</div>
+    <div class="domain-track"><div class="domain-fill" style="width:10%;background:var(--p)"></div></div>
+    <div class="domain-pct">10%</div>
+  </div>
+</div>
+
+<div class="footer">
+  <span>Built by <a href="https://linkedin.com/in/yourprofile">Borislav Stancevic</a></span>
+  <span><a href="https://github.com/yourusername/cka-killer-prep">GitHub</a> · MIT License</span>
+</div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CKA JSONPath & Bash Filtering Drills</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0b0e14;--s1:#11151c;--s2:#151a23;--s3:#1a202b;--bd:#252d3a;--ac:#4d9bef;--g:#41b883;--y:#e5a746;--r:#e05561;--p:#d275d8;--o:#f07c5c;--tx:#b8c4d4;--mu:#5c6a7e;--hd:#e4e9f0}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--tx);font-size:14px;line-height:1.65}
+
+.app{max-width:920px;margin:0 auto;padding:32px 24px}
+
+/* HEADER */
+.hdr{margin-bottom:36px}
+.hdr h1{font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;color:var(--hd);margin-bottom:6px}
+.hdr p{font-size:13px;color:var(--mu);max-width:640px;line-height:1.7}
+
+/* PROGRESS */
+.prog{display:flex;align-items:center;gap:14px;margin-bottom:32px;padding:14px 18px;background:var(--s1);border:1px solid var(--bd);border-radius:8px}
+.prog-bar{flex:1;height:4px;background:var(--bd);border-radius:4px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--ac),var(--g));border-radius:4px;transition:width .4s}
+.prog-txt{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--mu);min-width:80px;text-align:right}
+
+/* TABS */
+.tabs{display:flex;gap:2px;margin-bottom:24px;border-bottom:1px solid var(--bd)}
+.tab{padding:10px 18px;font-size:12px;color:var(--mu);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .12s;font-family:'JetBrains Mono',monospace;font-weight:500}
+.tab:hover{color:var(--tx)}
+.tab.active{color:var(--ac);border-bottom-color:var(--ac)}
+.tab-pane{display:none}
+.tab-pane.active{display:block}
+
+/* CHEATSHEET */
+.cs-group{margin-bottom:28px}
+.cs-title{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;color:var(--hd);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.cs-title span{font-size:10px;padding:2px 8px;border-radius:4px;font-weight:500}
+
+.pattern{background:var(--s1);border:1px solid var(--bd);border-radius:8px;margin-bottom:10px;overflow:hidden}
+.pattern-row{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.pattern-left{padding:14px 16px;border-right:1px solid var(--bd);font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--p);line-height:1.6}
+.pattern-right{padding:14px 16px;font-size:13px;color:var(--tx);line-height:1.6}
+.pattern-right code{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ac);background:var(--s3);padding:1px 4px;border-radius:3px}
+
+/* MENTAL MODEL */
+.mm{background:rgba(77,155,239,.04);border:1px solid rgba(77,155,239,.15);border-left:3px solid var(--ac);border-radius:0 8px 8px 0;padding:18px 22px;margin:20px 0;font-size:13px;line-height:1.8;color:#8ec4f5}
+.mm strong{display:block;font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;opacity:.7}
+
+/* DRILL CARDS */
+.drill{background:var(--s1);border:1px solid var(--bd);border-radius:8px;margin-bottom:14px;overflow:hidden;transition:border-color .2s}
+.drill.correct-d{border-color:rgba(65,184,131,.4)}
+.drill.wrong-d{border-color:rgba(224,85,97,.4)}
+
+.drill-hdr{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--s2);border-bottom:1px solid var(--bd)}
+.drill-num{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--mu);font-weight:600}
+.drill-diff{font-size:10px;font-family:'JetBrains Mono',monospace;padding:2px 8px;border-radius:4px}
+.drill-diff.easy{background:rgba(65,184,131,.12);color:var(--g)}
+.drill-diff.med{background:rgba(229,167,70,.12);color:var(--y)}
+.drill-diff.hard{background:rgba(224,85,97,.12);color:var(--r)}
+
+.drill-body{padding:16px}
+.drill-q{font-size:14px;color:var(--hd);margin-bottom:12px;line-height:1.7}
+.drill-q code{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--p);background:var(--s3);padding:1px 5px;border-radius:3px}
+
+.drill-ctx{background:var(--s3);border:1px solid var(--bd);border-radius:6px;padding:10px 14px;margin-bottom:14px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--mu);line-height:1.6;white-space:pre-wrap}
+
+.drill-input-wrap{display:flex;gap:8px;margin-bottom:10px}
+.drill-input{flex:1;background:var(--s3);border:1px solid var(--bd);border-radius:6px;padding:10px 14px;font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--hd);outline:none;transition:border-color .15s}
+.drill-input:focus{border-color:var(--ac)}
+.drill-input::placeholder{color:var(--mu)}
+.drill-check{padding:10px 18px;background:rgba(77,155,239,.08);border:1px solid rgba(77,155,239,.25);border-radius:6px;color:var(--ac);font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;cursor:pointer;transition:all .12s;white-space:nowrap}
+.drill-check:hover{background:rgba(77,155,239,.15)}
+
+.drill-fb{display:none;padding:10px 14px;border-radius:6px;margin-top:10px;font-size:13px;line-height:1.6;font-family:'JetBrains Mono',monospace}
+.drill-fb.show{display:block}
+.drill-fb.ok{background:rgba(65,184,131,.06);border:1px solid rgba(65,184,131,.2);color:#8fd4b4}
+.drill-fb.no{background:rgba(224,85,97,.06);border:1px solid rgba(224,85,97,.2);color:#f5a0a8}
+
+.drill-reveal{font-size:11px;color:var(--mu);cursor:pointer;font-family:'JetBrains Mono',monospace;background:none;border:1px solid var(--bd);padding:4px 12px;border-radius:4px;transition:all .12s;margin-top:6px}
+.drill-reveal:hover{color:var(--y);border-color:var(--y)}
+
+.drill-answer{display:none;margin-top:10px;padding:10px 14px;background:var(--s3);border:1px solid var(--bd);border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ac);line-height:1.7;white-space:pre-wrap}
+.drill-answer.show{display:block}
+.drill-answer .expl{color:var(--mu);font-style:italic;margin-top:6px;font-size:11px}
+
+/* BASH SECTION */
+.pipe-viz{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:12px 0;padding:14px;background:var(--s1);border:1px solid var(--bd);border-radius:8px}
+.pipe-step{background:var(--s3);border:1px solid var(--bd);border-radius:6px;padding:6px 12px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--p)}
+.pipe-arrow{color:var(--mu);font-size:16px}
+
+@media(max-width:768px){
+  .pattern-row{grid-template-columns:1fr}
+  .pattern-left{border-right:none;border-bottom:1px solid var(--bd)}
+  .drill-input-wrap{flex-direction:column}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<div class="hdr">
+<h1>JSONPath & Bash Filtering for CKA</h1>
+<p>10 patterns that cover 95% of what you'll need. Learn the mental model, then drill until it's muscle memory. Type your answers — don't just read.</p>
+</div>
+
+<div class="prog">
+<div class="prog-bar"><div class="prog-fill" id="pf" style="width:0%"></div></div>
+<div class="prog-txt" id="pt">0 / 20 drills</div>
+</div>
+
+<div class="tabs">
+<div class="tab active" onclick="showPane(this,'cheat')">Cheatsheet</div>
+<div class="tab" onclick="showPane(this,'jsonpath')">JSONPath Drills</div>
+<div class="tab" onclick="showPane(this,'bash')">Bash Drills</div>
+<div class="tab" onclick="showPane(this,'combo')">Combo Drills</div>
+</div>
+
+<!-- ==================== CHEATSHEET ==================== -->
+<div class="tab-pane active" id="cheat">
+
+<div class="mm">
+<strong>Mental Model — The Tree</strong>
+Every Kubernetes resource is a JSON tree. JSONPath is just a way to navigate that tree and pick leaves. Think of it like a file path:<br><br>
+<code>/</code> = root of the resource<br>
+<code>.metadata.name</code> = go into metadata folder, pick name file<br>
+<code>.spec.containers[0].image</code> = go into spec, then containers array, pick first item, then its image<br>
+<code>.items[*].metadata.name</code> = go into items array, pick ALL items, then each one's name<br><br>
+That's it. Everything else is just syntax around this idea.
+</div>
+
+<div class="cs-group">
+<div class="cs-title">Core JSONPath Patterns <span style="background:rgba(65,184,131,.12);color:var(--g)">Memorize these</span></div>
+
+<div class="pattern"><div class="pattern-row">
+<div class="pattern-left">-o jsonpath='{.metadata.name}'</div>
+<div class="pattern-right">Get a <b>single field</b> from a single resource. Dot-walk the tree.</div>
+</div></div>
+
+<div class="pattern"><div class="pattern-row">
+<div class="pattern-left">-o jsonpath='{.items[*].metadata.name}'</div>
+<div class="pattern-right">Get a field from <b>every item</b> in a list (when using <code>get pods</code> etc). <code>[*]</code> = all items.</div>
+</div></div>
+
+<div class="pattern"><div class="pattern-row">
+<div class="pattern-left">-o jsonpath='{range .items[*]}{.metadata.name}{"\n"}{end}'</div>
+<div class="pattern-right"><b>Loop + newline</b>. Puts each result on its own line. <code>{"\n"}</code> = newline, <code>{"\t"}</code> = tab.</div>
+</div></div>
+
+<div class="pattern"><div class="pattern-row">
+<div class="pattern-left">-o jsonpath='{.items[*].status.addresses[?(@.type=="InternalIP")].address}'</div>
+<div class="pattern-right"><b>Filter</b>. <code>?(@.field=="value")</code> selects items where field matches. Like SQL WHERE.</div>
+</div></div>
+
+<div class="pattern"><div class="pattern-row">
+<div class="pattern-left">-o jsonpath='{range .items[*]}{.metadata.name}{"\t"}{.status.podIP}{"\n"}{end}'</div>
+<div class="pattern-right"><b>Multi-column output</b>. Print name + tab + IP + newline per item. Build custom tables.</div>
+</div></div>
+</div>
+
+<div class="cs-group">
+<div class="cs-title">Custom Columns <span style="background:rgba(229,167,70,.12);color:var(--y)">Faster for tables</span></div>
+
+<div class="pattern"><div class="pattern-row">
+<div class="pattern-left">-o custom-columns=NAME:.metadata.name,IMAGE:.spec.containers[0].image</div>
+<div class="pattern-right">Print a <b>table with headers</b>. Faster to type than jsonpath range loops. Each column = HEADER:JSONPATH.</div>
+</div></div>
+
+<div class="pattern"><div class="pattern-row">
+<div class="pattern-left">-o custom-columns=NODE:.spec.nodeName,STATUS:.status.phase</div>
+<div class="pattern-right">Works for any fields. No quotes needed around header names. Commas between columns, colons between name:path.</div>
+</div></div>
+</div>
+
+<div class="cs-group">
+<div class="cs-title">Bash Filtering <span style="background:rgba(210,168,255,.12);color:var(--p)">When JSONPath isn't enough</span></div>
+
+<div class="pattern"><div class="pattern-row">
+<div class="pattern-left">| grep -i "pattern"</div>
+<div class="pattern-right"><b>Filter lines</b> containing a pattern. <code>-i</code> = case insensitive. <code>-v</code> = invert (exclude).</div>
+</div></div>
+
+<div class="pattern"><div class="pattern-row">
+<div class="pattern-left">| awk '{print $1}'</div>
+<div class="pattern-right">Print the <b>Nth column</b>. <code>$1</code> = first, <code>$2</code> = second, <code>$NF</code> = last. Splits on whitespace.</div>
+</div></div>
+
+<div class="pattern"><div class="pattern-row">
+<div class="pattern-left">| wc -l</div>
+<div class="pattern-right"><b>Count lines</b>. Use with <code>--no-headers</code> to count resources. <code>wc -w</code> counts words.</div>
+</div></div>
+
+<div class="pattern"><div class="pattern-row">
+<div class="pattern-left">| sort | uniq -c | sort -rn</div>
+<div class="pattern-right"><b>Count unique values</b> and sort by frequency. Great for "which node has the most pods?"</div>
+</div></div>
+
+<div class="pattern"><div class="pattern-row">
+<div class="pattern-left">| tr " " "\n"</div>
+<div class="pattern-right"><b>Replace spaces with newlines</b>. Useful when jsonpath outputs space-separated values and you want one-per-line.</div>
+</div></div>
+</div>
+
+<div class="mm">
+<strong>Exam Decision Tree</strong>
+Need a <b>single field</b>? → <code>-o jsonpath='{.field}'</code><br>
+Need a <b>list of one field</b>? → <code>-o jsonpath='{.items[*].field}'</code> then pipe to <code>tr " " "\n"</code><br>
+Need a <b>filtered list</b>? → <code>-o jsonpath</code> with <code>?(@.field=="value")</code><br>
+Need a <b>table of multiple fields</b>? → <code>-o custom-columns=A:.path,B:.path</code><br>
+Need to <b>count things</b>? → <code>--no-headers | wc -l</code><br>
+Need to <b>sort</b>? → <code>--sort-by=.path</code> (kubectl native) or pipe to <code>sort</code><br>
+Don't remember the path? → <code>kubectl get pod X -o json | less</code> then browse the tree
+</div>
+
+<div class="cs-group">
+<div class="cs-title">The Emergency Fallback <span style="background:rgba(224,85,97,.12);color:var(--r)">When stuck</span></div>
+<div class="pattern"><div class="pattern-row">
+<div class="pattern-left">kubectl get pod X -o json | less</div>
+<div class="pattern-right">Dump the full JSON. Browse it with arrow keys. <code>/search</code> to find fields. Copy the path you need. This is faster than guessing jsonpath syntax. <b>Use this in the exam — it's allowed.</b></div>
+</div></div>
+</div>
+
+</div>
+
+<!-- ==================== JSONPATH DRILLS ==================== -->
+<div class="tab-pane" id="jsonpath">
+
+<div class="mm">
+<strong>How to practice</strong>
+Type the FULL kubectl command — not just the jsonpath part. You need to type the whole thing fast in the exam. Wrong is fine — the answer will show you the right pattern. Do each drill 3x on different days and you'll have it memorized.
+</div>
+
+<div id="jp-drills"></div>
+</div>
+
+<!-- ==================== BASH DRILLS ==================== -->
+<div class="tab-pane" id="bash">
+
+<div class="mm">
+<strong>Bash Pipeline Mental Model</strong>
+Think of bash pipes like an assembly line. Each tool does ONE thing, then passes the result to the next.
+</div>
+
+<div class="pipe-viz">
+<div class="pipe-step">kubectl get pods</div>
+<div class="pipe-arrow">→</div>
+<div class="pipe-step">grep Running</div>
+<div class="pipe-arrow">→</div>
+<div class="pipe-step">awk '{print $1}'</div>
+<div class="pipe-arrow">→</div>
+<div class="pipe-step">wc -l</div>
+<div class="pipe-arrow">=</div>
+<div class="pipe-step" style="color:var(--g)">count of running pods</div>
+</div>
+
+<div id="bash-drills"></div>
+</div>
+
+<!-- ==================== COMBO DRILLS ==================== -->
+<div class="tab-pane" id="combo">
+
+<div class="mm">
+<strong>These are exam-realistic</strong>
+Each drill below simulates a real CKA task. Combine jsonpath, custom-columns, grep, awk, sort — whatever gets the answer fastest. Speed matters more than elegance.
+</div>
+
+<div id="combo-drills"></div>
+</div>
+
+</div>
+
+<script>
+let solved=0;
+const totalDrills=20;
+
+const jpDrills=[
+{q:'Get the <code>podCIDR</code> of node <code>node01</code>.',
+diff:'easy',
+ctx:'Hint: it lives under .spec',
+ans:'kubectl get node node01 -o jsonpath=\'{.spec.podCIDR}\'',
+alts:['kubectl get node node01 -o jsonpath="{.spec.podCIDR}"'],
+expl:'Path: .spec.podCIDR. This is a single field from a single resource — simplest pattern.'},
+
+{q:'List the names of ALL pods in namespace <code>kube-system</code>, one per line.',
+diff:'easy',
+ctx:'Hint: use range + \\n, or items[*] + tr',
+ans:'kubectl get pods -n kube-system -o jsonpath=\'{range .items[*]}{.metadata.name}{"\\n"}{end}\'',
+alts:['kubectl get pods -n kube-system -o jsonpath=\'{.items[*].metadata.name}\' | tr " " "\\n"'],
+expl:'Two ways work: range loop with \\n, or items[*] piped to tr. Both are correct.'},
+
+{q:'Get the <code>InternalIP</code> of all nodes.',
+diff:'med',
+ctx:'Hint: node addresses are an array under .status.addresses, each with a .type field',
+ans:'kubectl get nodes -o jsonpath=\'{.items[*].status.addresses[?(@.type=="InternalIP")].address}\'',
+alts:[],
+expl:'The filter ?(@.type=="InternalIP") selects only the address entry where type matches. This is the most important filter pattern.'},
+
+{q:'Print a table: POD NAME | NODE — for all pods in default namespace.',
+diff:'easy',
+ctx:'Hint: custom-columns is faster than jsonpath for tables',
+ans:'kubectl get pods -o custom-columns=POD:.metadata.name,NODE:.spec.nodeName',
+alts:['kubectl get pods -o custom-columns="POD:.metadata.name,NODE:.spec.nodeName"'],
+expl:'custom-columns: HEADER:.jsonpath,HEADER:.jsonpath. No range loop needed. Much faster to type.'},
+
+{q:'Get the container image of the FIRST container in pod <code>web-app</code>.',
+diff:'easy',
+ctx:'Hint: containers is an array — use [0] for first element',
+ans:'kubectl get pod web-app -o jsonpath=\'{.spec.containers[0].image}\'',
+alts:[],
+expl:'.spec.containers[0].image — [0] selects the first container. [*] would give all containers.'},
+
+{q:'List ALL container images running across ALL pods in ALL namespaces.',
+diff:'med',
+ctx:'Hint: -A for all namespaces, containers[*] for all containers per pod',
+ans:'kubectl get pods -A -o jsonpath=\'{range .items[*]}{range .spec.containers[*]}{.image}{"\\n"}{end}{end}\'',
+alts:['kubectl get pods -A -o jsonpath=\'{.items[*].spec.containers[*].image}\' | tr " " "\\n"'],
+expl:'Nested range: outer loop over pods, inner loop over containers. Or flatten with items[*]...containers[*] + tr.'},
+
+{q:'Get the <code>--service-cluster-ip-range</code> value from the kube-apiserver pod spec.',
+diff:'hard',
+ctx:'Hint: it\'s in .spec.containers[0].command array. Use grep after getting the full command.',
+ans:'kubectl -n kube-system get pod kube-apiserver-controlplane -o jsonpath=\'{.spec.containers[0].command}\' | tr "," "\\n" | grep service-cluster',
+alts:['kubectl -n kube-system describe pod kube-apiserver-controlplane | grep service-cluster-ip-range'],
+expl:'Sometimes jsonpath + grep is faster than trying to filter inside jsonpath. The describe + grep approach also works and is arguably easier under exam pressure.'},
+];
+
+const bashDrills=[
+{q:'Count the number of pods in <code>Running</code> state across all namespaces.',
+diff:'easy',
+ctx:'Hint: get all pods, filter for Running, count lines',
+ans:'kubectl get pods -A --no-headers | grep Running | wc -l',
+alts:['kubectl get pods -A --field-selector=status.phase=Running --no-headers | wc -l'],
+expl:'--no-headers prevents counting the header as a line. grep Running filters. wc -l counts. The --field-selector approach is faster but harder to remember.'},
+
+{q:'Get the names of all pods that are NOT Running (any other status).',
+diff:'easy',
+ctx:'Hint: grep -v inverts the match',
+ans:'kubectl get pods -A --no-headers | grep -v Running | awk \'{print $2}\'',
+alts:['kubectl get pods -A | grep -v Running | grep -v NAME | awk \'{print $2}\''],
+expl:'grep -v Running excludes Running pods. awk \'{print $2}\' prints the second column (pod name). $1 would be namespace.'},
+
+{q:'Find which node has the most pods scheduled on it.',
+diff:'med',
+ctx:'Hint: get pods -o wide shows NODE column, then count per node',
+ans:'kubectl get pods -A -o wide --no-headers | awk \'{print $8}\' | sort | uniq -c | sort -rn | head -1',
+alts:[],
+expl:'awk $8 extracts the NODE column from -o wide output. sort | uniq -c counts occurrences. sort -rn sorts highest first. head -1 picks the top.'},
+
+{q:'List all namespaces that contain more than 5 pods.',
+diff:'hard',
+ctx:'Hint: count pods per namespace, then filter by count',
+ans:'kubectl get pods -A --no-headers | awk \'{print $1}\' | sort | uniq -c | sort -rn | awk \'$1 > 5 {print $2}\'',
+alts:[],
+expl:'First count pods per namespace with sort|uniq -c. Then awk \'$1 > 5\' filters to only lines where count exceeds 5. $2 prints the namespace name.'},
+
+{q:'Find all pods using image <code>nginx</code> (any tag) and output just their names.',
+diff:'easy',
+ctx:'Hint: custom-columns + grep',
+ans:'kubectl get pods -A -o custom-columns=NAME:.metadata.name,IMAGE:.spec.containers[0].image --no-headers | grep nginx | awk \'{print $1}\'',
+alts:['kubectl get pods -A -o jsonpath=\'{range .items[*]}{.metadata.name}{"\\t"}{.spec.containers[0].image}{"\\n"}{end}\' | grep nginx | awk \'{print $1}\''],
+expl:'custom-columns builds a quick table. grep nginx filters. awk $1 extracts the name. Works in under 10 seconds.'},
+
+{q:'Get all events sorted by timestamp and write only the last 5 to a file.',
+diff:'med',
+ctx:'Hint: --sort-by + tail',
+ans:'kubectl get events -A --sort-by=.metadata.creationTimestamp | tail -5 > /tmp/recent-events.txt',
+alts:['kubectl get events -A --sort-by=.lastTimestamp | tail -5 > /tmp/recent-events.txt'],
+expl:'--sort-by is kubectl native sorting. tail -5 grabs the last 5 lines (most recent since sorted ascending). Redirect with > to file.'},
+];
+
+const comboDrills=[
+{q:'Write the names and IPs of all nodes into <code>/tmp/nodes.txt</code> in the format: <code>nodename  ip</code> (tab-separated, one per line).',
+diff:'med',
+ctx:'This is a real CKA pattern — combine jsonpath range with file output',
+ans:'kubectl get nodes -o jsonpath=\'{range .items[*]}{.metadata.name}{"\\t"}{.status.addresses[?(@.type=="InternalIP")].address}{"\\n"}{end}\' > /tmp/nodes.txt',
+alts:['kubectl get nodes -o wide --no-headers | awk \'{print $1"\\t"$6}\' > /tmp/nodes.txt'],
+expl:'Two approaches: jsonpath range loop (precise), or -o wide + awk (quick and dirty). Both produce the same output. Use whichever you can type faster.'},
+
+{q:'Find all pods in namespace <code>production</code> that are consuming more than 100m CPU. Write their names to <code>/tmp/high-cpu.txt</code>.',
+diff:'hard',
+ctx:'Hint: kubectl top + awk numeric comparison',
+ans:'kubectl top pods -n production --no-headers | sort -k2 -rn | awk \'$2 > 100 {print $1}\' > /tmp/high-cpu.txt',
+alts:['kubectl top pods -n production --no-headers | awk \'{if ($2+0 > 100) print $1}\' > /tmp/high-cpu.txt'],
+expl:'kubectl top shows CPU in column 2. awk $2 > 100 filters. Note: kubectl top shows values like \"105m\" — awk treats \"105m\" as 105 numerically (stops at the letter). This works in practice.'},
+
+{q:'Create a file listing all service account names in namespace <code>kube-system</code> sorted alphabetically.',
+diff:'easy',
+ctx:'Hint: get sa + jsonpath or custom-columns + sort',
+ans:'kubectl get sa -n kube-system -o jsonpath=\'{.items[*].metadata.name}\' | tr " " "\\n" | sort > /tmp/sa-list.txt',
+alts:['kubectl get sa -n kube-system --no-headers -o custom-columns=NAME:.metadata.name | sort > /tmp/sa-list.txt'],
+expl:'items[*].metadata.name gets all names. tr splits to lines. sort alphabetizes. Redirect to file.'},
+
+{q:'Find all PersistentVolumes with <code>reclaimPolicy: Retain</code> and capacity greater than 1Gi. Write the PV names to <code>/tmp/large-retain-pvs.txt</code>.',
+diff:'hard',
+ctx:'Hint: custom-columns to build a table, then grep + awk',
+ans:'kubectl get pv -o custom-columns=NAME:.metadata.name,RECLAIM:.spec.persistentVolumeReclaimPolicy,CAP:.spec.capacity.storage --no-headers | grep Retain | awk \'{if ($3+0 > 1) print $1}\' > /tmp/large-retain-pvs.txt',
+alts:['kubectl get pv -o jsonpath=\'{range .items[?(@.spec.persistentVolumeReclaimPolicy=="Retain")]}{.metadata.name}{"\\t"}{.spec.capacity.storage}{"\\n"}{end}\' | awk \'{if ($2+0 > 1) print $1}\' > /tmp/large-retain-pvs.txt'],
+expl:'Filter by Retain first (grep or jsonpath filter), then check capacity numerically. The jsonpath filter approach is more precise but harder to type under pressure.'},
+
+{q:'List all pods with their restart counts, sorted by restarts descending. Show only pods with more than 0 restarts.',
+diff:'hard',
+ctx:'Hint: restart count is under .status.containerStatuses[0].restartCount',
+ans:'kubectl get pods -A -o custom-columns=NS:.metadata.namespace,POD:.metadata.name,RESTARTS:.status.containerStatuses[0].restartCount --no-headers --sort-by=.status.containerStatuses[0].restartCount | awk \'$3 > 0\' | sort -k3 -rn',
+alts:['kubectl get pods -A --no-headers | awk \'$5 > 0 {print $1, $2, $5}\' | sort -k3 -rn'],
+expl:'The simple awk approach on default output works because restart count is column 5 in standard kubectl get pods output. Sometimes the fastest solution is the dumbest one.'},
+
+{q:'Write a one-liner that checks if a specific deployment <code>web</code> in namespace <code>prod</code> has all replicas ready, outputting "OK" or "NOT READY".',
+diff:'hard',
+ctx:'Hint: compare .status.readyReplicas to .spec.replicas',
+ans:'[ "$(kubectl get deploy web -n prod -o jsonpath=\'{.status.readyReplicas}\')" = "$(kubectl get deploy web -n prod -o jsonpath=\'{.spec.replicas}\')" ] && echo "OK" || echo "NOT READY"',
+alts:['kubectl get deploy web -n prod -o jsonpath=\'{.status.readyReplicas}/{.spec.replicas}\' | grep -q "^\\(.\\+\\)/\\1$" && echo "OK" || echo "NOT READY"'],
+expl:'Compare two jsonpath values with bash test [ ]. && runs on match (OK), || runs on mismatch (NOT READY). This pattern is useful for scripting health checks.'},
+
+];
+
+function renderDrills(containerId, drills, prefix){
+const el=document.getElementById(containerId);
+drills.forEach((d,i)=>{
+const id=prefix+i;
+el.innerHTML+=`<div class="drill" id="d-${id}">
+<div class="drill-hdr">
+<span class="drill-num">DRILL ${i+1}/${drills.length}</span>
+<span class="drill-diff ${d.diff}">${d.diff}</span>
+</div>
+<div class="drill-body">
+<div class="drill-q">${d.q}</div>
+<div class="drill-ctx">${d.ctx}</div>
+<div class="drill-input-wrap">
+<input class="drill-input" id="in-${id}" placeholder="type your command here..." onkeydown="if(event.key==='Enter')checkDrill('${id}',${i},'${prefix}')">
+<button class="drill-check" onclick="checkDrill('${id}',${i},'${prefix}')">Check</button>
+</div>
+<div class="drill-fb" id="fb-${id}"></div>
+<button class="drill-reveal" onclick="revealAnswer('${id}')">Show answer</button>
+<div class="drill-answer" id="ans-${id}"><span class="expl">${d.expl}</span></div>
+</div></div>`;
+});
+}
+
+function getDrillSet(prefix){
+if(prefix==='jp') return jpDrills;
+if(prefix==='bs') return bashDrills;
+return comboDrills;
+}
+
+function normalize(s){
+return s.replace(/['"]/g,'').replace(/\s+/g,' ').trim().toLowerCase();
+}
+
+function checkDrill(id, idx, prefix){
+const drills=getDrillSet(prefix);
+const input=document.getElementById('in-'+id).value.trim();
+const fb=document.getElementById('fb-'+id);
+const card=document.getElementById('d-'+id);
+
+if(!input){fb.className='drill-fb show no';fb.textContent='Type a command first.';return;}
+
+const norm=normalize(input);
+const ansNorm=normalize(drills[idx].ans);
+const altsNorm=(drills[idx].alts||[]).map(normalize);
+
+const isCorrect=norm===ansNorm||altsNorm.some(a=>norm===a)||
+  (norm.includes('jsonpath')&&ansNorm.includes('jsonpath')&&
+   norm.replace(/jsonpath/g,'').includes(ansNorm.replace(/[^a-z0-9.]/g,'').substring(0,20)));
+
+// More flexible: check if key parts are present
+const keyParts=ansNorm.split(/\s+/).filter(p=>p.length>3);
+const matchCount=keyParts.filter(p=>norm.includes(p)).length;
+const partialMatch=matchCount/keyParts.length>0.6;
+
+if(isCorrect||partialMatch&&matchCount>3){
+  fb.className='drill-fb show ok';
+  fb.innerHTML='✓ Correct! '+drills[idx].expl;
+  card.classList.add('correct-d');
+  if(!card.dataset.solved){card.dataset.solved='1';solved++;updateProgress();}
+}else{
+  fb.className='drill-fb show no';
+  fb.innerHTML='✗ Not quite. Key parts missing. Click "Show answer" to see the expected command.';
+  card.classList.add('wrong-d');
+  setTimeout(()=>card.classList.remove('wrong-d'),1500);
+}
+}
+
+function revealAnswer(id){
+const el=document.getElementById('ans-'+id);
+const prefix=id.substring(0,2);
+const idx=parseInt(id.substring(2));
+const drills=getDrillSet(prefix);
+if(!el.classList.contains('show')){
+  const ansLine=drills[idx].ans;
+  const alts=drills[idx].alts||[];
+  let html='<b>Best answer:</b>\n'+ansLine;
+  if(alts.length) html+='\n\n<b>Also accepted:</b>\n'+alts.join('\n');
+  html+='\n\n<span class="expl">'+drills[idx].expl+'</span>';
+  el.innerHTML=html;
+}
+el.classList.toggle('show');
+}
+
+function updateProgress(){
+document.getElementById('pf').style.width=(solved/totalDrills*100)+'%';
+document.getElementById('pt').textContent=solved+' / '+totalDrills+' drills';
+}
+
+function showPane(el,id){
+document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+el.classList.add('active');
+document.getElementById(id).classList.add('active');
+}
+
+renderDrills('jp-drills',jpDrills,'jp');
+renderDrills('bash-drills',bashDrills,'bs');
+renderDrills('combo-drills',comboDrills,'cb');
+</script>
+</body>
+</html>

@@ -1,0 +1,2008 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CKA Study Guide 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;1,400&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0d1117;
+  --surface: #161b22;
+  --surface2: #1c2128;
+  --border: #30363d;
+  --accent: #58a6ff;
+  --accent2: #3fb950;
+  --accent3: #f78166;
+  --accent4: #d2a8ff;
+  --accent5: #ffa657;
+  --text: #c9d1d9;
+  --muted: #6e7681;
+  --heading: #f0f6fc;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'IBM Plex Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* LAYOUT */
+.app { display: grid; grid-template-columns: 280px 1fr; min-height: 100vh; }
+
+/* SIDEBAR */
+nav {
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.nav-header {
+  padding: 24px 20px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.nav-title {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--heading);
+  letter-spacing: 0.5px;
+}
+
+.nav-sub {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 3px;
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.progress-bar {
+  margin-top: 12px;
+  height: 3px;
+  background: var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  border-radius: 3px;
+  transition: width 0.4s ease;
+}
+
+.progress-label {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 4px;
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.nav-chapter {
+  padding: 6px 12px;
+  margin: 8px 8px 0;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: background 0.15s;
+  border: 1px solid transparent;
+  position: relative;
+}
+
+.nav-chapter:hover { background: var(--surface2); }
+
+.nav-chapter.active {
+  background: rgba(88,166,255,0.1);
+  border-color: rgba(88,166,255,0.2);
+}
+
+.nav-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.nav-chapter-text { flex: 1; }
+.nav-chapter-name {
+  font-size: 12px;
+  color: var(--text);
+  font-weight: 500;
+  line-height: 1.3;
+}
+.nav-chapter.active .nav-chapter-name { color: var(--accent); }
+
+.nav-chapter-ts {
+  font-size: 10px;
+  color: var(--muted);
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.nav-check {
+  font-size: 11px;
+  color: var(--accent2);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.nav-chapter.done .nav-check { opacity: 1; }
+
+.nav-footer {
+  margin-top: auto;
+  padding: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.source-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--muted);
+  text-decoration: none;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  transition: all 0.15s;
+}
+
+.source-link:hover { color: var(--accent); border-color: var(--accent); }
+
+/* MAIN */
+main {
+  padding: 0;
+  overflow: hidden;
+}
+
+.chapter {
+  display: none;
+  animation: fadeUp 0.25s ease;
+}
+
+.chapter.active { display: block; }
+
+@keyframes fadeUp {
+  from { opacity:0; transform: translateY(6px); }
+  to { opacity:1; transform: translateY(0); }
+}
+
+/* CHAPTER HEADER */
+.chapter-header {
+  padding: 48px 56px 36px;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+
+.chapter-header::before {
+  content: attr(data-num);
+  position: absolute;
+  right: 40px;
+  top: 20px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 80px;
+  font-weight: 600;
+  opacity: 0.04;
+  color: var(--heading);
+  line-height: 1;
+  pointer-events: none;
+}
+
+.chapter-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  margin-bottom: 12px;
+  font-weight: 500;
+}
+
+.chapter-title {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 26px;
+  font-weight: 600;
+  color: var(--heading);
+  line-height: 1.2;
+  margin-bottom: 12px;
+  letter-spacing: -0.5px;
+}
+
+.chapter-desc {
+  font-size: 14px;
+  color: var(--muted);
+  max-width: 600px;
+  line-height: 1.7;
+}
+
+.chapter-meta {
+  display: flex;
+  gap: 20px;
+  margin-top: 16px;
+}
+
+.chapter-meta span {
+  font-size: 12px;
+  color: var(--muted);
+  font-family: 'IBM Plex Mono', monospace;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.chapter-meta span b { color: var(--text); font-weight: 500; }
+
+/* TABS */
+.chapter-tabs {
+  display: flex;
+  padding: 0 56px;
+  border-bottom: 1px solid var(--border);
+  gap: 0;
+}
+
+.ctab {
+  padding: 14px 20px;
+  font-size: 13px;
+  color: var(--muted);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: all 0.15s;
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 500;
+}
+
+.ctab:hover { color: var(--text); }
+.ctab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+/* CONTENT AREA */
+.chapter-body {
+  padding: 40px 56px;
+  max-width: 880px;
+}
+
+.tab-pane { display: none; }
+.tab-pane.active { display: block; }
+
+/* LESSON CONTENT */
+h3 {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--heading);
+  margin: 28px 0 12px;
+}
+
+h3:first-child { margin-top: 0; }
+
+p { color: var(--text); margin-bottom: 12px; font-size: 14px; }
+
+.concept-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 16px 0 24px;
+}
+
+.concept-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.concept-card-title {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--heading);
+  margin-bottom: 6px;
+}
+
+.concept-card-body {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+/* CODE BLOCKS */
+.code-block {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin: 12px 0 20px;
+  overflow: hidden;
+}
+
+.code-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 14px;
+  background: var(--surface2);
+  border-bottom: 1px solid var(--border);
+}
+
+.code-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.copy-btn {
+  font-size: 11px;
+  color: var(--muted);
+  background: none;
+  border: 1px solid var(--border);
+  padding: 3px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: 'IBM Plex Mono', monospace;
+  transition: all 0.15s;
+}
+
+.copy-btn:hover { color: var(--accent); border-color: var(--accent); }
+
+pre {
+  padding: 16px;
+  overflow-x: auto;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text);
+}
+
+/* keyword highlighting */
+.k { color: var(--accent4); }
+.s { color: var(--accent2); }
+.c { color: var(--muted); font-style: italic; }
+.f { color: var(--accent5); }
+.v { color: var(--accent); }
+
+/* CALLOUTS */
+.callout {
+  padding: 14px 18px;
+  border-radius: 8px;
+  margin: 16px 0;
+  font-size: 13px;
+  line-height: 1.6;
+  border-left: 3px solid;
+}
+
+.callout.tip { background: rgba(63,185,80,0.06); border-color: var(--accent2); color: #a5d6a7; }
+.callout.warn { background: rgba(255,166,87,0.06); border-color: var(--accent5); color: #ffcc80; }
+.callout.exam { background: rgba(88,166,255,0.06); border-color: var(--accent); color: #90caf9; }
+.callout.danger { background: rgba(247,129,102,0.06); border-color: var(--accent3); color: #ffab91; }
+
+.callout strong { display: block; font-weight: 600; margin-bottom: 4px; font-family: 'IBM Plex Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+/* EXERCISES */
+.exercise {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin: 20px 0;
+  overflow: hidden;
+}
+
+.exercise-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  background: var(--surface2);
+  border-bottom: 1px solid var(--border);
+}
+
+.exercise-num {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.exercise-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--heading);
+}
+
+.difficulty {
+  font-size: 11px;
+  font-family: 'IBM Plex Mono', monospace;
+  padding: 3px 10px;
+  border-radius: 4px;
+}
+
+.difficulty.easy { background: rgba(63,185,80,0.15); color: var(--accent2); }
+.difficulty.medium { background: rgba(255,166,87,0.15); color: var(--accent5); }
+.difficulty.hard { background: rgba(247,129,102,0.15); color: var(--accent3); }
+
+.exercise-body { padding: 18px; }
+
+.exercise-task {
+  font-size: 13px;
+  color: var(--text);
+  margin-bottom: 14px;
+  line-height: 1.7;
+}
+
+.hint-toggle {
+  font-size: 12px;
+  color: var(--muted);
+  cursor: pointer;
+  font-family: 'IBM Plex Mono', monospace;
+  background: none;
+  border: 1px solid var(--border);
+  padding: 5px 12px;
+  border-radius: 4px;
+  transition: all 0.15s;
+  margin-right: 8px;
+}
+
+.hint-toggle:hover { color: var(--accent5); border-color: var(--accent5); }
+
+.solution-toggle {
+  font-size: 12px;
+  color: var(--muted);
+  cursor: pointer;
+  font-family: 'IBM Plex Mono', monospace;
+  background: none;
+  border: 1px solid var(--border);
+  padding: 5px 12px;
+  border-radius: 4px;
+  transition: all 0.15s;
+}
+
+.solution-toggle:hover { color: var(--accent); border-color: var(--accent); }
+
+.hint-box, .solution-box {
+  display: none;
+  margin-top: 12px;
+  padding: 12px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.hint-box { background: rgba(255,166,87,0.06); border: 1px solid rgba(255,166,87,0.2); color: #ffcc80; }
+.solution-box { background: rgba(88,166,255,0.06); border: 1px solid rgba(88,166,255,0.2); color: var(--text); }
+
+.hint-box.visible, .solution-box.visible { display: block; }
+
+/* QUIZ */
+.quiz-q {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.quiz-question {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--heading);
+  margin-bottom: 14px;
+  line-height: 1.6;
+}
+
+.quiz-options { display: flex; flex-direction: column; gap: 8px; }
+
+.quiz-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: all 0.15s;
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.5;
+}
+
+.quiz-option:hover { background: var(--surface2); border-color: var(--muted); }
+.quiz-option.selected { background: rgba(88,166,255,0.08); border-color: var(--accent); }
+.quiz-option.correct { background: rgba(63,185,80,0.1); border-color: var(--accent2); color: #a5d6a7; }
+.quiz-option.wrong { background: rgba(247,129,102,0.1); border-color: var(--accent3); color: #ffab91; }
+
+.quiz-letter {
+  width: 22px; height: 22px;
+  border-radius: 4px;
+  background: var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.quiz-feedback {
+  display: none;
+  margin-top: 12px;
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.quiz-feedback.show { display: block; }
+.quiz-feedback.correct-f { background: rgba(63,185,80,0.08); border: 1px solid rgba(63,185,80,0.2); color: #a5d6a7; }
+.quiz-feedback.wrong-f { background: rgba(247,129,102,0.08); border: 1px solid rgba(247,129,102,0.2); color: #ffab91; }
+
+.check-btn {
+  margin-top: 12px;
+  padding: 7px 18px;
+  background: rgba(88,166,255,0.1);
+  border: 1px solid rgba(88,166,255,0.3);
+  border-radius: 6px;
+  color: var(--accent);
+  font-size: 12px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.check-btn:hover { background: rgba(88,166,255,0.2); }
+
+/* DONE BUTTON */
+.mark-done-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 32px;
+  padding: 10px 24px;
+  background: rgba(63,185,80,0.08);
+  border: 1px solid rgba(63,185,80,0.25);
+  border-radius: 8px;
+  color: var(--accent2);
+  font-size: 13px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.mark-done-btn:hover { background: rgba(63,185,80,0.15); }
+.mark-done-btn.done-state { opacity: 0.5; cursor: default; }
+
+/* CHEATSHEET TABLE */
+table { width: 100%; border-collapse: collapse; margin: 16px 0 24px; font-size: 13px; }
+th { text-align: left; padding: 10px 14px; background: var(--surface2); color: var(--muted); font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border); }
+td { padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+tr:last-child td { border-bottom: none; }
+td code { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--accent4); background: var(--surface2); padding: 1px 6px; border-radius: 3px; }
+
+/* SCROLL */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- SIDEBAR NAV -->
+<nav>
+  <div class="nav-header">
+    <div class="nav-title">CKA Study Guide</div>
+    <div class="nav-sub">2026 · freeCodeCamp source</div>
+    <div class="progress-bar"><div class="progress-fill" id="globalProgress" style="width:0%"></div></div>
+    <div class="progress-label" id="progressLabel">0 / 6 chapters</div>
+  </div>
+
+  <div style="padding: 12px 8px 8px;">
+    <div class="nav-chapter active" onclick="showChapter(0)" id="nav0">
+      <div class="nav-dot" style="background:#58a6ff"></div>
+      <div class="nav-chapter-text">
+        <div class="nav-chapter-name">Kubernetes Fundamentals</div>
+        <div class="nav-chapter-ts">0:06:23</div>
+      </div>
+      <span class="nav-check">✓</span>
+    </div>
+    <div class="nav-chapter" onclick="showChapter(1)" id="nav1">
+      <div class="nav-dot" style="background:#d2a8ff"></div>
+      <div class="nav-chapter-text">
+        <div class="nav-chapter-name">Cluster Architecture & Config</div>
+        <div class="nav-chapter-ts">0:22:09</div>
+      </div>
+      <span class="nav-check">✓</span>
+    </div>
+    <div class="nav-chapter" onclick="showChapter(2)" id="nav2">
+      <div class="nav-dot" style="background:#ffa657"></div>
+      <div class="nav-chapter-text">
+        <div class="nav-chapter-name">Workloads & Scheduling</div>
+        <div class="nav-chapter-ts">0:55:23</div>
+      </div>
+      <span class="nav-check">✓</span>
+    </div>
+    <div class="nav-chapter" onclick="showChapter(3)" id="nav3">
+      <div class="nav-dot" style="background:#3fb950"></div>
+      <div class="nav-chapter-text">
+        <div class="nav-chapter-name">Services & Networking</div>
+        <div class="nav-chapter-ts">1:26:04</div>
+      </div>
+      <span class="nav-check">✓</span>
+    </div>
+    <div class="nav-chapter" onclick="showChapter(4)" id="nav4">
+      <div class="nav-dot" style="background:#f78166"></div>
+      <div class="nav-chapter-text">
+        <div class="nav-chapter-name">Storage</div>
+        <div class="nav-chapter-ts">1:43:45</div>
+      </div>
+      <span class="nav-check">✓</span>
+    </div>
+    <div class="nav-chapter" onclick="showChapter(5)" id="nav5">
+      <div class="nav-dot" style="background:#e3b341"></div>
+      <div class="nav-chapter-text">
+        <div class="nav-chapter-name">Troubleshooting</div>
+        <div class="nav-chapter-ts">1:55:31</div>
+      </div>
+      <span class="nav-check">✓</span>
+    </div>
+  </div>
+
+  <div class="nav-footer">
+    <a href="https://youtu.be/l57xKN6OBhY" target="_blank" class="source-link">
+      ▶ Source: freeCodeCamp CKA 2026
+    </a>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<main>
+
+<!-- ===== CHAPTER 0: FUNDAMENTALS ===== -->
+<div class="chapter active" id="ch0">
+  <div class="chapter-header" data-num="01">
+    <div class="chapter-badge" style="background:rgba(88,166,255,0.1);color:#58a6ff;">Chapter 1</div>
+    <div class="chapter-title">Kubernetes Fundamentals</div>
+    <div class="chapter-desc">Architecture overview, core objects, and setting up a CKA practice environment. The foundation everything else builds on.</div>
+    <div class="chapter-meta">
+      <span>⏱ <b>~16 min</b> video</span>
+      <span>📖 <b>3</b> lessons</span>
+      <span>🔧 <b>4</b> exercises</span>
+      <span>❓ <b>5</b> quiz questions</span>
+    </div>
+  </div>
+  <div class="chapter-tabs">
+    <div class="ctab active" onclick="switchTab(this,'t0-lesson')">Lesson</div>
+    <div class="ctab" onclick="switchTab(this,'t0-exercises')">Exercises</div>
+    <div class="ctab" onclick="switchTab(this,'t0-quiz')">Quiz</div>
+    <div class="ctab" onclick="switchTab(this,'t0-cheatsheet')">Cheatsheet</div>
+  </div>
+  <div class="chapter-body">
+
+    <div class="tab-pane active" id="t0-lesson">
+      <h3>Kubernetes Architecture</h3>
+      <p>Kubernetes is a container orchestration platform. The cluster is split into two planes: the <strong>control plane</strong> (the brain) and <strong>worker nodes</strong> (the muscle).</p>
+      <div class="concept-grid">
+        <div class="concept-card">
+          <div class="concept-card-title" style="color:#58a6ff">Control Plane</div>
+          <div class="concept-card-body"><b>kube-apiserver</b> — all cluster communication goes through here<br><b>etcd</b> — distributed key-value store, the source of truth<br><b>kube-scheduler</b> — assigns pods to nodes<br><b>kube-controller-manager</b> — reconciliation loops<br><b>cloud-controller-manager</b> — cloud provider integration</div>
+        </div>
+        <div class="concept-card">
+          <div class="concept-card-title" style="color:#3fb950">Worker Node</div>
+          <div class="concept-card-body"><b>kubelet</b> — agent that runs on every node, talks to apiserver<br><b>kube-proxy</b> — handles pod networking rules (iptables/ipvs)<br><b>container runtime</b> — containerd or CRI-O (not Docker directly)<br><b>pods</b> — the actual workloads running here</div>
+        </div>
+      </div>
+      <div class="callout exam"><strong>CKA Exam Note</strong> Know the exact names and responsibilities of each component. You will be asked to troubleshoot failing components by name — e.g. "the scheduler is not running, pods are Pending".</div>
+
+      <h3>Core Objects</h3>
+      <div class="concept-grid">
+        <div class="concept-card"><div class="concept-card-title">Pod</div><div class="concept-card-body">Smallest deployable unit. One or more containers sharing network + storage. Ephemeral — never manually restart a Pod, fix the controller.</div></div>
+        <div class="concept-card"><div class="concept-card-title">Deployment</div><div class="concept-card-body">Manages ReplicaSets. Handles rolling updates and rollbacks. Always use Deployments for stateless apps, not bare Pods.</div></div>
+        <div class="concept-card"><div class="concept-card-title">Service</div><div class="concept-card-body">Stable network endpoint for a set of Pods. Types: ClusterIP (internal), NodePort (external via node), LoadBalancer (cloud LB).</div></div>
+        <div class="concept-card"><div class="concept-card-title">Namespace</div><div class="concept-card-body">Virtual cluster within a cluster. Scope for RBAC, resource quotas. Default namespaces: default, kube-system, kube-public.</div></div>
+      </div>
+
+      <h3>Setting Up Your Practice Environment</h3>
+      <p>For CKA prep you need a multi-node cluster. Your aks-project on AKS is perfect. You can also spin up a local kind or k3s cluster for offline practice.</p>
+      <div class="code-block">
+        <div class="code-header"><span class="code-label">kind — local multi-node cluster</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+        <pre><span class="c"># kind-config.yaml</span>
+<span class="k">kind</span>: Cluster
+<span class="k">apiVersion</span>: kind.x-k8s.io/v1alpha4
+<span class="k">nodes</span>:
+- <span class="k">role</span>: <span class="s">control-plane</span>
+- <span class="k">role</span>: <span class="s">worker</span>
+- <span class="k">role</span>: <span class="s">worker</span>
+
+<span class="c"># Create the cluster</span>
+kind create cluster --config kind-config.yaml --name cka-lab
+
+<span class="c"># Verify</span>
+kubectl get nodes</pre>
+      </div>
+      <div class="callout tip"><strong>Exam Tip</strong> The CKA exam gives you 6 clusters. You switch between them with <code>kubectl config use-context</code>. Practice this. Forgetting to switch context is one of the most common mistakes.</div>
+    </div>
+
+    <div class="tab-pane" id="t0-exercises">
+      <div class="exercise">
+        <div class="exercise-header">
+          <div><div class="exercise-num">Exercise 1</div><div class="exercise-title">Explore the control plane components</div></div>
+          <span class="difficulty easy">Easy</span>
+        </div>
+        <div class="exercise-body">
+          <div class="exercise-task">List all pods running in the <code>kube-system</code> namespace. Identify which pod corresponds to each control plane component (apiserver, etcd, scheduler, controller-manager). Note which node they run on.</div>
+          <button class="hint-toggle" onclick="toggleBox(this, 'hint')">Show hint</button>
+          <button class="solution-toggle" onclick="toggleBox(this, 'solution')">Show solution</button>
+          <div class="hint-box">Control plane components in a kubeadm cluster run as static pods in kube-system. Use -o wide to see the node.</div>
+          <div class="solution-box"><code>kubectl get pods -n kube-system -o wide</code><br><br>Look for pods named: kube-apiserver-*, etcd-*, kube-scheduler-*, kube-controller-manager-*. They should all run on the control-plane node.</div>
+        </div>
+      </div>
+      <div class="exercise">
+        <div class="exercise-header">
+          <div><div class="exercise-num">Exercise 2</div><div class="exercise-title">Create a pod imperatively and declaratively</div></div>
+          <span class="difficulty easy">Easy</span>
+        </div>
+        <div class="exercise-body">
+          <div class="exercise-task">Create an nginx pod named <code>web-test</code> in the <code>default</code> namespace using an imperative command. Then generate its YAML, save it, delete the pod, and recreate it from the YAML file.</div>
+          <button class="hint-toggle" onclick="toggleBox(this, 'hint')">Show hint</button>
+          <button class="solution-toggle" onclick="toggleBox(this, 'solution')">Show solution</button>
+          <div class="hint-box">Use --dry-run=client -o yaml to generate YAML without creating the resource. This is the single most important CKA technique.</div>
+          <div class="solution-box"><code>kubectl run web-test --image=nginx --dry-run=client -o yaml > pod.yaml</code><br><code>kubectl apply -f pod.yaml</code><br><code>kubectl delete pod web-test</code><br><code>kubectl apply -f pod.yaml</code></div>
+        </div>
+      </div>
+      <div class="exercise">
+        <div class="exercise-header">
+          <div><div class="exercise-num">Exercise 3</div><div class="exercise-title">Context switching</div></div>
+          <span class="difficulty easy">Easy</span>
+        </div>
+        <div class="exercise-body">
+          <div class="exercise-task">List all contexts in your kubeconfig. Switch to a different context, verify you switched, then switch back. Set a namespace as the default for the current context so you don't need to pass -n on every command.</div>
+          <button class="solution-toggle" onclick="toggleBox(this, 'solution')">Show solution</button>
+          <div class="solution-box"><code>kubectl config get-contexts</code><br><code>kubectl config use-context &lt;name&gt;</code><br><code>kubectl config current-context</code><br><code>kubectl config set-context --current --namespace=kube-system</code></div>
+        </div>
+      </div>
+      <div class="exercise">
+        <div class="exercise-header">
+          <div><div class="exercise-num">Exercise 4</div><div class="exercise-title">Decode cluster info</div></div>
+          <span class="difficulty medium">Medium</span>
+        </div>
+        <div class="exercise-body">
+          <div class="exercise-task">Find the version of the Kubernetes cluster, the container runtime being used on each node, and how much allocatable CPU and memory each node has. Output this information without using any external tools.</div>
+          <button class="solution-toggle" onclick="toggleBox(this, 'solution')">Show solution</button>
+          <div class="solution-box"><code>kubectl version</code><br><code>kubectl get nodes -o wide</code>  (shows container runtime)<br><code>kubectl describe node &lt;name&gt; | grep -A5 Allocatable</code></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-pane" id="t0-quiz">
+      <div class="quiz-q" id="q0-0">
+        <div class="quiz-question">1. Which control plane component is responsible for storing the cluster state?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">A</span>kube-apiserver</div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">B</span>etcd</div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">C</span>kube-controller-manager</div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">D</span>kube-scheduler</div>
+        </div>
+        <button class="check-btn" onclick="checkAnswer(this, 1, 'etcd is the distributed key-value store that holds all cluster state. The apiserver reads and writes to etcd — it never holds state itself.')">Check answer</button>
+        <div class="quiz-feedback"></div>
+      </div>
+      <div class="quiz-q" id="q0-1">
+        <div class="quiz-question">2. A pod is in Pending state and no events show scheduling errors. Which component is most likely failing?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">A</span>kubelet</div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">B</span>kube-proxy</div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">C</span>kube-scheduler</div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">D</span>etcd</div>
+        </div>
+        <button class="check-btn" onclick="checkAnswer(this, 2, 'The scheduler assigns pods to nodes. If it is not running, pods stay Pending indefinitely with no scheduling events.')">Check answer</button>
+        <div class="quiz-feedback"></div>
+      </div>
+      <div class="quiz-q">
+        <div class="quiz-question">3. What is the correct command to generate a pod YAML without creating the pod?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">A</span><code>kubectl run nginx --image=nginx --output yaml</code></div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">B</span><code>kubectl run nginx --image=nginx --dry-run=client -o yaml</code></div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">C</span><code>kubectl create pod nginx --image=nginx --dry-run</code></div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">D</span><code>kubectl run nginx --image=nginx --preview</code></div>
+        </div>
+        <button class="check-btn" onclick="checkAnswer(this, 1, '--dry-run=client -o yaml is the canonical way to generate manifests. Memorise this — you will use it in almost every CKA task.')">Check answer</button>
+        <div class="quiz-feedback"></div>
+      </div>
+      <div class="quiz-q">
+        <div class="quiz-question">4. Which namespace contains Kubernetes system components?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">A</span>default</div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">B</span>kube-public</div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">C</span>kube-system</div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">D</span>system</div>
+        </div>
+        <button class="check-btn" onclick="checkAnswer(this, 2, 'kube-system contains all core components: apiserver, etcd, scheduler, controller-manager, CoreDNS, kube-proxy.')">Check answer</button>
+        <div class="quiz-feedback"></div>
+      </div>
+      <div class="quiz-q">
+        <div class="quiz-question">5. What is the role of the kubelet?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">A</span>Routes traffic between services</div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">B</span>Schedules pods to nodes</div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">C</span>Runs on every node and ensures containers match the desired state</div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">D</span>Stores cluster state</div>
+        </div>
+        <button class="check-btn" onclick="checkAnswer(this, 2, 'The kubelet is the node agent. It watches the apiserver for pod specs assigned to its node and ensures the containers are running and healthy.')">Check answer</button>
+        <div class="quiz-feedback"></div>
+      </div>
+    </div>
+
+    <div class="tab-pane" id="t0-cheatsheet">
+      <h3>Essential Commands — Fundamentals</h3>
+      <table>
+        <tr><th>Command</th><th>What it does</th></tr>
+        <tr><td><code>kubectl get nodes -o wide</code></td><td>List nodes with IP, OS, container runtime</td></tr>
+        <tr><td><code>kubectl describe node &lt;name&gt;</code></td><td>Full node detail — taints, capacity, conditions</td></tr>
+        <tr><td><code>kubectl get pods -A</code></td><td>All pods across all namespaces</td></tr>
+        <tr><td><code>kubectl run &lt;name&gt; --image=&lt;img&gt; --dry-run=client -o yaml</code></td><td>Generate pod YAML</td></tr>
+        <tr><td><code>kubectl config use-context &lt;ctx&gt;</code></td><td>Switch cluster context</td></tr>
+        <tr><td><code>kubectl config set-context --current --namespace=&lt;ns&gt;</code></td><td>Set default namespace</td></tr>
+        <tr><td><code>kubectl explain pod.spec</code></td><td>Inline API docs — use this during the exam</td></tr>
+        <tr><td><code>kubectl api-resources</code></td><td>List all resource types + their shortnames</td></tr>
+      </table>
+    </div>
+
+    <button class="mark-done-btn" id="done-btn-0" onclick="markDone(0)">✓ Mark chapter complete</button>
+  </div>
+</div>
+
+<!-- ===== CHAPTER 1: CLUSTER ARCH ===== -->
+<div class="chapter" id="ch1">
+  <div class="chapter-header" data-num="02">
+    <div class="chapter-badge" style="background:rgba(210,168,255,0.1);color:#d2a8ff;">Chapter 2</div>
+    <div class="chapter-title">Cluster Architecture, Installation & Config</div>
+    <div class="chapter-desc">kubeadm bootstrapping, HA control plane, RBAC, Helm, Kustomize, and cluster lifecycle management.</div>
+    <div class="chapter-meta">
+      <span>⏱ <b>~33 min</b> video</span>
+      <span>📖 <b>4</b> lessons</span>
+      <span>🔧 <b>4</b> exercises</span>
+      <span>❓ <b>5</b> quiz questions</span>
+    </div>
+  </div>
+  <div class="chapter-tabs">
+    <div class="ctab active" onclick="switchTab(this,'t1-lesson')">Lesson</div>
+    <div class="ctab" onclick="switchTab(this,'t1-exercises')">Exercises</div>
+    <div class="ctab" onclick="switchTab(this,'t1-quiz')">Quiz</div>
+    <div class="ctab" onclick="switchTab(this,'t1-cheatsheet')">Cheatsheet</div>
+  </div>
+  <div class="chapter-body">
+
+    <div class="tab-pane active" id="t1-lesson">
+      <h3>Bootstrapping a Cluster with kubeadm</h3>
+      <p>kubeadm is the official tool to bootstrap a production-grade cluster. The flow is: init the control plane → configure kubectl → install a CNI → join worker nodes.</p>
+      <div class="code-block">
+        <div class="code-header"><span class="code-label">kubeadm init flow</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+        <pre><span class="c"># 1. Init control plane (run on control-plane node)</span>
+kubeadm init \
+  --pod-network-cidr=<span class="s">10.244.0.0/16</span> \
+  --apiserver-advertise-address=<span class="s">&lt;control-plane-ip&gt;</span>
+
+<span class="c"># 2. Set up kubeconfig</span>
+mkdir -p $HOME/.kube
+cp /etc/kubernetes/admin.conf $HOME/.kube/config
+
+<span class="c"># 3. Install CNI (Flannel example)</span>
+kubectl apply -f https://raw.githubusercontent.com/flannel-io/flannel/master/Documentation/kube-flannel.yml
+
+<span class="c"># 4. Join worker nodes (command printed by kubeadm init)</span>
+kubeadm join &lt;control-plane-ip&gt;:6443 \
+  --token &lt;token&gt; \
+  --discovery-token-ca-cert-hash sha256:&lt;hash&gt;</pre>
+      </div>
+      <div class="callout exam"><strong>CKA Exam Note</strong> You may be asked to join a node to an existing cluster. If the token has expired: <code>kubeadm token create --print-join-command</code></div>
+
+      <h3>RBAC — Role-Based Access Control</h3>
+      <p>RBAC controls who can do what in the cluster. Four key objects: <b>Role</b>, <b>ClusterRole</b>, <b>RoleBinding</b>, <b>ClusterRoleBinding</b>.</p>
+      <div class="concept-grid">
+        <div class="concept-card"><div class="concept-card-title">Role / ClusterRole</div><div class="concept-card-body">Defines permissions (verbs on resources). Role = namespace-scoped. ClusterRole = cluster-wide OR can be bound namespace-scoped.</div></div>
+        <div class="concept-card"><div class="concept-card-title">RoleBinding / ClusterRoleBinding</div><div class="concept-card-body">Grants a Role to a user/group/serviceaccount. RoleBinding = namespace. ClusterRoleBinding = cluster-wide.</div></div>
+      </div>
+      <div class="code-block">
+        <div class="code-header"><span class="code-label">RBAC — create and bind imperatively</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+        <pre><span class="c"># Create a Role allowing pod reads in 'dev' namespace</span>
+kubectl create role pod-reader \
+  --verb=get,list,watch \
+  --resource=pods \
+  --namespace=dev
+
+<span class="c"># Bind it to a user</span>
+kubectl create rolebinding read-pods \
+  --role=pod-reader \
+  --user=jane \
+  --namespace=dev
+
+<span class="c"># Verify what jane can do</span>
+kubectl auth can-i list pods --as=jane -n dev</pre>
+      </div>
+
+      <h3>Helm & Kustomize</h3>
+      <p>Helm is the package manager for Kubernetes. Kustomize is a template-free overlay system built into kubectl.</p>
+      <div class="code-block">
+        <div class="code-header"><span class="code-label">Helm essential commands</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+        <pre>helm repo add bitnami https://charts.bitnami.com/bitnami
+helm repo update
+helm search repo nginx
+helm install my-nginx bitnami/nginx --namespace web --create-namespace
+helm list -A
+helm upgrade my-nginx bitnami/nginx --set replicaCount=3
+helm rollback my-nginx 1
+helm uninstall my-nginx -n web</pre>
+      </div>
+      <div class="callout tip"><strong>Exam Tip</strong> For Kustomize: <code>kubectl apply -k ./dir</code> applies a kustomization directory. You don't need to memorise kustomization.yaml syntax deeply — focus on what the exam might ask: applying an overlay, changing a namespace, or setting a label.</div>
+    </div>
+
+    <div class="tab-pane" id="t1-exercises">
+      <div class="exercise">
+        <div class="exercise-header">
+          <div><div class="exercise-num">Exercise 1</div><div class="exercise-title">Create RBAC for a service account</div></div>
+          <span class="difficulty medium">Medium</span>
+        </div>
+        <div class="exercise-body">
+          <div class="exercise-task">Create a ServiceAccount named <code>app-reader</code> in namespace <code>staging</code>. Create a Role that allows listing and getting Deployments only. Bind the role to the service account. Verify the permissions.</div>
+          <button class="solution-toggle" onclick="toggleBox(this, 'solution')">Show solution</button>
+          <div class="solution-box">
+<code>kubectl create ns staging</code><br>
+<code>kubectl create sa app-reader -n staging</code><br>
+<code>kubectl create role deployment-reader --verb=get,list --resource=deployments -n staging</code><br>
+<code>kubectl create rolebinding app-reader-binding --role=deployment-reader --serviceaccount=staging:app-reader -n staging</code><br>
+<code>kubectl auth can-i list deployments --as=system:serviceaccount:staging:app-reader -n staging</code>
+          </div>
+        </div>
+      </div>
+      <div class="exercise">
+        <div class="exercise-header">
+          <div><div class="exercise-num">Exercise 2</div><div class="exercise-title">Upgrade a cluster with kubeadm</div></div>
+          <span class="difficulty hard">Hard</span>
+        </div>
+        <div class="exercise-body">
+          <div class="exercise-task">Describe the full kubeadm upgrade procedure for a single control-plane node cluster (steps only, conceptual). What must you do to worker nodes before upgrading them? What does <code>kubectl drain</code> do?</div>
+          <button class="solution-toggle" onclick="toggleBox(this, 'solution')">Show solution</button>
+          <div class="solution-box">
+1. <code>apt-get update && apt-cache madison kubeadm</code> — find target version<br>
+2. <code>apt-get install -y kubeadm=1.X.X-00</code><br>
+3. <code>kubeadm upgrade plan</code> — check what will change<br>
+4. <code>kubeadm upgrade apply v1.X.X</code> — upgrade control plane<br>
+5. <code>kubectl drain &lt;node&gt; --ignore-daemonsets</code> — evict pods from node<br>
+6. <code>apt-get install -y kubelet=1.X.X-00 kubectl=1.X.X-00</code><br>
+7. <code>systemctl restart kubelet</code><br>
+8. <code>kubectl uncordon &lt;node&gt;</code> — mark node schedulable again<br><br>
+kubectl drain evicts all pods (except DaemonSets) and marks the node unschedulable so no new pods land on it during the upgrade.
+          </div>
+        </div>
+      </div>
+      <div class="exercise">
+        <div class="exercise-header">
+          <div><div class="exercise-num">Exercise 3</div><div class="exercise-title">Inspect and renew certificates</div></div>
+          <span class="difficulty medium">Medium</span>
+        </div>
+        <div class="exercise-body">
+          <div class="exercise-task">Check when all kubeadm-managed certificates expire. Renew them all. Verify the renewal was successful.</div>
+          <button class="solution-toggle" onclick="toggleBox(this, 'solution')">Show solution</button>
+          <div class="solution-box">
+<code>kubeadm certs check-expiration</code><br>
+<code>kubeadm certs renew all</code><br>
+<code>kubeadm certs check-expiration</code>  (verify new expiry dates)<br><br>
+After renewal you must restart the static pod containers: <code>crictl rm $(crictl ps -a -q)</code> on the control-plane node, or simply reboot.
+          </div>
+        </div>
+      </div>
+      <div class="exercise">
+        <div class="exercise-header">
+          <div><div class="exercise-num">Exercise 4</div><div class="exercise-title">Deploy an app with Helm</div></div>
+          <span class="difficulty easy">Easy</span>
+        </div>
+        <div class="exercise-body">
+          <div class="exercise-task">Add the bitnami Helm repo, install nginx with 2 replicas into a namespace called <code>web</code>, then upgrade it to 3 replicas without editing any files.</div>
+          <button class="solution-toggle" onclick="toggleBox(this, 'solution')">Show solution</button>
+          <div class="solution-box">
+<code>helm repo add bitnami https://charts.bitnami.com/bitnami && helm repo update</code><br>
+<code>helm install my-nginx bitnami/nginx --set replicaCount=2 -n web --create-namespace</code><br>
+<code>helm upgrade my-nginx bitnami/nginx --set replicaCount=3 -n web</code>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-pane" id="t1-quiz">
+      <div class="quiz-q">
+        <div class="quiz-question">1. What command regenerates a kubeadm join token after it has expired?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">A</span><code>kubeadm token renew</code></div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">B</span><code>kubeadm token create --print-join-command</code></div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">C</span><code>kubeadm join --regenerate</code></div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">D</span><code>kubectl create token node</code></div>
+        </div>
+        <button class="check-btn" onclick="checkAnswer(this, 1, 'kubeadm token create --print-join-command creates a new bootstrap token and prints the complete join command.')">Check answer</button>
+        <div class="quiz-feedback"></div>
+      </div>
+      <div class="quiz-q">
+        <div class="quiz-question">2. A ClusterRole is bound to a user via a RoleBinding (not ClusterRoleBinding) in namespace "dev". What is the scope of their permissions?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">A</span>Cluster-wide</div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">B</span>Only namespace "dev"</div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">C</span>All namespaces except kube-system</div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">D</span>The binding is invalid</div>
+        </div>
+        <button class="check-btn" onclick="checkAnswer(this, 1, 'A RoleBinding always scopes permissions to its namespace — even when referencing a ClusterRole. This is a common exam trick.')">Check answer</button>
+        <div class="quiz-feedback"></div>
+      </div>
+      <div class="quiz-q">
+        <div class="quiz-question">3. What does <code>kubectl drain &lt;node&gt;</code> do?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">A</span>Deletes the node from the cluster</div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">B</span>Evicts all pods and marks the node unschedulable</div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">C</span>Marks the node unschedulable only</div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">D</span>Restarts the kubelet</div>
+        </div>
+        <button class="check-btn" onclick="checkAnswer(this, 1, 'drain = cordon (unschedulable) + evict all non-DaemonSet pods. Use before maintenance or upgrades.')">Check answer</button>
+        <div class="quiz-feedback"></div>
+      </div>
+      <div class="quiz-q">
+        <div class="quiz-question">4. Which verb checks what permissions a user has in Kubernetes?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">A</span><code>kubectl check-auth</code></div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">B</span><code>kubectl rbac verify</code></div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">C</span><code>kubectl auth can-i</code></div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">D</span><code>kubectl get permissions</code></div>
+        </div>
+        <button class="check-btn" onclick="checkAnswer(this, 2, 'kubectl auth can-i &lt;verb&gt; &lt;resource&gt; [--as=user] [-n namespace] — use this constantly in the exam to verify RBAC changes.')">Check answer</button>
+        <div class="quiz-feedback"></div>
+      </div>
+      <div class="quiz-q">
+        <div class="quiz-question">5. Where does kubeadm store TLS certificates on the control plane?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">A</span>/etc/ssl/kubernetes</div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">B</span>/var/lib/kubelet/pki</div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">C</span>/etc/kubernetes/pki</div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">D</span>/root/.kube/certs</div>
+        </div>
+        <button class="check-btn" onclick="checkAnswer(this, 2, '/etc/kubernetes/pki contains all cluster certificates including apiserver, etcd, front-proxy, and the CA.')">Check answer</button>
+        <div class="quiz-feedback"></div>
+      </div>
+    </div>
+
+    <div class="tab-pane" id="t1-cheatsheet">
+      <h3>Essential Commands — Architecture & Config</h3>
+      <table>
+        <tr><th>Command</th><th>What it does</th></tr>
+        <tr><td><code>kubeadm init --pod-network-cidr=X</code></td><td>Bootstrap control plane</td></tr>
+        <tr><td><code>kubeadm token create --print-join-command</code></td><td>Get fresh join command</td></tr>
+        <tr><td><code>kubeadm upgrade plan</code></td><td>Show available upgrades</td></tr>
+        <tr><td><code>kubeadm upgrade apply vX.X.X</code></td><td>Upgrade control plane</td></tr>
+        <tr><td><code>kubeadm certs check-expiration</code></td><td>Check cert expiry</td></tr>
+        <tr><td><code>kubeadm certs renew all</code></td><td>Renew all certs</td></tr>
+        <tr><td><code>kubectl drain &lt;node&gt; --ignore-daemonsets</code></td><td>Evacuate node</td></tr>
+        <tr><td><code>kubectl uncordon &lt;node&gt;</code></td><td>Make node schedulable again</td></tr>
+        <tr><td><code>kubectl auth can-i &lt;verb&gt; &lt;resource&gt; --as=&lt;user&gt;</code></td><td>Test RBAC permissions</td></tr>
+        <tr><td><code>kubectl create role/clusterrole ... --verb --resource</code></td><td>Create roles imperatively</td></tr>
+      </table>
+    </div>
+
+    <button class="mark-done-btn" id="done-btn-1" onclick="markDone(1)">✓ Mark chapter complete</button>
+  </div>
+</div>
+
+<!-- ===== CHAPTER 2: WORKLOADS ===== -->
+<div class="chapter" id="ch2">
+  <div class="chapter-header" data-num="03">
+    <div class="chapter-badge" style="background:rgba(255,166,87,0.1);color:#ffa657;">Chapter 3</div>
+    <div class="chapter-title">Workloads & Scheduling</div>
+    <div class="chapter-desc">Deployments, ConfigMaps, Secrets, autoscaling, pod affinity, taints and tolerations, resource limits.</div>
+    <div class="chapter-meta">
+      <span>⏱ <b>~31 min</b> video</span>
+      <span>📖 <b>4</b> lessons</span>
+      <span>🔧 <b>4</b> exercises</span>
+      <span>❓ <b>5</b> quiz questions</span>
+    </div>
+  </div>
+  <div class="chapter-tabs">
+    <div class="ctab active" onclick="switchTab(this,'t2-lesson')">Lesson</div>
+    <div class="ctab" onclick="switchTab(this,'t2-exercises')">Exercises</div>
+    <div class="ctab" onclick="switchTab(this,'t2-quiz')">Quiz</div>
+    <div class="ctab" onclick="switchTab(this,'t2-cheatsheet')">Cheatsheet</div>
+  </div>
+  <div class="chapter-body">
+    <div class="tab-pane active" id="t2-lesson">
+      <h3>Deployments & Rolling Updates</h3>
+      <p>Deployments manage ReplicaSets. The key mechanisms are: <b>rolling update</b> (zero-downtime, default), <b>Recreate</b> (all-at-once), rollback, and scaling.</p>
+      <div class="code-block">
+        <div class="code-header"><span class="code-label">Deployment operations</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+        <pre>kubectl create deployment web --image=nginx:1.21 --replicas=3
+
+<span class="c"># Rolling update</span>
+kubectl set image deployment/web nginx=nginx:1.23
+
+<span class="c"># Watch rollout progress</span>
+kubectl rollout status deployment/web
+
+<span class="c"># Rollback</span>
+kubectl rollout undo deployment/web
+
+<span class="c"># Rollback to specific revision</span>
+kubectl rollout undo deployment/web --to-revision=2
+
+<span class="c"># Pause/resume rollout</span>
+kubectl rollout pause deployment/web
+kubectl rollout resume deployment/web</pre>
+      </div>
+
+      <h3>ConfigMaps & Secrets</h3>
+      <div class="code-block">
+        <div class="code-header"><span class="code-label">ConfigMap + Secret usage</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+        <pre><span class="c"># Create ConfigMap</span>
+kubectl create configmap app-config \
+  --from-literal=ENV=production \
+  --from-literal=LOG_LEVEL=info
+
+<span class="c"># Create Secret (base64 encoded automatically)</span>
+kubectl create secret generic db-creds \
+  --from-literal=password=supersecret
+
+<span class="c"># Use in pod spec</span>
+<span class="k">env</span>:
+- <span class="k">name</span>: <span class="v">ENV</span>
+  <span class="k">valueFrom</span>:
+    <span class="k">configMapKeyRef</span>:
+      <span class="k">name</span>: <span class="s">app-config</span>
+      <span class="k">key</span>: <span class="s">ENV</span></pre>
+      </div>
+
+      <h3>Scheduling: Taints, Tolerations & Affinity</h3>
+      <div class="concept-grid">
+        <div class="concept-card"><div class="concept-card-title">Taints & Tolerations</div><div class="concept-card-body">Taints repel pods from nodes. Tolerations allow pods to be scheduled on tainted nodes. Effects: NoSchedule, PreferNoSchedule, NoExecute.</div></div>
+        <div class="concept-card"><div class="concept-card-title">Node Affinity</div><div class="concept-card-body">Attract pods to nodes based on labels. Required (hard rule) vs Preferred (soft rule). More expressive than nodeSelector.</div></div>
+        <div class="concept-card"><div class="concept-card-title">Resource Requests/Limits</div><div class="concept-card-body">requests = guaranteed minimum. limits = hard cap. Scheduler uses requests to fit pods. OOMKiller uses limits to evict.</div></div>
+        <div class="concept-card"><div class="concept-card-title">HPA</div><div class="concept-card-body">HorizontalPodAutoscaler scales replicas based on CPU/memory metrics. Requires metrics-server. Target: average utilization.</div></div>
+      </div>
+      <div class="callout exam"><strong>CKA Exam Note</strong> You will likely be asked to schedule a pod on a specific node using node affinity or nodeSelector, or to taint a node and add a toleration to a pod. Practice writing these specs from scratch.</div>
+    </div>
+
+    <div class="tab-pane" id="t2-exercises">
+      <div class="exercise">
+        <div class="exercise-header"><div><div class="exercise-num">Exercise 1</div><div class="exercise-title">Rolling update and rollback</div></div><span class="difficulty easy">Easy</span></div>
+        <div class="exercise-body">
+          <div class="exercise-task">Create a deployment with nginx:1.21 and 3 replicas. Update the image to nginx:1.25. Verify the rollout completed. Check the rollout history. Roll back to the previous version.</div>
+          <button class="solution-toggle" onclick="toggleBox(this, 'solution')">Show solution</button>
+          <div class="solution-box">
+<code>kubectl create deployment web --image=nginx:1.21 --replicas=3</code><br>
+<code>kubectl set image deployment/web nginx=nginx:1.25</code><br>
+<code>kubectl rollout status deployment/web</code><br>
+<code>kubectl rollout history deployment/web</code><br>
+<code>kubectl rollout undo deployment/web</code>
+          </div>
+        </div>
+      </div>
+      <div class="exercise">
+        <div class="exercise-header"><div><div class="exercise-num">Exercise 2</div><div class="exercise-title">Taint a node and schedule a pod on it</div></div><span class="difficulty medium">Medium</span></div>
+        <div class="exercise-body">
+          <div class="exercise-task">Taint a worker node with <code>env=prod:NoSchedule</code>. Create a pod that tolerates this taint. Verify the pod lands on the tainted node. Then remove the taint.</div>
+          <button class="solution-toggle" onclick="toggleBox(this, 'solution')">Show solution</button>
+          <div class="solution-box">
+<code>kubectl taint node &lt;worker&gt; env=prod:NoSchedule</code><br><br>
+Add to pod spec:<br>
+<code>tolerations:<br>- key: "env"<br>  operator: "Equal"<br>  value: "prod"<br>  effect: "NoSchedule"</code><br><br>
+Remove taint: <code>kubectl taint node &lt;worker&gt; env=prod:NoSchedule-</code>  (note the trailing -)
+          </div>
+        </div>
+      </div>
+      <div class="exercise">
+        <div class="exercise-header"><div><div class="exercise-num">Exercise 3</div><div class="exercise-title">Mount a ConfigMap as a volume</div></div><span class="difficulty medium">Medium</span></div>
+        <div class="exercise-body">
+          <div class="exercise-task">Create a ConfigMap with two keys (app.conf and db.conf, each with some text content). Mount it as a volume in a pod at <code>/etc/config/</code>. Exec into the pod and verify both files exist.</div>
+          <button class="solution-toggle" onclick="toggleBox(this, 'solution')">Show solution</button>
+          <div class="solution-box">
+<code>kubectl create configmap app-files --from-literal=app.conf="debug=true" --from-literal=db.conf="host=localhost"</code><br><br>
+In pod spec:<br>
+<code>volumes:<br>- name: config-vol<br>  configMap:<br>    name: app-files<br>containers:<br>- volumeMounts:<br>  - name: config-vol<br>    mountPath: /etc/config</code><br><br>
+<code>kubectl exec -it &lt;pod&gt; -- ls /etc/config</code>
+          </div>
+        </div>
+      </div>
+      <div class="exercise">
+        <div class="exercise-header"><div><div class="exercise-num">Exercise 4</div><div class="exercise-title">Create an HPA</div></div><span class="difficulty medium">Medium</span></div>
+        <div class="exercise-body">
+          <div class="exercise-task">Create a deployment with 1 replica. Create an HPA that scales it between 1–5 replicas, targeting 50% CPU utilization. Describe the HPA to verify it is correctly configured.</div>
+          <button class="solution-toggle" onclick="toggleBox(this, 'solution')">Show solution</button>
+          <div class="solution-box">
+<code>kubectl autoscale deployment web --min=1 --max=5 --cpu-percent=50</code><br>
+<code>kubectl describe hpa web</code>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-pane" id="t2-quiz">
+      <div class="quiz-q">
+        <div class="quiz-question">1. What is the difference between resource <code>requests</code> and <code>limits</code>?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">A</span>They are synonymous</div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">B</span>Requests are used by the scheduler; limits are enforced at runtime</div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">C</span>Limits are used by the scheduler; requests are enforced at runtime</div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">D</span>Requests are only for memory, limits are only for CPU</div>
+        </div>
+        <button class="check-btn" onclick="checkAnswer(this, 1, 'The scheduler uses requests to place pods on nodes with sufficient capacity. Limits are enforced by the container runtime — exceeding CPU limit = throttled, exceeding memory limit = OOMKilled.')">Check answer</button>
+        <div class="quiz-feedback"></div>
+      </div>
+      <div class="quiz-q">
+        <div class="quiz-question">2. How do you remove a taint from a node?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">A</span><code>kubectl untaint node &lt;name&gt; key=value:effect</code></div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">B</span><code>kubectl taint node &lt;name&gt; key=value:effect-</code></div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">C</span><code>kubectl delete taint &lt;name&gt; key</code></div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">D</span><code>kubectl taint node &lt;name&gt; --remove key</code></div>
+        </div>
+        <button class="check-btn" onclick="checkAnswer(this, 1, 'Append a minus sign after the taint spec to remove it. The trailing - is easy to forget under exam pressure.')">Check answer</button>
+        <div class="quiz-feedback"></div>
+      </div>
+      <div class="quiz-q">
+        <div class="quiz-question">3. A pod has <code>requiredDuringSchedulingIgnoredDuringExecution</code> node affinity that no node satisfies. What happens?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">A</span>The pod is scheduled on any available node</div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">B</span>The pod stays Pending</div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">C</span>The pod is evicted</div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">D</span>An error is returned immediately</div>
+        </div>
+        <button class="check-btn" onclick="checkAnswer(this, 1, 'Required affinity is a hard constraint. If no node matches, the pod stays Pending indefinitely. IgnoredDuringExecution means running pods are not evicted if labels change after scheduling.')">Check answer</button>
+        <div class="quiz-feedback"></div>
+      </div>
+      <div class="quiz-q">
+        <div class="quiz-question">4. Which command updates a deployment's container image without editing the YAML?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">A</span><code>kubectl update deployment web --image=nginx:1.25</code></div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">B</span><code>kubectl patch deployment web --image=nginx:1.25</code></div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">C</span><code>kubectl set image deployment/web nginx=nginx:1.25</code></div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">D</span><code>kubectl replace deployment web --image=nginx:1.25</code></div>
+        </div>
+        <button class="check-btn" onclick="checkAnswer(this, 2, 'kubectl set image deployment/&lt;name&gt; &lt;container-name&gt;=&lt;new-image&gt; is the imperative way. Know the format: deployment/name then container=image.')">Check answer</button>
+        <div class="quiz-feedback"></div>
+      </div>
+      <div class="quiz-q">
+        <div class="quiz-question">5. What does <code>kubectl rollout undo deployment/web --to-revision=2</code> do?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">A</span>Creates revision 2 as a new revision</div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">B</span>Reverts the deployment to the state at revision 2</div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">C</span>Deletes all revisions after revision 2</div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">D</span>Pauses the deployment at revision 2</div>
+        </div>
+        <button class="check-btn" onclick="checkAnswer(this, 1, 'It rolls back to the specific revision. Without --to-revision, it rolls back one version. Use kubectl rollout history to see revision numbers.')">Check answer</button>
+        <div class="quiz-feedback"></div>
+      </div>
+    </div>
+
+    <div class="tab-pane" id="t2-cheatsheet">
+      <table>
+        <tr><th>Command</th><th>What it does</th></tr>
+        <tr><td><code>kubectl set image deployment/&lt;name&gt; &lt;c&gt;=&lt;img&gt;</code></td><td>Update container image</td></tr>
+        <tr><td><code>kubectl rollout status/history/undo deployment/&lt;name&gt;</code></td><td>Rollout operations</td></tr>
+        <tr><td><code>kubectl scale deployment &lt;name&gt; --replicas=5</code></td><td>Scale manually</td></tr>
+        <tr><td><code>kubectl autoscale deployment &lt;name&gt; --min=1 --max=5 --cpu-percent=50</code></td><td>Create HPA</td></tr>
+        <tr><td><code>kubectl taint node &lt;node&gt; key=val:effect</code></td><td>Add taint</td></tr>
+        <tr><td><code>kubectl taint node &lt;node&gt; key=val:effect-</code></td><td>Remove taint</td></tr>
+        <tr><td><code>kubectl create configmap &lt;name&gt; --from-literal=k=v</code></td><td>Create ConfigMap</td></tr>
+        <tr><td><code>kubectl create secret generic &lt;name&gt; --from-literal=k=v</code></td><td>Create Secret</td></tr>
+      </table>
+    </div>
+    <button class="mark-done-btn" id="done-btn-2" onclick="markDone(2)">✓ Mark chapter complete</button>
+  </div>
+</div>
+
+<!-- ===== CHAPTER 3: NETWORKING ===== -->
+<div class="chapter" id="ch3">
+  <div class="chapter-header" data-num="04">
+    <div class="chapter-badge" style="background:rgba(63,185,80,0.1);color:#3fb950;">Chapter 4</div>
+    <div class="chapter-title">Services & Networking</div>
+    <div class="chapter-desc">Pod networking, Services, Ingress, Gateway API, Network Policies, CoreDNS. One of the highest-difficulty CKA domains.</div>
+    <div class="chapter-meta">
+      <span>⏱ <b>~17 min</b> video</span>
+      <span>📖 <b>4</b> lessons</span>
+      <span>🔧 <b>4</b> exercises</span>
+      <span>❓ <b>5</b> quiz questions</span>
+    </div>
+  </div>
+  <div class="chapter-tabs">
+    <div class="ctab active" onclick="switchTab(this,'t3-lesson')">Lesson</div>
+    <div class="ctab" onclick="switchTab(this,'t3-exercises')">Exercises</div>
+    <div class="ctab" onclick="switchTab(this,'t3-quiz')">Quiz</div>
+    <div class="ctab" onclick="switchTab(this,'t3-cheatsheet')">Cheatsheet</div>
+  </div>
+  <div class="chapter-body">
+    <div class="tab-pane active" id="t3-lesson">
+      <h3>Pod-to-Pod Connectivity</h3>
+      <p>Every pod gets a unique IP. Pods on different nodes can communicate directly — no NAT. This is guaranteed by the CNI plugin (Flannel, Calico, Cilium, etc.).</p>
+      <div class="callout tip"><strong>Mental model</strong> Think of all pods as being on one big flat network, regardless of which node they're on. The CNI is the plumbing underneath that makes this illusion real.</div>
+
+      <h3>Service Types</h3>
+      <div class="concept-grid">
+        <div class="concept-card"><div class="concept-card-title">ClusterIP</div><div class="concept-card-body">Default. Stable internal IP. Only reachable within the cluster. Use for service-to-service communication.</div></div>
+        <div class="concept-card"><div class="concept-card-title">NodePort</div><div class="concept-card-body">Exposes the service on a static port on every node (30000–32767). Reachable externally via NodeIP:NodePort.</div></div>
+        <div class="concept-card"><div class="concept-card-title">LoadBalancer</div><div class="concept-card-body">Provisions a cloud load balancer. In bare-metal: use MetalLB. Extends NodePort.</div></div>
+        <div class="concept-card"><div class="concept-card-title">ExternalName</div><div class="concept-card-body">Maps a service to a DNS name. No proxying — just a CNAME. Useful for external services.</div></div>
+      </div>
+
+      <h3>Network Policies</h3>
+      <p>NetworkPolicies control pod-to-pod traffic. By default, all traffic is allowed. Once you apply a NetworkPolicy to a pod, all traffic not explicitly allowed is denied.</p>
+      <div class="code-block">
+        <div class="code-header"><span class="code-label">Deny all ingress, allow only from app=frontend</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+        <pre><span class="k">apiVersion</span>: networking.k8s.io/v1
+<span class="k">kind</span>: NetworkPolicy
+<span class="k">metadata</span>:
+  <span class="k">name</span>: <span class="s">allow-frontend</span>
+  <span class="k">namespace</span>: <span class="s">backend</span>
+<span class="k">spec</span>:
+  <span class="k">podSelector</span>:
+    <span class="k">matchLabels</span>:
+      <span class="k">app</span>: <span class="s">api</span>
+  <span class="k">policyTypes</span>: [<span class="s">Ingress</span>]
+  <span class="k">ingress</span>:
+  - <span class="k">from</span>:
+    - <span class="k">podSelector</span>:
+        <span class="k">matchLabels</span>:
+          <span class="k">app</span>: <span class="s">frontend</span></pre>
+      </div>
+      <div class="callout exam"><strong>CKA Exam Note</strong> NetworkPolicy YAML cannot be generated imperatively — you must write it from scratch. Memorise the structure: podSelector → policyTypes → ingress/egress → from/to. The exam often asks you to allow traffic on a specific port from a specific namespace.</div>
+
+      <h3>CoreDNS</h3>
+      <p>CoreDNS is the cluster DNS. Every service gets a DNS name: <code>&lt;service&gt;.&lt;namespace&gt;.svc.cluster.local</code>. Pods: <code>&lt;pod-ip-dashes&gt;.&lt;namespace&gt;.pod.cluster.local</code>.</p>
+      <div class="callout tip"><strong>Debugging DNS</strong> <code>kubectl run test --image=busybox --rm -it -- nslookup kubernetes</code> — quick DNS check from inside the cluster.</div>
+    </div>
+
+    <div class="tab-pane" id="t3-exercises">
+      <div class="exercise">
+        <div class="exercise-header"><div><div class="exercise-num">Exercise 1</div><div class="exercise-title">Expose a deployment as NodePort</div></div><span class="difficulty easy">Easy</span></div>
+        <div class="exercise-body">
+          <div class="exercise-task">Create an nginx deployment. Expose it as a NodePort service on port 80. Find the NodePort assigned. Test connectivity from outside the cluster.</div>
+          <button class="solution-toggle" onclick="toggleBox(this, 'solution')">Show solution</button>
+          <div class="solution-box">
+<code>kubectl create deployment web --image=nginx</code><br>
+<code>kubectl expose deployment web --port=80 --type=NodePort</code><br>
+<code>kubectl get svc web</code>  (find NodePort)<br>
+<code>curl http://&lt;node-ip&gt;:&lt;nodeport&gt;</code>
+          </div>
+        </div>
+      </div>
+      <div class="exercise">
+        <div class="exercise-header"><div><div class="exercise-num">Exercise 2</div><div class="exercise-title">Write a Network Policy</div></div><span class="difficulty hard">Hard</span></div>
+        <div class="exercise-body">
+          <div class="exercise-task">Create a NetworkPolicy in namespace <code>api</code> that: (1) selects pods with label <code>role=backend</code>, (2) denies all ingress by default, (3) allows ingress only from pods with label <code>role=frontend</code> in namespace <code>web</code> on port 8080.</div>
+          <button class="solution-toggle" onclick="toggleBox(this, 'solution')">Show solution</button>
+          <div class="solution-box">
+<pre style="font-size:12px;line-height:1.5">apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: backend-policy
+  namespace: api
+spec:
+  podSelector:
+    matchLabels:
+      role: backend
+  policyTypes: [Ingress]
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: web
+      podSelector:
+        matchLabels:
+          role: frontend
+    ports:
+    - port: 8080</pre>
+          </div>
+        </div>
+      </div>
+      <div class="exercise">
+        <div class="exercise-header"><div><div class="exercise-num">Exercise 3</div><div class="exercise-title">Debug DNS resolution</div></div><span class="difficulty medium">Medium</span></div>
+        <div class="exercise-body">
+          <div class="exercise-task">Launch a busybox pod and use it to resolve the DNS name of the kubernetes service in the default namespace. Then resolve a custom service in a different namespace using the fully qualified domain name.</div>
+          <button class="solution-toggle" onclick="toggleBox(this, 'solution')">Show solution</button>
+          <div class="solution-box">
+<code>kubectl run dns-test --image=busybox:1.28 --rm -it -- /bin/sh</code><br>
+Inside pod:<br>
+<code>nslookup kubernetes</code><br>
+<code>nslookup &lt;svc&gt;.&lt;namespace&gt;.svc.cluster.local</code>
+          </div>
+        </div>
+      </div>
+      <div class="exercise">
+        <div class="exercise-header"><div><div class="exercise-num">Exercise 4</div><div class="exercise-title">Create an Ingress resource</div></div><span class="difficulty medium">Medium</span></div>
+        <div class="exercise-body">
+          <div class="exercise-task">Create an Ingress resource that routes traffic for host <code>app.example.com</code> path <code>/api</code> to service <code>api-svc</code> on port 80. Assume an Ingress controller is already installed.</div>
+          <button class="solution-toggle" onclick="toggleBox(this, 'solution')">Show solution</button>
+          <div class="solution-box">
+<pre style="font-size:12px;line-height:1.5">apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: app-ingress
+spec:
+  rules:
+  - host: app.example.com
+    http:
+      paths:
+      - path: /api
+        pathType: Prefix
+        backend:
+          service:
+            name: api-svc
+            port:
+              number: 80</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-pane" id="t3-quiz">
+      <div class="quiz-q">
+        <div class="quiz-question">1. What is the DNS name format for a Service named "db" in namespace "prod"?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">A</span>db.prod</div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">B</span>prod.db.svc</div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">C</span>db.prod.svc.cluster.local</div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">D</span>svc.prod.db.cluster.local</div>
+        </div>
+        <button class="check-btn" onclick="checkAnswer(this, 2, 'Format: &lt;service&gt;.&lt;namespace&gt;.svc.cluster.local. Within the same namespace you can use just the service name.')">Check answer</button>
+        <div class="quiz-feedback"></div>
+      </div>
+      <div class="quiz-q">
+        <div class="quiz-question">2. A NetworkPolicy exists selecting pod A. No ingress rules are defined. What traffic is allowed into pod A?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">A</span>All traffic is allowed</div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">B</span>No ingress traffic is allowed</div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">C</span>Only traffic from kube-system is allowed</div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">D</span>Only traffic on port 443</div>
+        </div>
+        <button class="check-btn" onclick="checkAnswer(this, 1, 'If a NetworkPolicy selects a pod and includes Ingress in policyTypes but has no ingress rules, ALL ingress is denied. This is the default-deny pattern.')">Check answer</button>
+        <div class="quiz-feedback"></div>
+      </div>
+      <div class="quiz-q">
+        <div class="quiz-question">3. What NodePort range does Kubernetes use by default?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">A</span>8000–9000</div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">B</span>1024–65535</div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">C</span>30000–32767</div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">D</span>31000–33000</div>
+        </div>
+        <button class="check-btn" onclick="checkAnswer(this, 2, '30000–32767 is the default NodePort range. It can be changed in the apiserver config but you will not need to on the exam.')">Check answer</button>
+        <div class="quiz-feedback"></div>
+      </div>
+      <div class="quiz-q">
+        <div class="quiz-question">4. Which component is responsible for pod-to-pod networking across nodes?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">A</span>kube-proxy</div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">B</span>kubelet</div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">C</span>CNI plugin</div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">D</span>CoreDNS</div>
+        </div>
+        <button class="check-btn" onclick="checkAnswer(this, 2, 'The CNI plugin (Flannel, Calico, Cilium) implements the pod network. kube-proxy handles service-to-pod routing via iptables/ipvs.')">Check answer</button>
+        <div class="quiz-feedback"></div>
+      </div>
+      <div class="quiz-q">
+        <div class="quiz-question">5. In a NetworkPolicy, what is the difference between placing namespaceSelector and podSelector under the same "from" element vs separate elements?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">A</span>No difference</div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">B</span>Same element = AND (both must match); separate elements = OR (either match)</div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">C</span>Same element = OR; separate elements = AND</div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">D</span>namespaceSelector always takes precedence</div>
+        </div>
+        <button class="check-btn" onclick="checkAnswer(this, 1, 'This is a critical NetworkPolicy gotcha. Same from element = AND (pod must match both selectors). Separate list items = OR (either selector grants access). Get this wrong and your policy allows too much or too little.')">Check answer</button>
+        <div class="quiz-feedback"></div>
+      </div>
+    </div>
+
+    <div class="tab-pane" id="t3-cheatsheet">
+      <table>
+        <tr><th>Command</th><th>What it does</th></tr>
+        <tr><td><code>kubectl expose deployment &lt;n&gt; --port=80 --type=NodePort</code></td><td>Create a NodePort service</td></tr>
+        <tr><td><code>kubectl get svc -o wide</code></td><td>List services with selectors</td></tr>
+        <tr><td><code>kubectl get endpoints &lt;svc&gt;</code></td><td>See pods backing a service</td></tr>
+        <tr><td><code>kubectl run test --image=busybox --rm -it -- nslookup &lt;svc&gt;</code></td><td>DNS debug</td></tr>
+        <tr><td><code>kubectl get networkpolicies -A</code></td><td>List all network policies</td></tr>
+        <tr><td><code>kubectl describe netpol &lt;name&gt;</code></td><td>Inspect a network policy</td></tr>
+      </table>
+    </div>
+    <button class="mark-done-btn" id="done-btn-3" onclick="markDone(3)">✓ Mark chapter complete</button>
+  </div>
+</div>
+
+<!-- ===== CHAPTER 4: STORAGE ===== -->
+<div class="chapter" id="ch4">
+  <div class="chapter-header" data-num="05">
+    <div class="chapter-badge" style="background:rgba(247,129,102,0.1);color:#f78166;">Chapter 5</div>
+    <div class="chapter-title">Storage</div>
+    <div class="chapter-desc">Volumes, PersistentVolumes, PersistentVolumeClaims, StorageClasses, and dynamic provisioning.</div>
+    <div class="chapter-meta">
+      <span>⏱ <b>~12 min</b> video</span>
+      <span>📖 <b>3</b> lessons</span>
+      <span>🔧 <b>3</b> exercises</span>
+      <span>❓ <b>4</b> quiz questions</span>
+    </div>
+  </div>
+  <div class="chapter-tabs">
+    <div class="ctab active" onclick="switchTab(this,'t4-lesson')">Lesson</div>
+    <div class="ctab" onclick="switchTab(this,'t4-exercises')">Exercises</div>
+    <div class="ctab" onclick="switchTab(this,'t4-quiz')">Quiz</div>
+    <div class="ctab" onclick="switchTab(this,'t4-cheatsheet')">Cheatsheet</div>
+  </div>
+  <div class="chapter-body">
+    <div class="tab-pane active" id="t4-lesson">
+      <h3>The Storage Hierarchy</h3>
+      <div class="callout tip"><strong>Mental model</strong> Think of it like renting a flat. StorageClass = the property developer. PersistentVolume = the actual flat. PersistentVolumeClaim = your rental agreement. Pod = you living in it.</div>
+      <div class="concept-grid">
+        <div class="concept-card"><div class="concept-card-title">Volume</div><div class="concept-card-body">Ephemeral or durable storage attached to a pod. Lives with the pod. Types: emptyDir, hostPath, configMap, secret, projected.</div></div>
+        <div class="concept-card"><div class="concept-card-title">PersistentVolume (PV)</div><div class="concept-card-body">Cluster-level storage resource. Pre-provisioned (static) or dynamically created by a StorageClass. Has capacity, access modes, reclaim policy.</div></div>
+        <div class="concept-card"><div class="concept-card-title">PersistentVolumeClaim (PVC)</div><div class="concept-card-body">Namespace-scoped request for storage. Bound to a PV that satisfies its requirements. Pod references the PVC, not the PV directly.</div></div>
+        <div class="concept-card"><div class="concept-card-title">StorageClass</div><div class="concept-card-body">Defines a provisioner and parameters. Enables dynamic PV creation when a PVC is submitted. AKS uses azure-disk, azure-file, etc.</div></div>
+      </div>
+
+      <h3>Access Modes</h3>
+      <table>
+        <tr><th>Mode</th><th>Abbreviation</th><th>Description</th></tr>
+        <tr><td>ReadWriteOnce</td><td>RWO</td><td>Read/write by a single node. Most common.</td></tr>
+        <tr><td>ReadOnlyMany</td><td>ROX</td><td>Read-only from many nodes.</td></tr>
+        <tr><td>ReadWriteMany</td><td>RWX</td><td>Read/write from many nodes. Requires NFS/Azure Files/etc.</td></tr>
+        <tr><td>ReadWriteOncePod</td><td>RWOP</td><td>Read/write by a single pod. Kubernetes 1.22+.</td></tr>
+      </table>
+
+      <div class="code-block">
+        <div class="code-header"><span class="code-label">PV + PVC + Pod — static provisioning</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+        <pre><span class="k">apiVersion</span>: v1
+<span class="k">kind</span>: PersistentVolume
+<span class="k">metadata</span>:
+  <span class="k">name</span>: <span class="s">pv-data</span>
+<span class="k">spec</span>:
+  <span class="k">capacity</span>:
+    <span class="k">storage</span>: <span class="s">1Gi</span>
+  <span class="k">accessModes</span>: [<span class="s">ReadWriteOnce</span>]
+  <span class="k">persistentVolumeReclaimPolicy</span>: <span class="s">Retain</span>
+  <span class="k">hostPath</span>:
+    <span class="k">path</span>: <span class="s">/mnt/data</span>
+---
+<span class="k">apiVersion</span>: v1
+<span class="k">kind</span>: PersistentVolumeClaim
+<span class="k">metadata</span>:
+  <span class="k">name</span>: pvc-data
+<span class="k">spec</span>:
+  <span class="k">accessModes</span>: [<span class="s">ReadWriteOnce</span>]
+  <span class="k">resources</span>:
+    <span class="k">requests</span>:
+      <span class="k">storage</span>: <span class="s">1Gi</span></pre>
+      </div>
+      <div class="callout exam"><strong>CKA Exam Note</strong> Know how to: create a PVC, mount it in a pod, check if it is Bound. Also know what happens when a PV is Released (Retain policy = PV is not auto-reused, must be manually cleared).</div>
+    </div>
+
+    <div class="tab-pane" id="t4-exercises">
+      <div class="exercise">
+        <div class="exercise-header"><div><div class="exercise-num">Exercise 1</div><div class="exercise-title">Create PV + PVC and mount in a pod</div></div><span class="difficulty medium">Medium</span></div>
+        <div class="exercise-body">
+          <div class="exercise-task">Create a 500Mi hostPath PersistentVolume. Create a PVC requesting 500Mi. Create a pod that mounts the PVC at <code>/data</code>. Write a file to <code>/data/test.txt</code> inside the pod. Delete and recreate the pod — verify the file persists.</div>
+          <button class="solution-toggle" onclick="toggleBox(this, 'solution')">Show solution</button>
+          <div class="solution-box">Create PV with hostPath /mnt/test. Create PVC matching 500Mi RWO. In pod spec:<br>
+<code>volumes:<br>- name: data<br>  persistentVolumeClaim:<br>    claimName: &lt;pvc-name&gt;<br>containers:<br>- volumeMounts:<br>  - name: data<br>    mountPath: /data</code><br><br>
+<code>kubectl exec -it &lt;pod&gt; -- sh -c "echo hello > /data/test.txt"</code><br>
+Delete + recreate pod with same PVC claim → file persists because hostPath data survives pod deletion.
+          </div>
+        </div>
+      </div>
+      <div class="exercise">
+        <div class="exercise-header"><div><div class="exercise-num">Exercise 2</div><div class="exercise-title">Dynamic provisioning with StorageClass</div></div><span class="difficulty easy">Easy</span></div>
+        <div class="exercise-body">
+          <div class="exercise-task">List available StorageClasses in your cluster. Create a PVC that uses the default StorageClass and requests 1Gi. Verify it becomes Bound automatically without creating a PV manually.</div>
+          <button class="solution-toggle" onclick="toggleBox(this, 'solution')">Show solution</button>
+          <div class="solution-box">
+<code>kubectl get storageclass</code><br>
+Create PVC without specifying storageClassName (will use default):<br>
+<code>kubectl apply -f pvc.yaml</code><br>
+<code>kubectl get pvc</code>  — should show Bound<br>
+<code>kubectl get pv</code>  — dynamically created PV appears automatically
+          </div>
+        </div>
+      </div>
+      <div class="exercise">
+        <div class="exercise-header"><div><div class="exercise-num">Exercise 3</div><div class="exercise-title">Expand a PVC</div></div><span class="difficulty medium">Medium</span></div>
+        <div class="exercise-body">
+          <div class="exercise-task">Check if your StorageClass supports volume expansion (<code>allowVolumeExpansion: true</code>). If so, expand an existing PVC from 1Gi to 2Gi. Verify the PVC reflects the new size.</div>
+          <button class="solution-toggle" onclick="toggleBox(this, 'solution')">Show solution</button>
+          <div class="solution-box">
+<code>kubectl describe storageclass &lt;name&gt; | grep -i expand</code><br>
+Edit PVC: <code>kubectl edit pvc &lt;name&gt;</code><br>
+Change spec.resources.requests.storage from 1Gi to 2Gi.<br>
+<code>kubectl get pvc &lt;name&gt;</code>  — capacity should update (may take a moment for online resize).
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-pane" id="t4-quiz">
+      <div class="quiz-q">
+        <div class="quiz-question">1. A PVC is in Pending state. The cluster has a PV with 2Gi capacity. The PVC requests 5Gi. What is the most likely cause?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">A</span>The PV is in a different namespace</div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">B</span>No PV satisfies the PVC's capacity request</div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">C</span>The StorageClass is missing</div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">D</span>PVCs cannot exceed 3Gi</div>
+        </div>
+        <button class="check-btn" onclick="checkAnswer(this, 1, 'PVs cannot be bound to PVCs that request more storage than the PV provides. The PVC stays Pending until a suitable PV is available.')">Check answer</button>
+        <div class="quiz-feedback"></div>
+      </div>
+      <div class="quiz-q">
+        <div class="quiz-question">2. What reclaim policy means the PV data is NOT deleted after the PVC is released?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">A</span>Delete</div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">B</span>Recycle</div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">C</span>Retain</div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">D</span>Preserve</div>
+        </div>
+        <button class="check-btn" onclick="checkAnswer(this, 2, 'Retain keeps the PV and data after the PVC is deleted. The PV moves to Released state and must be manually reclaimed. Delete = PV and backing storage deleted automatically.')">Check answer</button>
+        <div class="quiz-feedback"></div>
+      </div>
+      <div class="quiz-q">
+        <div class="quiz-question">3. Which access mode allows read/write from multiple nodes simultaneously?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">A</span>ReadWriteOnce</div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">B</span>ReadOnlyMany</div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">C</span>ReadWriteMany</div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">D</span>ReadWriteOncePod</div>
+        </div>
+        <button class="check-btn" onclick="checkAnswer(this, 2, 'ReadWriteMany (RWX) allows multiple nodes to mount the volume read-write simultaneously. Requires a distributed filesystem like NFS or Azure Files.')">Check answer</button>
+        <div class="quiz-feedback"></div>
+      </div>
+      <div class="quiz-q">
+        <div class="quiz-question">4. What enables a PVC to get a PV automatically without pre-creating one?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">A</span>A ClusterRole with PV permissions</div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">B</span>Dynamic provisioning via a StorageClass</div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">C</span>Setting the PVC to ClusterScoped</div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">D</span>A VolumeBinding admission controller</div>
+        </div>
+        <button class="check-btn" onclick="checkAnswer(this, 1, 'A StorageClass with a provisioner plugin automatically creates a PV when a PVC is submitted. This is dynamic provisioning.')">Check answer</button>
+        <div class="quiz-feedback"></div>
+      </div>
+    </div>
+
+    <div class="tab-pane" id="t4-cheatsheet">
+      <table>
+        <tr><th>Command</th><th>What it does</th></tr>
+        <tr><td><code>kubectl get pv,pvc -A</code></td><td>List all PVs and PVCs</td></tr>
+        <tr><td><code>kubectl describe pvc &lt;name&gt;</code></td><td>Debug PVC binding issues</td></tr>
+        <tr><td><code>kubectl get storageclass</code></td><td>List StorageClasses</td></tr>
+        <tr><td><code>kubectl edit pvc &lt;name&gt;</code></td><td>Expand PVC (if SC allows)</td></tr>
+      </table>
+    </div>
+    <button class="mark-done-btn" id="done-btn-4" onclick="markDone(4)">✓ Mark chapter complete</button>
+  </div>
+</div>
+
+<!-- ===== CHAPTER 5: TROUBLESHOOTING ===== -->
+<div class="chapter" id="ch5">
+  <div class="chapter-header" data-num="06">
+    <div class="chapter-badge" style="background:rgba(227,179,65,0.1);color:#e3b341;">Chapter 6</div>
+    <div class="chapter-title">Troubleshooting</div>
+    <div class="chapter-desc">The highest-weight CKA domain. Applications, pods, nodes, cluster components, services, networking, and resource monitoring.</div>
+    <div class="chapter-meta">
+      <span>⏱ <b>~9 min</b> video</span>
+      <span>📖 <b>4</b> lessons</span>
+      <span>🔧 <b>5</b> exercises</span>
+      <span>❓ <b>5</b> quiz questions</span>
+    </div>
+  </div>
+  <div class="chapter-tabs">
+    <div class="ctab active" onclick="switchTab(this,'t5-lesson')">Lesson</div>
+    <div class="ctab" onclick="switchTab(this,'t5-exercises')">Exercises</div>
+    <div class="ctab" onclick="switchTab(this,'t5-quiz')">Quiz</div>
+    <div class="ctab" onclick="switchTab(this,'t5-cheatsheet')">Cheatsheet</div>
+  </div>
+  <div class="chapter-body">
+    <div class="tab-pane active" id="t5-lesson">
+      <h3>The Troubleshooting Methodology</h3>
+      <div class="callout tip"><strong>Mental model — the funnel</strong> Start wide (what's wrong?), then narrow (which layer?), then precise (what exactly failed?). Cluster → Node → Pod → Container → Application.</div>
+      <div class="concept-grid">
+        <div class="concept-card"><div class="concept-card-title">Step 1: Observe</div><div class="concept-card-body">kubectl get &amp; describe. What is the state? What do events say? Never start fixing before you've read the events.</div></div>
+        <div class="concept-card"><div class="concept-card-title">Step 2: Logs</div><div class="concept-card-body">kubectl logs. If container is dead: --previous. Check app logs, not just Kubernetes events.</div></div>
+        <div class="concept-card"><div class="concept-card-title">Step 3: Exec</div><div class="concept-card-body">kubectl exec into a running pod. Check filesystem, env vars, network connectivity from inside the container.</div></div>
+        <div class="concept-card"><div class="concept-card-title">Step 4: System</div><div class="concept-card-body">For node/component issues: systemctl status kubelet, journalctl -u kubelet, crictl ps/logs.</div></div>
+      </div>
+
+      <h3>Pod Failure Patterns</h3>
+      <table>
+        <tr><th>Status</th><th>Likely cause</th><th>First command</th></tr>
+        <tr><td>Pending</td><td>No schedulable node (taint, resources, affinity)</td><td><code>kubectl describe pod &lt;name&gt;</code> → Events</td></tr>
+        <tr><td>ImagePullBackOff</td><td>Wrong image name, registry auth missing</td><td><code>kubectl describe pod &lt;name&gt;</code> → Events</td></tr>
+        <tr><td>CrashLoopBackOff</td><td>App crashes on start, bad config, missing env var</td><td><code>kubectl logs &lt;pod&gt; --previous</code></td></tr>
+        <tr><td>OOMKilled</td><td>Memory limit too low</td><td><code>kubectl describe pod</code> → Last State</td></tr>
+        <tr><td>Error</td><td>Container exited non-zero</td><td><code>kubectl logs &lt;pod&gt; --previous</code></td></tr>
+        <tr><td>Terminating</td><td>Finalizer blocking deletion, node gone</td><td><code>kubectl describe pod</code> → Finalizers</td></tr>
+      </table>
+
+      <h3>Troubleshooting Cluster Components</h3>
+      <div class="code-block">
+        <div class="code-header"><span class="code-label">Node + kubelet troubleshooting</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+        <pre><span class="c"># Check node status</span>
+kubectl get nodes
+kubectl describe node &lt;name&gt;
+
+<span class="c"># SSH to node, then:</span>
+systemctl status kubelet
+journalctl -u kubelet -f --no-pager | tail -50
+
+<span class="c"># Check if containers are running on node</span>
+crictl ps
+crictl logs &lt;container-id&gt;
+
+<span class="c"># Static pod manifests (control plane components)</span>
+ls /etc/kubernetes/manifests/
+
+<span class="c"># kubelet config</span>
+cat /var/lib/kubelet/config.yaml</pre>
+      </div>
+
+      <h3>Troubleshooting Services & Networking</h3>
+      <div class="code-block">
+        <div class="code-header"><span class="code-label">Service not routing traffic — debug steps</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+        <pre><span class="c"># 1. Does the service exist and have the right selector?</span>
+kubectl describe svc &lt;name&gt;
+
+<span class="c"># 2. Are there endpoints? (no endpoints = selector mismatch)</span>
+kubectl get endpoints &lt;name&gt;
+
+<span class="c"># 3. Are the target pods running and Ready?</span>
+kubectl get pods -l &lt;selector-labels&gt;
+
+<span class="c"># 4. Test from inside cluster</span>
+kubectl run test --image=busybox --rm -it -- wget -O- &lt;service-name&gt;:&lt;port&gt;
+
+<span class="c"># 5. Check kube-proxy is running</span>
+kubectl get pods -n kube-system | grep kube-proxy</pre>
+      </div>
+      <div class="callout exam"><strong>CKA Exam Note</strong> The #1 service troubleshooting trap: the service selector labels don't match the pod labels. Always check <code>kubectl get endpoints</code> — if it shows <code>&lt;none&gt;</code>, it's a label mismatch. Fix the selector or the pod labels.</div>
+    </div>
+
+    <div class="tab-pane" id="t5-exercises">
+      <div class="exercise">
+        <div class="exercise-header"><div><div class="exercise-num">Exercise 1</div><div class="exercise-title">Fix a CrashLoopBackOff pod</div></div><span class="difficulty medium">Medium</span></div>
+        <div class="exercise-body">
+          <div class="exercise-task">Create a pod using image <code>nginx:broken-tag</code> (intentionally wrong). Observe it fail. Identify the exact error. Fix it by updating the image to <code>nginx:latest</code>. Verify it runs.</div>
+          <button class="solution-toggle" onclick="toggleBox(this, 'solution')">Show solution</button>
+          <div class="solution-box">
+<code>kubectl run broken --image=nginx:broken-tag</code><br>
+<code>kubectl get pod broken</code>  — ImagePullBackOff<br>
+<code>kubectl describe pod broken</code>  — Events show failed image pull<br>
+Fix: <code>kubectl set image pod/broken broken=nginx:latest</code><br>
+Or delete and recreate with correct image.
+          </div>
+        </div>
+      </div>
+      <div class="exercise">
+        <div class="exercise-header"><div><div class="exercise-num">Exercise 2</div><div class="exercise-title">Fix a broken service</div></div><span class="difficulty hard">Hard</span></div>
+        <div class="exercise-body">
+          <div class="exercise-task">Create a deployment with label <code>app=web</code>. Create a service that selects <code>app=frontend</code> (intentionally wrong). Diagnose why the service has no endpoints. Fix the selector. Test connectivity.</div>
+          <button class="solution-toggle" onclick="toggleBox(this, 'solution')">Show solution</button>
+          <div class="solution-box">
+<code>kubectl get endpoints &lt;svc&gt;</code>  — shows &lt;none&gt;<br>
+<code>kubectl describe svc &lt;svc&gt;</code>  — shows wrong selector<br>
+<code>kubectl edit svc &lt;svc&gt;</code>  — fix selector to app=web<br>
+<code>kubectl get endpoints &lt;svc&gt;</code>  — now shows pod IPs
+          </div>
+        </div>
+      </div>
+      <div class="exercise">
+        <div class="exercise-header"><div><div class="exercise-num">Exercise 3</div><div class="exercise-title">Node is NotReady</div></div><span class="difficulty hard">Hard</span></div>
+        <div class="exercise-body">
+          <div class="exercise-task">Simulate a NotReady node by stopping the kubelet service on a worker node. Observe the node status in kubectl. SSH to the node, identify the stopped service, restart it, and verify the node returns to Ready.</div>
+          <button class="solution-toggle" onclick="toggleBox(this, 'solution')">Show solution</button>
+          <div class="solution-box">
+On worker node: <code>systemctl stop kubelet</code><br>
+On control plane: <code>kubectl get nodes</code> — worker shows NotReady after ~40s<br>
+<code>kubectl describe node &lt;worker&gt;</code> — conditions show kubelet stopped<br>
+SSH to worker: <code>systemctl start kubelet</code><br>
+<code>systemctl enable kubelet</code>  — prevent recurrence<br>
+<code>kubectl get nodes</code>  — back to Ready
+          </div>
+        </div>
+      </div>
+      <div class="exercise">
+        <div class="exercise-header"><div><div class="exercise-num">Exercise 4</div><div class="exercise-title">Decode a failed static pod</div></div><span class="difficulty hard">Hard</span></div>
+        <div class="exercise-body">
+          <div class="exercise-task">Introduce a deliberate error in the kube-scheduler static pod manifest (e.g. change the image to an invalid tag). Observe what happens to pending pods. Fix the manifest and verify the scheduler recovers.</div>
+          <button class="solution-toggle" onclick="toggleBox(this, 'solution')">Show solution</button>
+          <div class="solution-box">
+<code>vi /etc/kubernetes/manifests/kube-scheduler.yaml</code>  — break image tag<br>
+<code>kubectl get pods -n kube-system</code>  — scheduler pod fails/restarts<br>
+New pods will stay Pending.<br>
+Fix: restore correct image in the manifest. kubelet automatically recreates the static pod.<br>
+<code>kubectl get pods -n kube-system</code>  — scheduler back to Running
+          </div>
+        </div>
+      </div>
+      <div class="exercise">
+        <div class="exercise-header"><div><div class="exercise-num">Exercise 5</div><div class="exercise-title">Monitor resource usage</div></div><span class="difficulty easy">Easy</span></div>
+        <div class="exercise-body">
+          <div class="exercise-task">Using kubectl top, identify the node using the most CPU. Identify the pod using the most memory across all namespaces. What is required for kubectl top to work?</div>
+          <button class="solution-toggle" onclick="toggleBox(this, 'solution')">Show solution</button>
+          <div class="solution-box">
+<code>kubectl top nodes</code>  — highest CPU node<br>
+<code>kubectl top pods -A --sort-by=memory</code>  — highest memory pod<br><br>
+Required: metrics-server must be installed. Without it: "error: Metrics API not available"<br>
+Install: <code>kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml</code>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-pane" id="t5-quiz">
+      <div class="quiz-q">
+        <div class="quiz-question">1. A pod is in CrashLoopBackOff. The container is not currently running. How do you view its logs?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">A</span><code>kubectl logs &lt;pod&gt;</code></div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">B</span><code>kubectl logs &lt;pod&gt; --previous</code></div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">C</span><code>kubectl describe pod &lt;pod&gt; --logs</code></div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">D</span><code>crictl logs &lt;pod&gt;</code></div>
+        </div>
+        <button class="check-btn" onclick="checkAnswer(this, 1, '--previous (or -p) shows the logs from the previous container instance. Essential for debugging crash loops where the container is not currently running.')">Check answer</button>
+        <div class="quiz-feedback"></div>
+      </div>
+      <div class="quiz-q">
+        <div class="quiz-question">2. A service has no endpoints. What is the most likely cause?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">A</span>The service port is wrong</div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">B</span>The service selector does not match any pod labels</div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">C</span>kube-proxy is not running</div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">D</span>The pods are in a different namespace</div>
+        </div>
+        <button class="check-btn" onclick="checkAnswer(this, 1, 'No endpoints = selector mismatch is the #1 cause. Check kubectl get endpoints and kubectl describe svc — compare selector to actual pod labels.')">Check answer</button>
+        <div class="quiz-feedback"></div>
+      </div>
+      <div class="quiz-q">
+        <div class="quiz-question">3. A node is NotReady. You SSH to it. What is the first service to check?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">A</span>kube-proxy</div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">B</span>containerd</div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">C</span>kubelet</div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">D</span>etcd</div>
+        </div>
+        <button class="check-btn" onclick="checkAnswer(this, 2, 'kubelet is the node agent. If it is not running, the node cannot communicate with the control plane and becomes NotReady. systemctl status kubelet is always first.')">Check answer</button>
+        <div class="quiz-feedback"></div>
+      </div>
+      <div class="quiz-q">
+        <div class="quiz-question">4. Where are static pod manifests stored on a kubeadm cluster?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">A</span>/etc/kubernetes/static-pods/</div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">B</span>/var/lib/kubelet/pods/</div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">C</span>/etc/kubernetes/manifests/</div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">D</span>/etc/systemd/system/kubernetes/</div>
+        </div>
+        <button class="check-btn" onclick="checkAnswer(this, 2, '/etc/kubernetes/manifests/ is the default staticPodPath. kubelet watches this directory and manages pods defined there — even without the apiserver running.')">Check answer</button>
+        <div class="quiz-feedback"></div>
+      </div>
+      <div class="quiz-q">
+        <div class="quiz-question">5. What does <code>kubectl top pods -A --sort-by=memory</code> require to work?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">A</span>Prometheus installed</div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">B</span>metrics-server installed</div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">C</span>Node exporter on all nodes</div>
+          <div class="quiz-option" onclick="selectOpt(this)"><span class="quiz-letter">D</span>Grafana agent</div>
+        </div>
+        <button class="check-btn" onclick="checkAnswer(this, 1, 'kubectl top uses the Metrics API, which is served by metrics-server. Without it you get: error: Metrics API not available. The exam environment has it installed.')">Check answer</button>
+        <div class="quiz-feedback"></div>
+      </div>
+    </div>
+
+    <div class="tab-pane" id="t5-cheatsheet">
+      <h3>Master Troubleshooting Cheatsheet</h3>
+      <table>
+        <tr><th>Command</th><th>When to use</th></tr>
+        <tr><td><code>kubectl describe pod &lt;name&gt;</code></td><td>First step for any pod issue — read Events</td></tr>
+        <tr><td><code>kubectl logs &lt;pod&gt; --previous</code></td><td>Logs from a crashed container</td></tr>
+        <tr><td><code>kubectl logs &lt;pod&gt; -c &lt;container&gt;</code></td><td>Specific container in a multi-container pod</td></tr>
+        <tr><td><code>kubectl get events --sort-by=.metadata.creationTimestamp</code></td><td>Cluster-wide event timeline</td></tr>
+        <tr><td><code>kubectl get endpoints &lt;svc&gt;</code></td><td>Check if service routes to pods</td></tr>
+        <tr><td><code>kubectl exec -it &lt;pod&gt; -- /bin/sh</code></td><td>Shell into running container</td></tr>
+        <tr><td><code>kubectl top nodes / pods -A</code></td><td>Resource usage (requires metrics-server)</td></tr>
+        <tr><td><code>systemctl status kubelet</code></td><td>Node agent health (run on node)</td></tr>
+        <tr><td><code>journalctl -u kubelet -f</code></td><td>Live kubelet logs (run on node)</td></tr>
+        <tr><td><code>crictl ps / crictl logs &lt;id&gt;</code></td><td>Container runtime level debugging</td></tr>
+        <tr><td><code>ls /etc/kubernetes/manifests/</code></td><td>Inspect/fix static pod configs</td></tr>
+        <tr><td><code>kubectl get pods -A | grep -v Running</code></td><td>Find all non-healthy pods instantly</td></tr>
+      </table>
+    </div>
+    <button class="mark-done-btn" id="done-btn-5" onclick="markDone(5)">✓ Mark chapter complete</button>
+  </div>
+</div>
+
+</main>
+</div>
+
+<script>
+const done = new Array(6).fill(false);
+
+function showChapter(i) {
+  document.querySelectorAll('.chapter').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.nav-chapter').forEach(n => n.classList.remove('active'));
+  document.getElementById('ch' + i).classList.add('active');
+  document.getElementById('nav' + i).classList.add('active');
+  document.querySelector('main').scrollTop = 0;
+}
+
+function switchTab(el, id) {
+  const chapter = el.closest('.chapter');
+  chapter.querySelectorAll('.ctab').forEach(t => t.classList.remove('active'));
+  chapter.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById(id).classList.add('active');
+}
+
+function toggleBox(btn, type) {
+  const box = btn.nextElementSibling.classList.contains(type + '-box')
+    ? btn.nextElementSibling
+    : btn.parentElement.querySelector('.' + type + '-box');
+  if (box) box.classList.toggle('visible');
+}
+
+function selectOpt(el) {
+  const group = el.closest('.quiz-options');
+  group.querySelectorAll('.quiz-option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function checkAnswer(btn, correctIndex, explanation) {
+  const q = btn.closest('.quiz-q');
+  const opts = q.querySelectorAll('.quiz-option');
+  const selected = q.querySelector('.quiz-option.selected');
+  const feedback = q.querySelector('.quiz-feedback');
+  if (!selected) return;
+  const idx = Array.from(opts).indexOf(selected);
+  opts.forEach(o => o.style.pointerEvents = 'none');
+  if (idx === correctIndex) {
+    selected.classList.add('correct');
+    feedback.className = 'quiz-feedback show correct-f';
+    feedback.innerHTML = '✓ Correct. ' + explanation;
+  } else {
+    selected.classList.add('wrong');
+    opts[correctIndex].classList.add('correct');
+    feedback.className = 'quiz-feedback show wrong-f';
+    feedback.innerHTML = '✗ Incorrect. ' + explanation;
+  }
+  btn.style.display = 'none';
+}
+
+function markDone(i) {
+  const btn = document.getElementById('done-btn-' + i);
+  if (btn.classList.contains('done-state')) return;
+  done[i] = true;
+  btn.textContent = '✓ Chapter complete';
+  btn.classList.add('done-state');
+  document.getElementById('nav' + i).classList.add('done');
+  const count = done.filter(Boolean).length;
+  document.getElementById('globalProgress').style.width = (count / 6 * 100) + '%';
+  document.getElementById('progressLabel').textContent = count + ' / 6 chapters';
+}
+
+function copyCode(btn) {
+  const pre = btn.closest('.code-block').querySelector('pre');
+  const text = pre.innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'copied!';
+    setTimeout(() => btn.textContent = 'copy', 1500);
+  });
+}
+</script>
+</body>
+</html>

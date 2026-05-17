@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KillerShell CKA Simulator – 25 Questions</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0b0e14;--s1:#11151c;--s2:#151a23;--s3:#1a202b;--bd:#252d3a;--ac:#4d9bef;--ac2:#41b883;--ac3:#e5a746;--ac4:#d275d8;--ac5:#f07c5c;--tx:#b8c4d4;--mu:#5c6a7e;--hd:#e4e9f0;--r:#e05561;--g:#41b883;--y:#e5a746}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--tx);font-size:14px;line-height:1.65}
+.app{display:grid;grid-template-columns:290px 1fr;min-height:100vh}
+
+/* SIDEBAR */
+nav{background:var(--s1);border-right:1px solid var(--bd);position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column}
+.nh{padding:20px 16px;border-bottom:1px solid var(--bd)}
+.nt{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:700;color:var(--hd)}
+.ns{font-size:11px;color:var(--mu);margin-top:2px;font-family:'JetBrains Mono',monospace}
+.pw{padding:10px 16px;border-bottom:1px solid var(--bd)}
+.pb{height:3px;background:var(--bd);border-radius:3px;overflow:hidden;margin-bottom:4px}
+.pf{height:100%;background:linear-gradient(90deg,var(--ac),var(--ac2));border-radius:3px;transition:width .4s}
+.pl{font-size:11px;color:var(--mu);font-family:'JetBrains Mono',monospace}
+.nl{padding:6px;flex:1}
+
+.ni{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:6px;cursor:pointer;border:1px solid transparent;transition:all .12s;margin-bottom:1px}
+.ni:hover{background:var(--s2)}
+.ni.active{background:rgba(77,155,239,.08);border-color:rgba(77,155,239,.18)}
+.ni.done .nn{color:var(--g)}
+.nn{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--mu);min-width:20px;font-weight:600}
+.ni.active .nn{color:var(--ac)}
+.ni-t{flex:1;font-size:11px;color:var(--tx);line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ni.active .ni-t{color:var(--ac)}
+.ni-w{font-size:9px;color:var(--mu);font-family:'JetBrains Mono',monospace;flex-shrink:0}
+.nc{font-size:10px;color:var(--g);opacity:0;transition:opacity .2s;flex-shrink:0}
+.ni.done .nc{opacity:1}
+.nf{margin-top:auto;padding:12px 16px;border-top:1px solid var(--bd);font-size:11px;color:var(--mu);line-height:1.5}
+.nf b{color:var(--ac3)}
+
+/* MAIN */
+main{overflow:hidden}
+.q{display:none;animation:fu .2s ease}
+.q.active{display:block}
+@keyframes fu{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+
+/* QUESTION HEADER */
+.qh{padding:36px 48px 24px;border-bottom:1px solid var(--bd);position:relative;overflow:hidden}
+.qh::before{content:attr(data-n);position:absolute;right:36px;top:8px;font-family:'JetBrains Mono',monospace;font-size:68px;font-weight:700;opacity:.03;color:var(--hd);pointer-events:none;line-height:1}
+.qb-row{display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap}
+.qb{font-size:10px;padding:3px 10px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-weight:600;letter-spacing:.3px}
+.qb-w{background:rgba(229,167,70,.1);color:var(--ac3);border:1px solid rgba(229,167,70,.2)}
+.qb-ctx{background:rgba(77,155,239,.1);color:var(--ac);border:1px solid rgba(77,155,239,.2)}
+.qb-dom{background:var(--s3);color:var(--mu);border:1px solid var(--bd)}
+.qt{font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;color:var(--hd);letter-spacing:-.3px;margin-bottom:6px}
+.qd{font-size:12px;color:var(--mu)}
+
+/* TABS */
+.qtabs{display:flex;padding:0 48px;border-bottom:1px solid var(--bd)}
+.ctab{padding:11px 16px;font-size:11px;color:var(--mu);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .12s;font-family:'JetBrains Mono',monospace;font-weight:500;text-transform:uppercase;letter-spacing:.5px}
+.ctab:hover{color:var(--tx)}
+.ctab.active{color:var(--ac);border-bottom-color:var(--ac)}
+
+/* BODY */
+.qbody{padding:32px 48px;max-width:880px}
+.tp{display:none}
+.tp.active{display:block}
+
+/* TASK */
+.task{background:var(--s1);border:1px solid var(--bd);border-left:3px solid var(--ac);border-radius:8px;padding:22px;margin-bottom:20px;font-size:14px;line-height:1.8}
+.task h4{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--mu);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.task p{color:var(--tx);margin-bottom:8px}
+.task p:last-child{margin-bottom:0}
+.task code{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ac4);background:var(--s3);padding:1px 5px;border-radius:3px}
+.task em{font-style:normal;color:var(--hd);font-weight:500}
+
+/* CODE */
+.cb{background:var(--s1);border:1px solid var(--bd);border-radius:8px;margin:10px 0 18px;overflow:hidden}
+.ch{display:flex;align-items:center;justify-content:space-between;padding:6px 14px;background:var(--s2);border-bottom:1px solid var(--bd)}
+.cl{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--mu)}
+.cp{font-size:10px;color:var(--mu);background:none;border:1px solid var(--bd);padding:2px 10px;border-radius:4px;cursor:pointer;font-family:'JetBrains Mono',monospace;transition:all .12s}
+.cp:hover{color:var(--ac);border-color:var(--ac)}
+pre{padding:14px;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.7;color:var(--tx);white-space:pre-wrap;word-break:break-word}
+.c{color:var(--mu);font-style:italic}
+
+/* CALLOUT */
+.co{padding:12px 16px;border-radius:6px;margin:14px 0;font-size:13px;line-height:1.6;border-left:3px solid}
+.co.tip{background:rgba(65,184,131,.05);border-color:var(--g);color:#8fd4b4}
+.co.exam{background:rgba(77,155,239,.05);border-color:var(--ac);color:#8ec4f5}
+.co.warn{background:rgba(229,167,70,.05);border-color:var(--ac3);color:#f0d28a}
+.co strong{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:4px}
+
+/* SOLUTION TOGGLE */
+.sol-wrap{margin:16px 0}
+.sol-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;background:var(--s2);border:1px solid var(--bd);border-radius:6px;color:var(--mu);font-size:12px;font-family:'JetBrains Mono',monospace;cursor:pointer;transition:all .12s}
+.sol-btn:hover{color:var(--ac);border-color:var(--ac)}
+.sol-content{display:none;margin-top:14px}
+.sol-content.visible{display:block}
+
+/* TEXT STYLING */
+h3{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;color:var(--hd);margin:24px 0 10px}
+h3:first-child{margin-top:0}
+p{color:var(--tx);margin-bottom:10px;font-size:13px}
+p code{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ac4);background:var(--s3);padding:1px 5px;border-radius:3px}
+
+/* DONE + NAV */
+.md{display:flex;align-items:center;gap:8px;margin-top:24px;padding:8px 18px;background:rgba(65,184,131,.06);border:1px solid rgba(65,184,131,.2);border-radius:6px;color:var(--g);font-size:12px;font-family:'JetBrains Mono',monospace;font-weight:600;cursor:pointer;transition:all .12s}
+.md:hover{background:rgba(65,184,131,.12)}
+.md.ds{opacity:.5;cursor:default}
+.qn{display:flex;gap:8px;margin-top:14px}
+.qnb{padding:7px 16px;background:var(--s1);border:1px solid var(--bd);border-radius:6px;color:var(--mu);font-size:11px;font-family:'JetBrains Mono',monospace;cursor:pointer;transition:all .12s}
+.qnb:hover{color:var(--ac);border-color:var(--ac)}
+
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--bd);border-radius:4px}
+
+@media(max-width:768px){
+  .app{grid-template-columns:1fr}
+  nav{position:relative;height:auto;max-height:40vh}
+  .qh,.qtabs,.qbody{padding-left:20px;padding-right:20px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+<nav>
+<div class="nh">
+<div class="nt">KillerShell CKA</div>
+<div class="ns">Simulator · K8s 1.26 · 25 Qs</div>
+</div>
+<div class="pw">
+<div class="pb"><div class="pf" id="gp" style="width:0%"></div></div>
+<div class="pl" id="gl">0 / 25 completed</div>
+</div>
+<div class="nl" id="navList"></div>
+<div class="nf"><b>Exam tip:</b> Set up aliases first:<br><code>alias k=kubectl</code><br><code>export do="--dry-run=client -o yaml"</code></div>
+</nav>
+<main id="mainArea"></main>
+</div>
+
+<script>
+const Q=[
+{n:1,t:"Contexts",w:1,ctx:"—",dom:"Architecture",
+task:`You have access to multiple clusters from your main terminal through <code>kubectl</code> contexts. Write all those context names into <code>/opt/course/1/contexts</code>.\n\nNext write a command to display the current context into <code>/opt/course/1/context_default_kubectl.sh</code>, the command should use <code>kubectl</code>.\n\nFinally write a second command doing the same thing into <code>/opt/course/1/context_default_no_kubectl.sh</code>, but without the use of <code>kubectl</code>.`,
+solution:`# List all contexts
+k config get-contexts -o name > /opt/course/1/contexts
+
+# Or using jsonpath:
+k config view -o jsonpath="{.contexts[*].name}" | tr " " "\\n" > /opt/course/1/contexts
+
+# Script 1: using kubectl
+# /opt/course/1/context_default_kubectl.sh
+kubectl config current-context
+
+# Script 2: without kubectl
+# /opt/course/1/context_default_no_kubectl.sh
+cat ~/.kube/config | grep current | sed -e "s/current-context: //"`,
+tip:`Knowing jsonpath and simple bash filtering is helpful for the real exam where you need to filter bigger resource lists.`},
+
+{n:2,t:"Schedule Pod on Controlplane Node",w:3,ctx:"k8s-c1-H",dom:"Scheduling",
+task:`Create a single <em>Pod</em> of image <code>httpd:2.4.41-alpine</code> in <em>Namespace</em> <code>default</code>. The <em>Pod</em> should be named <code>pod1</code> and the container should be named <code>pod1-container</code>. This <em>Pod</em> should <b>only</b> be scheduled on a controlplane node, do not add new labels to any nodes.`,
+solution:`# Find controlplane node and its taints
+k get node
+k describe node cluster1-controlplane1 | grep Taint -A1
+k get node cluster1-controlplane1 --show-labels
+
+# Generate template
+k run pod1 --image=httpd:2.4.41-alpine $do > 2.yaml
+
+# Edit 2.yaml:
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod1
+spec:
+  containers:
+  - image: httpd:2.4.41-alpine
+    name: pod1-container          # change name
+  tolerations:                     # add
+  - effect: NoSchedule
+    key: node-role.kubernetes.io/control-plane
+  nodeSelector:                    # add
+    node-role.kubernetes.io/control-plane: ""
+
+k -f 2.yaml create
+k get pod pod1 -o wide  # verify node`,
+tip:`Important: add BOTH toleration AND nodeSelector. Toleration alone means the pod CAN run on controlplane, but might still land on a worker. nodeSelector ensures it ONLY runs on controlplane.`},
+
+{n:3,t:"Scale down StatefulSet",w:1,ctx:"k8s-c1-H",dom:"Workloads",
+task:`There are two <em>Pods</em> named <code>o3db-*</code> in <em>Namespace</em> <code>project-c13</code>. C13 management asked you to scale the <em>Pods</em> down to one replica to save resources.`,
+solution:`# Find what manages the pods
+k -n project-c13 get deploy,ds,sts | grep o3db
+# statefulset.apps/o3db   2/2
+
+# Scale down
+k -n project-c13 scale sts o3db --replicas 1
+
+# Verify
+k -n project-c13 get sts o3db`,
+tip:`If unsure what manages the pods, check labels: kubectl get pod --show-labels — look for statefulset.kubernetes.io/pod-name label.`},
+
+{n:4,t:"Pod Ready if Service is reachable",w:4,ctx:"k8s-c1-H",dom:"Workloads",
+task:`Create a single <em>Pod</em> named <code>ready-if-service-ready</code> of image <code>nginx:1.16.1-alpine</code>. Configure a LivenessProbe which simply executes command <code>true</code>. Also configure a ReadinessProbe which checks if the url <code>http://service-am-i-ready:80</code> is reachable, you can use <code>wget -T2 -O- http://service-am-i-ready:80</code> for this. Start the <em>Pod</em> and confirm it isn't ready because of the ReadinessProbe.\n\nCreate a second <em>Pod</em> named <code>am-i-ready</code> of image <code>nginx:1.16.1-alpine</code> with label <code>id: cross-server-ready</code>. The already existing <em>Service</em> <code>service-am-i-ready</code> should now have that second <em>Pod</em> as endpoint.\n\nNow the first <em>Pod</em> should be in ready state, confirm that.`,
+solution:`k run ready-if-service-ready --image=nginx:1.16.1-alpine $do > 4_pod1.yaml
+
+# Edit to add probes:
+spec:
+  containers:
+  - image: nginx:1.16.1-alpine
+    name: ready-if-service-ready
+    livenessProbe:
+      exec:
+        command:
+        - 'true'
+    readinessProbe:
+      exec:
+        command:
+        - sh
+        - -c
+        - 'wget -T2 -O- http://service-am-i-ready:80'
+
+k -f 4_pod1.yaml create
+k get pod ready-if-service-ready  # 0/1 Running — not ready
+
+# Create second pod to satisfy the service
+k run am-i-ready --image=nginx:1.16.1-alpine --labels="id=cross-server-ready"
+
+k describe svc service-am-i-ready  # now has endpoint
+k get pod ready-if-service-ready   # 1/1 Running — ready!`,
+tip:`wget -T2 sets a 2 second timeout. The readinessProbe.httpGet doesn't work for absolute remote URLs, so we use exec with wget instead.`},
+
+{n:5,t:"Kubectl sorting",w:1,ctx:"k8s-c1-H",dom:"Architecture",
+task:`Write a command into <code>/opt/course/5/find_pods.sh</code> which lists all <em>Pods</em> sorted by their AGE (<code>metadata.creationTimestamp</code>).\n\nWrite a second command into <code>/opt/course/5/find_pods_uid.sh</code> which lists all <em>Pods</em> sorted by field <code>metadata.uid</code>. Use <code>kubectl</code> sorting for both commands.`,
+solution:`# /opt/course/5/find_pods.sh
+kubectl get pod -A --sort-by=.metadata.creationTimestamp
+
+# /opt/course/5/find_pods_uid.sh
+kubectl get pod -A --sort-by=.metadata.uid`,
+tip:`--sort-by uses JSONPath dot notation. Use full 'kubectl' in scripts, not alias 'k'.`},
+
+{n:6,t:"Storage, PV, PVC, Pod volume",w:8,ctx:"k8s-c1-H",dom:"Storage",
+task:`Create a new <em>PersistentVolume</em> named <code>safari-pv</code>. It should have a capacity of <em>2Gi</em>, accessMode <em>ReadWriteOnce</em>, hostPath <code>/Volumes/Data</code> and no storageClassName defined.\n\nNext create a new <em>PersistentVolumeClaim</em> in <em>Namespace</em> <code>project-tiger</code> named <code>safari-pvc</code>. It should request <em>2Gi</em> storage, accessMode <em>ReadWriteOnce</em> and should not define a storageClassName. The <em>PVC</em> should bound to the <em>PV</em> correctly.\n\nFinally create a new <em>Deployment</em> <code>safari</code> in <em>Namespace</em> <code>project-tiger</code> which mounts that volume at <code>/tmp/safari-data</code>. The <em>Pods</em> of that <em>Deployment</em> should be of image <code>httpd:2.4.41-alpine</code>.`,
+solution:`# PV (cluster-scoped)
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: safari-pv
+spec:
+  capacity:
+    storage: 2Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/Volumes/Data"
+
+# PVC (namespace-scoped)
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: safari-pvc
+  namespace: project-tiger
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+
+# Deployment
+k -n project-tiger create deploy safari \\
+  --image=httpd:2.4.41-alpine $do > 6_dep.yaml
+
+# Add to deployment YAML:
+spec:
+  template:
+    spec:
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: safari-pvc
+      containers:
+      - image: httpd:2.4.41-alpine
+        name: container
+        volumeMounts:
+        - name: data
+          mountPath: /tmp/safari-data
+
+# Verify
+k -n project-tiger get pv,pvc
+# Both should show STATUS: Bound`,
+tip:`PV capacity must be >= PVC request AND access modes must match. Don't define storageClassName at all (not even empty string) to let them bind via static provisioning.`},
+
+{n:7,t:"Node and Pod Resource Usage",w:1,ctx:"k8s-c1-H",dom:"Troubleshooting",
+task:`The metrics-server has been installed in the cluster. Your colleague would like to know the kubectl commands to:\n\n1. show <em>Nodes</em> resource usage\n2. show <em>Pods</em> and their containers resource usage\n\nPlease write the commands into <code>/opt/course/7/node.sh</code> and <code>/opt/course/7/pod.sh</code>.`,
+solution:`# /opt/course/7/node.sh
+kubectl top node
+
+# /opt/course/7/pod.sh
+kubectl top pod --containers=true`,
+tip:`kubectl top pod --containers=true shows per-container usage. Without --containers it shows pod-level only.`},
+
+{n:8,t:"Get Controlplane Information",w:2,ctx:"k8s-c1-H",dom:"Architecture",
+task:`Ssh into the controlplane node with <code>ssh cluster1-controlplane1</code>. Check how the controlplane components kubelet, kube-apiserver, kube-scheduler, kube-controller-manager and etcd are started/installed on the controlplane node. Also find out the name of the DNS application and how it's started/installed.\n\nWrite your findings into file <code>/opt/course/8/controlplane-components.txt</code>. Choices of [TYPE] are: <code>not-installed</code>, <code>process</code>, <code>static-pod</code>, <code>pod</code>`,
+solution:`ssh cluster1-controlplane1
+
+# Check kubelet — it's a systemd process
+ps aux | grep kubelet
+find /etc/systemd/system/ | grep kube
+
+# Check static pods
+find /etc/kubernetes/manifests/
+# apiserver, scheduler, controller-manager, etcd are all here
+
+# Check DNS
+kubectl -n kube-system get deploy  # coredns is a Deployment
+
+# /opt/course/8/controlplane-components.txt
+kubelet: process
+kube-apiserver: static-pod
+kube-scheduler: static-pod
+kube-controller-manager: static-pod
+etcd: static-pod
+dns: pod coredns`,
+tip:`kubelet is ALWAYS a systemd process — never a pod. Static pods are in /etc/kubernetes/manifests/. CoreDNS runs as a Deployment-managed pod.`},
+
+{n:9,t:"Kill Scheduler, Manual Scheduling",w:5,ctx:"k8s-c2-AC",dom:"Scheduling",
+task:`Ssh into the controlplane node. <b>Temporarily</b> stop the kube-scheduler, this means in a way that you can start it again afterwards.\n\nCreate a single <em>Pod</em> named <code>manual-schedule</code> of image <code>httpd:2.4-alpine</code>, confirm it's created but not scheduled on any node.\n\nNow you're the scheduler — manually schedule that <em>Pod</em> on node <code>cluster2-controlplane1</code>. Make sure it's running.\n\nStart the kube-scheduler again and confirm it's running correctly by creating a second <em>Pod</em> named <code>manual-schedule2</code> of image <code>httpd:2.4-alpine</code> and check if it's running on <code>cluster2-node1</code>.`,
+solution:`ssh cluster2-controlplane1
+
+# Stop scheduler by moving its static pod manifest
+cd /etc/kubernetes/manifests/
+mv kube-scheduler.yaml ..
+
+# Verify scheduler is gone
+kubectl -n kube-system get pod | grep schedule
+
+# Create pod — it will stay Pending
+k run manual-schedule --image=httpd:2.4-alpine
+k get pod manual-schedule -o wide  # NODE: <none>
+
+# Manually assign it
+k get pod manual-schedule -o yaml > 9.yaml
+# Add nodeName: cluster2-controlplane1 under spec:
+k -f 9.yaml replace --force
+k get pod manual-schedule -o wide  # NODE: cluster2-controlplane1
+
+# Restore scheduler
+mv /etc/kubernetes/kube-scheduler.yaml /etc/kubernetes/manifests/
+kubectl -n kube-system get pod | grep schedule  # Running
+
+# Test auto-scheduling
+k run manual-schedule2 --image=httpd:2.4-alpine
+k get pod manual-schedule2 -o wide  # scheduled automatically`,
+tip:`The only thing a scheduler does is set nodeName for a Pod. When you bypass the scheduler with nodeName directly, taints/tolerations/affinity are all ignored.`},
+
+{n:10,t:"RBAC ServiceAccount Role RoleBinding",w:6,ctx:"k8s-c1-H",dom:"Security",
+task:`Create a new <em>ServiceAccount</em> <code>processor</code> in <em>Namespace</em> <code>project-hamster</code>. Create a <em>Role</em> and <em>RoleBinding</em>, both named <code>processor</code> as well. These should allow the new SA to only create <em>Secrets</em> and <em>ConfigMaps</em> in that <em>Namespace</em>.`,
+solution:`k -n project-hamster create sa processor
+
+k -n project-hamster create role processor \\
+  --verb=create \\
+  --resource=secret \\
+  --resource=configmap
+
+k -n project-hamster create rolebinding processor \\
+  --role processor \\
+  --serviceaccount project-hamster:processor
+
+# Verify
+k -n project-hamster auth can-i create secret \\
+  --as system:serviceaccount:project-hamster:processor
+# yes
+
+k -n project-hamster auth can-i create pod \\
+  --as system:serviceaccount:project-hamster:processor
+# no
+
+k -n project-hamster auth can-i delete secret \\
+  --as system:serviceaccount:project-hamster:processor
+# no`,
+tip:`4 RBAC combos exist: Role+RoleBinding (namespace), ClusterRole+ClusterRoleBinding (cluster-wide), ClusterRole+RoleBinding (cluster-wide perms scoped to namespace). Role+ClusterRoleBinding is NOT possible.`},
+
+{n:11,t:"DaemonSet on all Nodes",w:4,ctx:"k8s-c1-H",dom:"Workloads",
+task:`Use <em>Namespace</em> <code>project-tiger</code>. Create a <em>DaemonSet</em> named <code>ds-important</code> with image <code>httpd:2.4-alpine</code> and labels <code>id=ds-important</code> and <code>uuid=18426a0b-5f59-4e10-923f-c0e078e82462</code>. The <em>Pods</em> it creates should request 10 millicore cpu and 10 mebibyte memory. The <em>Pods</em> of that <em>DaemonSet</em> should run on all nodes, also controlplanes.`,
+solution:`# No imperative way to create DaemonSet — generate from Deployment
+k -n project-tiger create deployment \\
+  --image=httpd:2.4-alpine ds-important $do > 11.yaml
+
+# Change kind: Deployment to kind: DaemonSet
+# Remove replicas and strategy fields
+# Add labels, resource requests, and toleration:
+
+spec:
+  template:
+    spec:
+      containers:
+      - image: httpd:2.4-alpine
+        name: ds-important
+        resources:
+          requests:
+            cpu: 10m
+            memory: 10Mi
+      tolerations:
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/control-plane
+
+k -f 11.yaml create
+k -n project-tiger get ds  # DESIRED: 3, READY: 3
+k -n project-tiger get pod -l id=ds-important -o wide`,
+tip:`To run DaemonSet on controlplane nodes, add toleration for node-role.kubernetes.io/control-plane:NoSchedule. Use kubectl explain daemonset.spec in the exam.`},
+
+{n:12,t:"Deployment on all Nodes",w:6,ctx:"k8s-c1-H",dom:"Scheduling",
+task:`Use <em>Namespace</em> <code>project-tiger</code>. Create a <em>Deployment</em> named <code>deploy-important</code> with label <code>id=very-important</code> and 3 replicas. It should contain two containers: <code>container1</code> with image <code>nginx:1.17.6-alpine</code> and <code>container2</code> with image <code>kubernetes/pause</code>.\n\nThere should be only ever <b>one Pod per worker node</b>. We have two worker nodes. The third Pod won't be scheduled unless a new worker node is added. (Simulating DaemonSet behavior with a Deployment)`,
+solution:`# Method 1: podAntiAffinity
+spec:
+  template:
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: id
+                operator: In
+                values:
+                - very-important
+            topologyKey: kubernetes.io/hostname
+
+# Method 2: topologySpreadConstraints
+spec:
+  template:
+    spec:
+      topologySpreadConstraints:
+      - maxSkew: 1
+        topologyKey: kubernetes.io/hostname
+        whenUnsatisfiable: DoNotSchedule
+        labelSelector:
+          matchLabels:
+            id: very-important
+
+# Result: 2/3 READY, 1 pod Pending (no node available)
+k -n project-tiger get pod -o wide -l id=very-important`,
+tip:`Two methods work: podAntiAffinity (older, more verbose) or topologySpreadConstraints (modern). Both are valid in the exam.`},
+
+{n:13,t:"Multi Containers and Pod shared Volume",w:4,ctx:"k8s-c1-H",dom:"Workloads",
+task:`Create a <em>Pod</em> named <code>multi-container-playground</code> with three containers, named <code>c1</code>, <code>c2</code> and <code>c3</code>. There should be a volume attached to that <em>Pod</em> and mounted into every container, but the volume shouldn't be persisted or shared with other <em>Pods</em>.\n\nContainer <code>c1</code>: image <code>nginx:1.17.6-alpine</code>, have the name of the node as env var MY_NODE_NAME.\nContainer <code>c2</code>: image <code>busybox:1.31.1</code>, write <code>date</code> every second to <code>/vol/date.log</code>.\nContainer <code>c3</code>: image <code>busybox:1.31.1</code>, tail <code>/vol/date.log</code>.`,
+solution:`apiVersion: v1
+kind: Pod
+metadata:
+  name: multi-container-playground
+spec:
+  volumes:
+  - name: vol
+    emptyDir: {}
+  containers:
+  - image: nginx:1.17.6-alpine
+    name: c1
+    env:
+    - name: MY_NODE_NAME
+      valueFrom:
+        fieldRef:
+          fieldPath: spec.nodeName
+    volumeMounts:
+    - name: vol
+      mountPath: /vol
+  - image: busybox:1.31.1
+    name: c2
+    command: ["sh", "-c", "while true; do date >> /vol/date.log; sleep 1; done"]
+    volumeMounts:
+    - name: vol
+      mountPath: /vol
+  - image: busybox:1.31.1
+    name: c3
+    command: ["sh", "-c", "tail -f /vol/date.log"]
+    volumeMounts:
+    - name: vol
+      mountPath: /vol
+
+# Verify
+k exec multi-container-playground -c c1 -- env | grep MY
+k logs multi-container-playground -c c3`,
+tip:`MY_NODE_NAME uses the Downward API (fieldRef: spec.nodeName). emptyDir volumes are ephemeral — created when pod starts, deleted when pod dies.`},
+
+{n:14,t:"Find out Cluster Information",w:2,ctx:"k8s-c1-H",dom:"Architecture",
+task:`Find out:\n1. How many controlplane nodes are available?\n2. How many worker nodes are available?\n3. What is the Service CIDR?\n4. Which CNI Plugin is configured and where is its config file?\n5. Which suffix will static pods have that run on cluster1-node1?`,
+solution:`# 1 & 2: count nodes
+k get node  # 1 controlplane, 2 workers
+
+# 3: Service CIDR
+ssh cluster1-controlplane1
+cat /etc/kubernetes/manifests/kube-apiserver.yaml | grep range
+# --service-cluster-ip-range=10.96.0.0/12
+
+# 4: CNI plugin
+find /etc/cni/net.d/
+# /etc/cni/net.d/10-weave.conflist → Weave
+
+# 5: Static pod suffix = -<node-hostname>
+# On cluster1-node1: suffix is -cluster1-node1
+
+# /opt/course/14/cluster-info
+1: 1
+2: 2
+3: 10.96.0.0/12
+4: Weave, /etc/cni/net.d/10-weave.conflist
+5: -cluster1-node1`,
+tip:`Service CIDR is always in kube-apiserver manifest as --service-cluster-ip-range. CNI config is always under /etc/cni/net.d/.`},
+
+{n:15,t:"Cluster Event Logging",w:3,ctx:"k8s-c2-AC",dom:"Troubleshooting",
+task:`Write a command into <code>/opt/course/15/cluster_events.sh</code> which shows the latest events in the whole cluster, ordered by time. Use <code>kubectl</code> for it.\n\nKill the kube-proxy <em>Pod</em> running on node cluster2-node1 and write the events this caused into <code>/opt/course/15/pod_kill.log</code>.\n\nFinally kill the containerd container of the kube-proxy <em>Pod</em> on node cluster2-node1 using <code>crictl</code> and write those events into <code>/opt/course/15/container_kill.log</code>.`,
+solution:`# /opt/course/15/cluster_events.sh
+kubectl get events -A --sort-by=.metadata.creationTimestamp
+
+# Kill pod (DaemonSet recreates it)
+k -n kube-system get pod -o wide | grep proxy
+k -n kube-system delete pod kube-proxy-xxxxx
+
+# Save events to pod_kill.log
+
+# Kill container via crictl (pod survives, container restarts)
+ssh cluster2-node1
+crictl ps | grep kube-proxy
+crictl rm <container-id>
+
+# Save events to container_kill.log`,
+tip:`Deleting the pod triggers: Killing → SuccessfulCreate (DaemonSet) → Scheduled → Created → Started. Killing just the container: only Created → Pulled → Started (pod still exists, less events).`},
+
+{n:16,t:"Namespaces and Api Resources",w:2,ctx:"k8s-c1-H",dom:"Architecture",
+task:`Write the names of all namespaced Kubernetes resources into <code>/opt/course/16/resources.txt</code>.\n\nFind the <code>project-*</code> <em>Namespace</em> with the highest number of <code>Roles</code> defined in it and write its name and amount of <em>Roles</em> into <code>/opt/course/16/crowded-namespace.txt</code>.`,
+solution:`# All namespaced resources
+k api-resources --namespaced -o name > /opt/course/16/resources.txt
+
+# Count roles per project namespace
+k -n project-c13 get role --no-headers | wc -l      # 0
+k -n project-c14 get role --no-headers | wc -l      # 300
+k -n project-hamster get role --no-headers | wc -l   # 0
+k -n project-snake get role --no-headers | wc -l     # 0
+k -n project-tiger get role --no-headers | wc -l     # 0
+
+# /opt/course/16/crowded-namespace.txt
+project-c14 with 300 resources`,
+tip:`--namespaced=true filters to namespace-scoped resources. --namespaced=false gives cluster-scoped. --no-headers is essential when piping to wc -l.`},
+
+{n:17,t:"Find Container of Pod and check info",w:3,ctx:"k8s-c1-H",dom:"Troubleshooting",
+task:`In <em>Namespace</em> <code>project-tiger</code> create a <em>Pod</em> named <code>tigers-reunite</code> of image <code>httpd:2.4.41-alpine</code> with labels <code>pod=container</code> and <code>container=pod</code>. Find out on which node the <em>Pod</em> is scheduled. Ssh into that node and find the containerd container belonging to that <em>Pod</em>.\n\nUsing <code>crictl</code>:\n1. Write the ID of the container and the <code>info.runtimeType</code> into <code>/opt/course/17/pod-container.txt</code>\n2. Write the logs of the container into <code>/opt/course/17/pod-container.log</code>`,
+solution:`k -n project-tiger run tigers-reunite \\
+  --image=httpd:2.4.41-alpine \\
+  --labels "pod=container,container=pod"
+
+k -n project-tiger get pod tigers-reunite -o wide  # find node
+ssh <node-name>
+
+crictl ps | grep tigers-reunite
+# b01edbe6f89ed  ...  Running  tigers-reunite
+
+crictl inspect b01edbe6f89ed | grep runtimeType
+# "runtimeType": "io.containerd.runc.v2"
+
+# /opt/course/17/pod-container.txt
+b01edbe6f89ed io.containerd.runc.v2
+
+# Write logs
+ssh <node> 'crictl logs b01edbe6f89ed' &> /opt/course/17/pod-container.log`,
+tip:`crictl operates at the container runtime level (containerd). &> redirects both stdout and stderr. You can also use 'kubectl logs' as an alternative.`},
+
+{n:18,t:"Fix Kubelet",w:8,ctx:"k8s-c3-CCC",dom:"Troubleshooting",
+task:`There seems to be an issue with the kubelet not running on <code>cluster3-node1</code>. Fix it and confirm that cluster has node <code>cluster3-node1</code> available in Ready state afterwards.\n\nWrite the reason of the issue into <code>/opt/course/18/reason.txt</code>.`,
+solution:`k get node  # cluster3-node1 is NotReady
+
+ssh cluster3-node1
+
+# Check kubelet
+ps aux | grep kubelet        # not running
+service kubelet status       # inactive (dead)
+service kubelet start        # try to start
+
+# Check errors
+service kubelet status
+# ExecStart=/usr/local/bin/kubelet → "No such file or directory"
+
+whereis kubelet
+# kubelet: /usr/bin/kubelet
+
+# Fix: wrong path in service config
+vim /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+# Change /usr/local/bin/kubelet to /usr/bin/kubelet
+
+systemctl daemon-reload && systemctl restart kubelet
+systemctl status kubelet  # now running
+
+# Verify from control plane
+k get node  # cluster3-node1 → Ready
+
+# /opt/course/18/reason.txt
+wrong path to kubelet binary specified in service config`,
+tip:`Always check: systemctl status kubelet → journalctl -u kubelet → whereis kubelet. The most common exam break: wrong binary path, wrong config path, or kubelet simply stopped.`},
+
+{n:19,t:"Create Secret and mount into Pod",w:3,ctx:"k8s-c3-CCC",dom:"Security",
+task:`In a new <em>Namespace</em> <code>secret</code>:\n\n1. Create a <em>Pod</em> named <code>secret-pod</code> of image <code>busybox:1.31.1</code> which should keep running for some time\n2. Mount the existing <em>Secret</em> at <code>/opt/course/19/secret1.yaml</code> readonly into the <em>Pod</em> at <code>/tmp/secret1</code>\n3. Create a new <em>Secret</em> <code>secret2</code> with <code>user=user1</code> and <code>pass=1234</code>. Expose as env vars <code>APP_USER</code> and <code>APP_PASS</code>`,
+solution:`k create ns secret
+k create -f /opt/course/19/secret1.yaml -n secret
+k -n secret create secret generic secret2 \\
+  --from-literal=user=user1 --from-literal=pass=1234
+
+k -n secret run secret-pod --image=busybox:1.31.1 $do \\
+  -- sh -c "sleep 5d" > 19.yaml
+
+# Add to 19.yaml:
+volumes:
+- name: secret1
+  secret:
+    secretName: secret1
+containers:
+- volumeMounts:
+  - name: secret1
+    mountPath: /tmp/secret1
+    readOnly: true
+  env:
+  - name: APP_USER
+    valueFrom:
+      secretKeyRef:
+        name: secret2
+        key: user
+  - name: APP_PASS
+    valueFrom:
+      secretKeyRef:
+        name: secret2
+        key: pass
+
+k -f 19.yaml create
+
+# Verify
+k -n secret exec secret-pod -- env | grep APP
+k -n secret exec secret-pod -- find /tmp/secret1`,
+tip:`Secrets mounted as volumes: each key becomes a file. Env vars use secretKeyRef. Verify with kubectl exec -- env | grep.`},
+
+{n:20,t:"Update Kubernetes Version and join cluster",w:10,ctx:"k8s-c3-CCC",dom:"Architecture",
+task:`Node <code>cluster3-node2</code> is running an older Kubernetes version and is not even part of the cluster. Update Kubernetes on that node to the exact version that's running on <code>cluster3-controlplane1</code>. Then add this node to the cluster. Use kubeadm for this.`,
+solution:`k get node  # controlplane runs v1.26.0, node2 not listed
+
+ssh cluster3-node2
+
+# Check current versions
+kubeadm version    # v1.26.0 (already correct)
+kubelet --version  # v1.25.5 (needs upgrade)
+
+# Upgrade kubelet and kubectl
+apt update
+apt install kubectl=1.26.0-00 kubelet=1.26.0-00
+kubelet --version  # v1.26.0
+service kubelet restart
+
+# Get join command from controlplane
+ssh cluster3-controlplane1
+kubeadm token create --print-join-command
+
+# Run the join command on node2
+ssh cluster3-node2
+kubeadm join 192.168.100.31:6443 --token xxx \\
+  --discovery-token-ca-cert-hash sha256:xxx
+
+service kubelet status  # active (running)
+
+# Verify from main terminal
+k get node  # cluster3-node2 → Ready, v1.26.0`,
+tip:`kubeadm upgrade node is for nodes already in the cluster. For a new node: upgrade packages first, then kubeadm join. If join fails, try kubeadm reset first.`},
+
+{n:21,t:"Create a Static Pod and Service",w:2,ctx:"k8s-c3-CCC",dom:"Architecture",
+task:`Create a <code>Static Pod</code> named <code>my-static-pod</code> on cluster3-controlplane1. It should be of image <code>nginx:1.16-alpine</code> and have resource requests for <code>10m</code> CPU and <code>20Mi</code> memory.\n\nThen create a NodePort <em>Service</em> named <code>static-pod-service</code> which exposes that static <em>Pod</em> on port 80 and check if it has <em>Endpoints</em> and if it's reachable.`,
+solution:`ssh cluster3-controlplane1
+
+kubectl run my-static-pod --image=nginx:1.16-alpine \\
+  -o yaml --dry-run=client > /etc/kubernetes/manifests/my-static-pod.yaml
+
+# Edit to add resource requests:
+resources:
+  requests:
+    cpu: 10m
+    memory: 20Mi
+
+# Verify static pod appears (with node suffix)
+k get pod -A | grep my-static
+# my-static-pod-cluster3-controlplane1   Running
+
+# Expose via NodePort (use full pod name with suffix)
+kubectl expose pod my-static-pod-cluster3-controlplane1 \\
+  --name static-pod-service \\
+  --type=NodePort \\
+  --port 80
+
+k get svc,ep -l run=my-static-pod`,
+tip:`Static pod name = spec name + '-' + node name. Use that FULL name when running kubectl expose.`},
+
+{n:22,t:"Check how long certificates are valid",w:2,ctx:"k8s-c2-AC",dom:"Security",
+task:`Check how long the kube-apiserver server certificate is valid on <code>cluster2-controlplane1</code>. Do this with openssl or cfssl. Write the expiration date into <code>/opt/course/22/expiration</code>.\n\nAlso run the correct <code>kubeadm</code> command to list the expiration dates and confirm both methods show the same date.\n\nWrite the correct <code>kubeadm</code> command that would renew the apiserver server certificate into <code>/opt/course/22/kubeadm-renew-certs.sh</code>.`,
+solution:`ssh cluster2-controlplane1
+
+# Method 1: openssl
+openssl x509 -noout -text \\
+  -in /etc/kubernetes/pki/apiserver.crt | grep Validity -A2
+
+# Method 2: kubeadm
+kubeadm certs check-expiration | grep apiserver
+
+# Write expiry
+# /opt/course/22/expiration
+Dec 20 18:05:20 2023 GMT
+
+# Write renewal command
+# /opt/course/22/kubeadm-renew-certs.sh
+kubeadm certs renew apiserver`,
+tip:`kubeadm certs check-expiration shows all certs with human-readable expiry — much faster than running openssl on each file. After renewal, restart the apiserver static pod.`},
+
+{n:23,t:"Kubelet client/server cert info",w:2,ctx:"k8s-c2-AC",dom:"Security",
+task:`Node cluster2-node1 has been added to the cluster using <code>kubeadm</code> and TLS bootstrapping.\n\nFind the "Issuer" and "Extended Key Usage" values of:\n1. kubelet <b>client</b> certificate (<code>/var/lib/kubelet/pki/kubelet-client-current.pem</code>)\n2. kubelet <b>server</b> certificate (<code>/var/lib/kubelet/pki/kubelet.crt</code>)`,
+solution:`ssh cluster2-node1
+
+# Client cert
+openssl x509 -noout -text \\
+  -in /var/lib/kubelet/pki/kubelet-client-current.pem | grep Issuer
+# Issuer: CN = kubernetes
+
+openssl x509 -noout -text \\
+  -in /var/lib/kubelet/pki/kubelet-client-current.pem | grep "Extended Key Usage" -A1
+# TLS Web Client Authentication
+
+# Server cert
+openssl x509 -noout -text \\
+  -in /var/lib/kubelet/pki/kubelet.crt | grep Issuer
+# Issuer: CN = cluster2-node1-ca@...
+
+openssl x509 -noout -text \\
+  -in /var/lib/kubelet/pki/kubelet.crt | grep "Extended Key Usage" -A1
+# TLS Web Server Authentication`,
+tip:`Client cert (issued by kubernetes CA) = used to talk TO the apiserver. Server cert (self-signed by node) = used when apiserver connects TO the kubelet. Extended Key Usage tells you which is which.`},
+
+{n:24,t:"NetworkPolicy",w:9,ctx:"k8s-c1-H",dom:"Networking",
+task:`There was a security incident where an intruder was able to access the whole cluster from a single hacked backend <em>Pod</em>.\n\nTo prevent this create a <em>NetworkPolicy</em> called <code>np-backend</code> in <em>Namespace</em> <code>project-snake</code>. It should allow the <code>backend-*</code> <em>Pods</em> only to:\n\n• connect to <code>db1-*</code> <em>Pods</em> on port 1111\n• connect to <code>db2-*</code> <em>Pods</em> on port 2222\n\nUse the <code>app</code> label of <em>Pods</em> in your policy.\n\nAfter implementation, connections from <code>backend-*</code> <em>Pods</em> to <code>vault-*</code> <em>Pods</em> on port 3333 should for example no longer work.`,
+solution:`# Check existing pods and labels
+k -n project-snake get pod -L app
+# backend-0 → app=backend
+# db1-0     → app=db1
+# db2-0     → app=db2
+# vault-0   → app=vault
+
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: np-backend
+  namespace: project-snake
+spec:
+  podSelector:
+    matchLabels:
+      app: backend
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: db1
+    ports:
+    - protocol: TCP
+      port: 1111
+  - to:
+    - podSelector:
+        matchLabels:
+          app: db2
+    ports:
+    - protocol: TCP
+      port: 2222
+
+k apply -f np.yaml
+k -n project-snake get netpol`,
+tip:`This is an EGRESS policy on backend pods (not ingress on db pods). Each egress rule (- to:) is a separate allowed destination. Without explicit DNS egress, backend pods also lose DNS resolution — in the exam, if DNS is needed, add a rule allowing UDP port 53 to kube-dns.`},
+
+{n:25,t:"Etcd Snapshot Save and Restore",w:8,ctx:"k8s-c3-CCC",dom:"Architecture",
+task:`Make a backup of etcd running on <code>cluster3-controlplane1</code> and save it on the controlplane node at <code>/tmp/etcd-backup.db</code>.\n\nThen create a <em>Pod</em> of your choice in the cluster.\n\nFinally restore the backup, confirm the cluster is still working and that the created <em>Pod</em> is no longer running.`,
+solution:`ssh cluster3-controlplane1
+
+# Find etcd cert paths from manifest
+cat /etc/kubernetes/manifests/etcd.yaml | grep -E "(cert|key|trusted)"
+
+# Backup
+ETCDCTL_API=3 etcdctl snapshot save /tmp/etcd-backup.db \\
+  --cacert=/etc/kubernetes/pki/etcd/ca.crt \\
+  --cert=/etc/kubernetes/pki/etcd/server.crt \\
+  --key=/etc/kubernetes/pki/etcd/server.key
+
+# Create a test pod
+kubectl run test --image=nginx
+
+# Restore to new data directory
+ETCDCTL_API=3 etcdctl snapshot restore /tmp/etcd-backup.db \\
+  --data-dir /var/lib/etcd-backup
+
+# Update etcd manifest to use new data dir
+vim /etc/kubernetes/manifests/etcd.yaml
+# Change hostPath from /var/lib/etcd to /var/lib/etcd-backup:
+#   - hostPath:
+#       path: /var/lib/etcd-backup
+#       type: DirectoryOrCreate
+#     name: etcd-data
+
+# Wait for etcd to restart
+# The test pod should no longer exist
+kubectl get pod | grep test  # gone`,
+tip:`Always get the cert paths from the etcd manifest — don't guess. After restore, you MUST update the etcd manifest hostPath to the new data directory. The kubelet will automatically restart the etcd static pod when the manifest changes.`}
+];
+
+let done=new Array(Q.length).fill(false);
+
+function buildNav(){
+const nl=document.getElementById('navList');
+Q.forEach((q,i)=>{
+nl.innerHTML+=`<div class="ni${i===0?' active':''}" id="nav${i}" onclick="go(${i})">
+<span class="nn">${String(q.n).padStart(2,'0')}</span>
+<span class="ni-t">${q.t}</span>
+<span class="ni-w">${q.w}%</span>
+<span class="nc">✓</span>
+</div>`;
+});
+}
+
+function buildMain(){
+const m=document.getElementById('mainArea');
+Q.forEach((q,i)=>{
+const taskHtml=q.task.replace(/\n/g,'<br>');
+const solLines=q.solution.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+m.innerHTML+=`<div class="q${i===0?' active':''}" id="q${i}">
+<div class="qh" data-n="Q${q.n}">
+<div class="qb-row">
+<span class="qb qb-w">Weight: ${q.w}%</span>
+${q.ctx!=='—'?`<span class="qb qb-ctx">ctx: ${q.ctx}</span>`:''}
+<span class="qb qb-dom">${q.dom}</span>
+</div>
+<div class="qt">Q${q.n}. ${q.t}</div>
+</div>
+<div class="qtabs">
+<div class="ctab active" onclick="stab(this,'${i}-task')">Task</div>
+<div class="ctab" onclick="stab(this,'${i}-sol')">Solution</div>
+</div>
+<div class="qbody">
+<div class="tp active" id="${i}-task">
+<div class="task"><h4>Task Description</h4>${taskHtml}</div>
+<div class="co exam"><strong>Exam context</strong>${q.ctx!=='—'?`Switch context first: <code>kubectl config use-context ${q.ctx}</code>`:' This question does not require a specific context.'}</div>
+<div class="sol-wrap">
+<button class="sol-btn" onclick="this.nextElementSibling.classList.toggle('visible')">▶ Show Quick Answer</button>
+<div class="sol-content">
+<div class="cb"><div class="ch"><span class="cl">solution</span><button class="cp" onclick="cpy(this)">copy</button></div><pre>${solLines}</pre></div>
+</div>
+</div>
+</div>
+<div class="tp" id="${i}-sol">
+<div class="cb"><div class="ch"><span class="cl">full solution</span><button class="cp" onclick="cpy(this)">copy</button></div><pre>${solLines}</pre></div>
+<div class="co tip"><strong>Tip</strong>${q.tip}</div>
+</div>
+<button class="md" id="db${i}" onclick="markDone(${i})">✓ Mark complete</button>
+<div class="qn">
+${i>0?`<button class="qnb" onclick="go(${i-1})">← Prev</button>`:''}
+${i<Q.length-1?`<button class="qnb" onclick="go(${i+1})">Next →</button>`:''}
+</div>
+</div>
+</div>`;
+});
+}
+
+function go(i){
+document.querySelectorAll('.q').forEach(e=>e.classList.remove('active'));
+document.querySelectorAll('.ni').forEach(e=>e.classList.remove('active'));
+document.getElementById('q'+i).classList.add('active');
+document.getElementById('nav'+i).classList.add('active');
+document.querySelector('main').scrollTop=0;
+}
+
+function stab(el,id){
+const ch=el.closest('.q');
+ch.querySelectorAll('.ctab').forEach(t=>t.classList.remove('active'));
+ch.querySelectorAll('.tp').forEach(p=>p.classList.remove('active'));
+el.classList.add('active');
+document.getElementById(id).classList.add('active');
+}
+
+function markDone(i){
+const b=document.getElementById('db'+i);
+if(b.classList.contains('ds'))return;
+done[i]=true;
+b.textContent='✓ Completed';
+b.classList.add('ds');
+document.getElementById('nav'+i).classList.add('done');
+const c=done.filter(Boolean).length;
+document.getElementById('gp').style.width=(c/Q.length*100)+'%';
+document.getElementById('gl').textContent=c+' / '+Q.length+' completed';
+}
+
+function cpy(btn){
+const pre=btn.closest('.cb').querySelector('pre');
+navigator.clipboard.writeText(pre.innerText).then(()=>{
+btn.textContent='copied!';
+setTimeout(()=>btn.textContent='copy',1500);
+});
+}
+
+buildNav();
+buildMain();
+</script>
+</body>
+</html>
