@@ -1,15 +1,17 @@
-# Scenario s03: Cluster DNS resolution failure
+# Scenario s03: CoreDNS Pod Crash Loop
 
 ## Problem
-[Describe what's broken and symptoms]
+
+Service DNS resolution is failing. Pods can't reach services by name. CoreDNS is stuck in CrashLoopBackOff.
+
+Fix the CoreDNS deployment so DNS queries work again.
 
 ## Expected State
-[Describe what success looks like]
+
+- CoreDNS pod is Running (not CrashLoopBackOff)
+- Service DNS resolves: `nslookup kubernetes.default` returns 10.96.0.1
+- Pods can reach services by name
 
 ## Time Limit
-15 minutes
 
-## Exam Notes
-- No external documentation allowed
-- Use only kubectl and ssh
-- Minimize cluster state changes
+15 minutes

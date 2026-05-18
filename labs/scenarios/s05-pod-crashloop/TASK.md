@@ -1,15 +1,17 @@
-# Scenario s05: Application missing startup config
+# Scenario s05: Pod Stuck in CrashLoopBackOff
 
 ## Problem
-[Describe what's broken and symptoms]
+
+A deployment's pods are restarting every few seconds (CrashLoopBackOff). The app needs a config file to start.
+
+Create the missing config and fix the deployment.
 
 ## Expected State
-[Describe what success looks like]
+
+- Pods are Running (not CrashLoopBackOff)
+- Container stays alive for > 60 seconds
+- ConfigMap with app config exists
 
 ## Time Limit
-15 minutes
 
-## Exam Notes
-- No external documentation allowed
-- Use only kubectl and ssh
-- Minimize cluster state changes
+15 minutes

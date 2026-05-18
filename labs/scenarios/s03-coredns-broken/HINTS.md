@@ -1,18 +1,38 @@
-# Hints for s03
+# Hints for s03: CoreDNS Broken
 
-## Step 1
-[First diagnostic step]
+## Symptoms
 
-## Step 2
-[Next step]
+- CoreDNS pod in CrashLoopBackOff
+- Pods can't resolve service names
+- nslookup fails inside pods
 
-## Common Mistakes
-- [Pitfall 1]
-- [Pitfall 2]
+## Debugging Path
+
+1. **Check CoreDNS pod status:**
+   ```
+   kubectl get pods -n kube-system -l k8s-app=kube-dns
+   kubectl describe pod <coredns-pod> -n kube-system
+   kubectl logs <coredns-pod> -n kube-system
+   ```
+
+2. **Check CoreDNS ConfigMap:**
+   ```
+   kubectl get configmap coredns -n kube-system -o yaml
+   ```
+
+3. **Likely issue: Invalid Corefile syntax**
+   - Look for `loop` directive (causes infinite recursion)
+   - Check for duplicate directives
+
+4. **Fix ConfigMap and restart:**
+   ```
+   kubectl edit configmap coredns -n kube-system
+   # Remove the "loop" line, save
+   kubectl rollout restart deployment/coredns -n kube-system
+   ```
 
 ## Key Commands
-```bash
-kubectl get nodes
-kubectl describe node <name>
-kubectl logs <pod> -n <ns>
-```
+
+- `kubectl get pods -n kube-system -l k8s-app=kube-dns`
+- `kubectl logs -f <pod> -n kube-system | head -20`
+- `kubectl exec <test-pod> -- nslookup kubernetes.default`
