@@ -1,13 +1,16 @@
 #!/bin/bash
 set -e
-
 CLUSTER_NAME="$1"
 KUBECONFIG="$2"
-
 export KUBECONFIG
 
-# Clean up
-# Example:
-# kubectl delete all --all -n default
+SCENARIO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-echo "✓ Scenario reset"
+kubectl delete -f "$SCENARIO_DIR/manifests/deployment.yaml" --ignore-not-found
+
+# Restore kubelet config (remove the bad override if possible)
+docker exec "$CLUSTER_NAME-worker" sh -c 'systemctl restart kubelet' || true
+
+sleep 5
+
+echo "✓ Scenario reset complete"

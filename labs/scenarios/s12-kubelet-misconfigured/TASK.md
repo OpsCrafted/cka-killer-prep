@@ -1,15 +1,18 @@
-# Scenario s12: Node can't reach API server
+# Scenario s12: Kubelet Misconfigured
 
 ## Problem
-[Describe what's broken and symptoms]
+
+Node is showing errors and can't run pods. Kubelet is misconfigured—its --config flag points to a non-existent file.
+
+Fix the kubelet configuration and restart the service.
 
 ## Expected State
-[Describe what success looks like]
+
+- Kubelet is Running
+- Node is Ready
+- Pods can schedule on node
+- kubelet logs show no errors
 
 ## Time Limit
-15 minutes
 
-## Exam Notes
-- No external documentation allowed
-- Use only kubectl and ssh
-- Minimize cluster state changes
+15 minutes
