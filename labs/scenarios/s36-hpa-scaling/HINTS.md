@@ -1,10 +1,9 @@
-# Hints
+# Hints for s36: Hpa Scaling
 
-Review TASK.md for expected state. Use kubectl to diagnose and fix.
+Review TASK.md for details. Use kubectl to verify hpa is properly configured.
 
-Key Commands:
+Key commands:
 ```bash
-kubectl get <resource>
-kubectl describe <resource> <name>
-kubectl apply -f <file>
+kubectl get hpa
+kubectl describe hpa
 ```

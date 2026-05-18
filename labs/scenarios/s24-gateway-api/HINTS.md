@@ -1,10 +1,9 @@
-# Hints
+# Hints for s24: Gateway Api
 
-Review TASK.md for expected state. Use kubectl to diagnose and fix.
+Review TASK.md for details. Use kubectl to verify gateway is properly configured.
 
-Key Commands:
+Key commands:
 ```bash
-kubectl get <resource>
-kubectl describe <resource> <name>
-kubectl apply -f <file>
+kubectl get gateway
+kubectl describe gateway
 ```

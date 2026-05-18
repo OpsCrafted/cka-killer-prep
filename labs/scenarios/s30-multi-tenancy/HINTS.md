@@ -1,10 +1,9 @@
-# Hints
+# Hints for s30: Multi Tenancy
 
-Review TASK.md for expected state. Use kubectl to diagnose and fix.
+Review TASK.md for details. Use kubectl to verify rbac is properly configured.
 
-Key Commands:
+Key commands:
 ```bash
-kubectl get <resource>
-kubectl describe <resource> <name>
-kubectl apply -f <file>
+kubectl get rbac
+kubectl describe rbac
 ```

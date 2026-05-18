@@ -1,10 +1,9 @@
-# Hints
+# Hints for s25: Netpol Namespace
 
-Review TASK.md for expected state. Use kubectl to diagnose and fix.
+Review TASK.md for details. Use kubectl to verify netpol is properly configured.
 
-Key Commands:
+Key commands:
 ```bash
-kubectl get <resource>
-kubectl describe <resource> <name>
-kubectl apply -f <file>
+kubectl get netpol
+kubectl describe netpol
 ```
