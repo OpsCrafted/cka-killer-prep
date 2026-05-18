@@ -10,21 +10,16 @@ Classification of all 40 CKA scenarios by implementation maturity.
 
 ## By Status
 
-### Ready (13 scenarios)
-s01-s13: All troubleshooting scenarios fully implemented with realistic break/fix labs.
+### Ready (20 scenarios)
+s01-s20: All troubleshooting and cluster architecture scenarios fully implemented with realistic break/fix labs.
+- **s01-s13**: Troubleshooting scenarios with pod/node/service failures
+- **s14-s20**: Cluster architecture scenarios with node/runtime/networking/API/webhook/RBAC configuration
 - Real setup: introduces meaningful failure/constraint
 - Real verify: checks kubectl state, assertions on cluster condition
 - Test coverage: setup mutates cluster, verify detects fixes
+- Constraints enforced: RBAC pod cannot read secret without role (s20), etcd restore validates backup usage (s11)
 
-### Partial (7 scenarios)  
-s14-s20: Cluster architecture scenarios have real verify checks but setup could be enhanced.
-- s14: node-join - verify checks worker labels (✓ real)
-- s15: runtime-switch - verify checks taints (✓ real)
-- s16: cni-migration - verify checks taint state (✓ real)
-- s17: custom-api - verify checks CRD (✓ real)
-- s18: webhook-config - verify checks mutation webhook (✓ real)
-- s19: audit-logging - verify basic check (✓ real)
-- s20: rbac-design - verify checks RBAC role (✓ real)
+### Partial (0 scenarios)
 
 ### Draft (20 scenarios)
 s21-s40: Scenario definitions exist (TASK.md), setup structure present, but verify is no-op.
@@ -35,13 +30,14 @@ s21-s40: Scenario definitions exist (TASK.md), setup structure present, but veri
 ## Path to Publish-Ready
 
 ### Immediate (fix weak verifies)
-- [ ] s11 (etcd-corruption): Enhance verify checks
-- [ ] s01: Duplicate entry, clean up
+- [x] s11 (etcd-corruption): Enhanced verify to check ConfigMap + original data
+- [x] s20 (rbac-design): Enhanced setup to enforce RBAC constraint on pod
+- [x] s01: API server down working correctly
 
 ### High-Value (complete s14-s20)
-- [ ] Enhance setups with more realistic failure modes
-- [ ] Add detailed verify assertions for each scenario
-- [ ] Test all s14-s20 against real kind cluster
+- [x] Enhance setups with more realistic failure modes
+- [x] Add detailed verify assertions for each scenario
+- [ ] Test all s01-s20 against real kind cluster
 
 ### Long-Term (implement s21-s40)
 - [ ] Implement real setup/verify for each scenario
