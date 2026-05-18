@@ -1,18 +1,26 @@
 # Hints for s17
 
-## Step 1
-[First diagnostic step]
+Create a CustomResourceDefinition:
+\`\`\`bash
+kubectl apply -f - << 'CRD'
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: bookings.example.com
+spec:
+  group: example.com
+  names:
+    kind: Booking
+    plural: bookings
+  scope: Namespaced
+  versions:
+  - name: v1
+    served: true
+    storage: true
+    schema:
+      openAPIV3Schema:
+        type: object
+CRD
+\`\`\`
 
-## Step 2
-[Next step]
-
-## Common Mistakes
-- [Pitfall 1]
-- [Pitfall 2]
-
-## Key Commands
-```bash
-kubectl get nodes
-kubectl describe node <name>
-kubectl logs <pod> -n <ns>
-```
+Key: Understand CRD structure and API groups.

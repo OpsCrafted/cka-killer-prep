@@ -6,9 +6,20 @@ KUBECONFIG="$2"
 
 export KUBECONFIG
 
-# Check if fixed
-# Example:
-# kubectl get deployment app -n default | grep -q "1/1"
+# Check 1: At least one node has worker label
+WORKERS=$(kubectl get nodes -l node-role.kubernetes.io/worker -o jsonpath='{.items[*].metadata.name}' | wc -w)
+if [[ $WORKERS -lt 1 ]]; then
+  echo "✗ FAILED: No nodes with worker label"
+  exit 1
+fi
 
-echo "✓ Scenario verified"
+# Check 2: Node is Ready
+if ! kubectl get nodes -l node-role.kubernetes.io/worker | grep -q "Ready"; then
+  echo "✗ FAILED: Worker node not Ready"
+  exit 1
+fi
+
+echo "✓ PASSED: Node properly joined and labeled"
+echo "  - Found $WORKERS worker node(s)"
+echo "  - Worker node is Ready"
 exit 0

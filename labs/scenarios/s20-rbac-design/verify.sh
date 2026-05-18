@@ -1,14 +1,9 @@
 #!/bin/bash
 set -e
-
 CLUSTER_NAME="$1"
 KUBECONFIG="$2"
-
 export KUBECONFIG
-
-# Check if fixed
-# Example:
-# kubectl get deployment app -n default | grep -q "1/1"
-
-echo "✓ Scenario verified"
+# Check if RBAC role is created
+kubectl get role -n rbac-test 2>/dev/null | grep -q app-role || { echo "✗ FAILED: RBAC role not created"; exit 1; }
+echo "✓ PASSED: RBAC policy configured"
 exit 0

@@ -1,15 +1,19 @@
-# Scenario s16: Swap network plugin cleanly
+# Scenario s16: CNI migration - network plugin swap
 
 ## Problem
-[Describe what's broken and symptoms]
+
+Cluster needs to migrate from one CNI (Container Network Interface) plugin to another. Current CNI is broken; new one is ready but not active.
+
+**Symptoms:**
+- Pods pending or stuck with network errors
+- Network plugin not recognized
 
 ## Expected State
-[Describe what success looks like]
+
+- New CNI active and running
+- All pods have IP addresses
+- Pod-to-pod communication works
 
 ## Time Limit
-15 minutes
 
-## Exam Notes
-- No external documentation allowed
-- Use only kubectl and ssh
-- Minimize cluster state changes
+15 minutes

@@ -1,14 +1,9 @@
 #!/bin/bash
 set -e
-
 CLUSTER_NAME="$1"
 KUBECONFIG="$2"
-
 export KUBECONFIG
-
-# Check if fixed
-# Example:
-# kubectl get deployment app -n default | grep -q "1/1"
-
-echo "✓ Scenario verified"
+TAINTED=$(kubectl get nodes -o json | jq '[.items[] | select(.spec.taints[] | select(.key == "cni-pending"))] | length')
+[[ $TAINTED -eq 0 ]] || { echo "✗ FAILED: CNI pending taint still present"; exit 1; }
+echo "✓ PASSED: CNI migration complete"
 exit 0

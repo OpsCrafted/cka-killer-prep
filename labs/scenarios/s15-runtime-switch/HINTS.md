@@ -1,18 +1,8 @@
 # Hints for s15
 
-## Step 1
-[First diagnostic step]
+Remove runtime taint:
+\`\`\`bash
+kubectl taint nodes <node> runtime:NoSchedule-
+\`\`\`
 
-## Step 2
-[Next step]
-
-## Common Mistakes
-- [Pitfall 1]
-- [Pitfall 2]
-
-## Key Commands
-```bash
-kubectl get nodes
-kubectl describe node <name>
-kubectl logs <pod> -n <ns>
-```
+Key: Know how to manage node taints and tolerations.

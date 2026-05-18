@@ -1,15 +1,20 @@
-# Scenario s15: Replace container runtime
+# Scenario s15: Runtime switch - container runtime migration
 
 ## Problem
-[Describe what's broken and symptoms]
+
+Cluster is running containerd, but needs to be switched to a different container runtime. One node is misconfigured with wrong runtime binary path.
+
+**Symptoms:**
+- Node shows NotReady
+- `kubectl describe node` shows runtime error
+- Pods fail to start
 
 ## Expected State
-[Describe what success looks like]
+
+- Node runtime properly configured
+- Node is Ready
+- Pods can be scheduled and run
 
 ## Time Limit
-15 minutes
 
-## Exam Notes
-- No external documentation allowed
-- Use only kubectl and ssh
-- Minimize cluster state changes
+10 minutes

@@ -1,18 +1,8 @@
 # Hints for s16
 
-## Step 1
-[First diagnostic step]
+Remove cni-pending taint:
+\`\`\`bash
+kubectl taint nodes --all cni-pending-
+\`\`\`
 
-## Step 2
-[Next step]
-
-## Common Mistakes
-- [Pitfall 1]
-- [Pitfall 2]
-
-## Key Commands
-```bash
-kubectl get nodes
-kubectl describe node <name>
-kubectl logs <pod> -n <ns>
-```
+Key: Know node taints block scheduling until CNI is ready.

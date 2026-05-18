@@ -1,15 +1,20 @@
-# Scenario s19: API server audit trail setup
+# Scenario s19: Audit logging - API server audit trail
 
 ## Problem
-[Describe what's broken and symptoms]
+
+API server audit logging is not configured. Audit events are not being recorded.
+
+**Symptoms:**
+- No audit log file
+- API server not logging requests
+- Compliance/audit requirements not met
 
 ## Expected State
-[Describe what success looks like]
+
+- Audit logging enabled on API server
+- Audit logs recording API calls
+- Proper audit event levels configured
 
 ## Time Limit
-15 minutes
 
-## Exam Notes
-- No external documentation allowed
-- Use only kubectl and ssh
-- Minimize cluster state changes
+15 minutes

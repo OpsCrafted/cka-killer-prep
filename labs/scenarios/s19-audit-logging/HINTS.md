@@ -1,18 +1,13 @@
 # Hints for s19
 
-## Step 1
-[First diagnostic step]
+Audit logging is configured at the kube-apiserver level via flags:
+- \`--audit-log-path\` - path to audit log
+- \`--audit-policy-file\` - policy defining what to log
 
-## Step 2
-[Next step]
+For kind clusters, check:
+\`\`\`bash
+kubectl get pods -n kube-system -l component=kube-apiserver
+kubectl describe pod -n kube-system <apiserver-pod>
+\`\`\`
 
-## Common Mistakes
-- [Pitfall 1]
-- [Pitfall 2]
-
-## Key Commands
-```bash
-kubectl get nodes
-kubectl describe node <name>
-kubectl logs <pod> -n <ns>
-```
+Key: Understand API server audit logging configuration.

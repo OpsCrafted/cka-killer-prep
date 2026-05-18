@@ -1,15 +1,19 @@
-# Scenario s17: CustomResourceDefinition with validation
+# Scenario s17: Custom API - CRD setup
 
 ## Problem
-[Describe what's broken and symptoms]
+
+Application needs a Custom Resource Definition (CRD) to define custom objects. CRD definition is available but not applied to the cluster.
+
+**Symptoms:**
+- Custom resource commands fail: `kubectl get mycustomresource`
+- Error: "the server doesn't have a resource type"
 
 ## Expected State
-[Describe what success looks like]
+
+- CRD is registered
+- Custom resources can be created and listed
+- Custom resource schema is active
 
 ## Time Limit
-15 minutes
 
-## Exam Notes
-- No external documentation allowed
-- Use only kubectl and ssh
-- Minimize cluster state changes
+10 minutes

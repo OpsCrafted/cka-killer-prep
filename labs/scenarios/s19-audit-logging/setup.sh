@@ -1,13 +1,8 @@
 #!/bin/bash
 set -e
-
 CLUSTER_NAME="$1"
 KUBECONFIG="$2"
-
 export KUBECONFIG
-
-# Introduce failure here
-# Example:
-# kubectl scale deployment app --replicas=0 -n default
-
-echo "✓ Scenario setup complete"
+for i in {1..30}; do kubectl get nodes &>/dev/null && break; sleep 1; done
+# Audit logging is not configured - this is the scenario
+echo "✓ Scenario setup complete: audit logging needs configuration"

@@ -1,18 +1,14 @@
 # Hints for s18
 
-## Step 1
-[First diagnostic step]
+List webhook configurations:
+\`\`\`bash
+kubectl get mutatingwebhookconfigurations
+kubectl describe mutatingwebhookconfigurations <name>
+\`\`\`
 
-## Step 2
-[Next step]
+Fix broken webhook by deleting or updating it:
+\`\`\`bash
+kubectl delete mutatingwebhookconfigurations broken-webhook
+\`\`\`
 
-## Common Mistakes
-- [Pitfall 1]
-- [Pitfall 2]
-
-## Key Commands
-```bash
-kubectl get nodes
-kubectl describe node <name>
-kubectl logs <pod> -n <ns>
-```
+Key: Understand admission webhooks and their configuration.

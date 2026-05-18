@@ -1,15 +1,20 @@
-# Scenario s20: RBAC for app deployment
+# Scenario s20: RBAC design - role-based access control
 
 ## Problem
-[Describe what's broken and symptoms]
+
+RBAC policy is incomplete or misconfigured. Service account has insufficient permissions for its workload.
+
+**Symptoms:**
+- Pods getting permission denied errors
+- ServiceAccount unable to access API resources
+- Deployment logs show "forbidden" errors
 
 ## Expected State
-[Describe what success looks like]
+
+- ServiceAccount has appropriate permissions
+- RBAC rules allow required API operations
+- Workload functions without permission errors
 
 ## Time Limit
-15 minutes
 
-## Exam Notes
-- No external documentation allowed
-- Use only kubectl and ssh
-- Minimize cluster state changes
+15 minutes

@@ -1,15 +1,20 @@
-# Scenario s18: Mutating webhook interceptor
+# Scenario s18: Webhook config - mutating admission controller
 
 ## Problem
-[Describe what's broken and symptoms]
+
+Mutating webhook is defined but not properly registered. Webhook server is running but API server isn't calling it.
+
+**Symptoms:**
+- Webhook rules not being enforced
+- MutatingWebhookConfiguration exists but inactive
+- Pods created without expected mutations
 
 ## Expected State
-[Describe what success looks like]
+
+- MutatingWebhookConfiguration active
+- API server calling webhook correctly
+- Mutations being applied to new objects
 
 ## Time Limit
-15 minutes
 
-## Exam Notes
-- No external documentation allowed
-- Use only kubectl and ssh
-- Minimize cluster state changes
+15 minutes
