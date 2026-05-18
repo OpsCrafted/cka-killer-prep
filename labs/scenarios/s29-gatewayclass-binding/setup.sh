@@ -5,8 +5,8 @@ KUBECONFIG="$2"
 export KUBECONFIG
 for i in {1..30}; do kubectl get nodes &>/dev/null && break; sleep 1; done
 
-# GatewayClass Binding
-kubectl apply -f - <<'MANIFEST'
+# GatewayClass Binding (optional, may not be available)
+kubectl apply -f - <<'MANIFEST' 2>/dev/null || true
 apiVersion: gateway.networking.k8s.io/v1beta1
 kind: GatewayClass
 metadata:
