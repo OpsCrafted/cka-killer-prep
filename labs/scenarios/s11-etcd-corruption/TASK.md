@@ -1,15 +1,17 @@
-# Scenario s11: Restore cluster from backup
+# Scenario s11: Restore Cluster from etcd Backup
 
 ## Problem
-[Describe what's broken and symptoms]
+
+Critical namespace was accidentally deleted. You need to restore from the etcd backup taken earlier.
+
+Use etcd snapshot restore to recover the deleted namespace and its resources.
 
 ## Expected State
-[Describe what success looks like]
+
+- Deleted namespace is restored
+- All resources in namespace are present
+- etcd is healthy and consistent
 
 ## Time Limit
-15 minutes
 
-## Exam Notes
-- No external documentation allowed
-- Use only kubectl and ssh
-- Minimize cluster state changes
+15 minutes
