@@ -103,10 +103,10 @@ main() {
   local failed=0
 
   echo -e "\n${BLUE}════════════════════════════════════════${NC}"
-  echo -e "${BLUE}Testing Scenarios 01-13${NC}"
+  echo -e "${BLUE}Testing Scenarios 01-40${NC}"
   echo -e "${BLUE}════════════════════════════════════════${NC}"
 
-  for i in {01..13}; do
+  for i in {01..40}; do
     if test_scenario "$i"; then
       ((passed++))
     else
