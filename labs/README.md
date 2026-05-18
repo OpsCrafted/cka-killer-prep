@@ -46,13 +46,36 @@ choco install docker-desktop kind kubectl
 
 ## Workflow
 
+### Single Scenario
 ```bash
-./run.sh 01                    # Start scenario 01
-# Inside shell, diagnose & fix with kubectl
-./run.sh verify 01             # Check if fixed
+./run.sh 01                    # Start scenario 01 (setup breaks state)
+# Diagnose & fix with kubectl
+./run.sh verify 01             # Check if fixed correctly
 ./run.sh reset 01              # Clean and retry
 ./run.sh clean                 # Delete cluster
 ```
+
+### Batch Testing
+```bash
+# Test setup only (verify scripts run after setup works)
+bash test-all.sh setup
+# or: bash test-all.sh
+
+# Test setup + verify (verifies that setup breaks state properly)
+bash test-all.sh verify
+```
+
+## Scenario Status
+
+**Ready (20 scenarios):** s01-s20 — Full implementation, setup breaks state, verify checks fix
+- Troubleshooting (s01-s13): Real failures (api-server down, node crashed, dns broken, etc)
+- Cluster Architecture (s14-s20): Node/runtime/network/webhook/RBAC config issues
+
+**Partial (20 scenarios):** s21-s40 — Real setup, verify checks resources exist
+- s21-s22: RBAC, backups
+- s23-s30: Networking (Ingress, Gateway, NetworkPolicy, LoadBalancer, etc)
+- s31-s36: Workloads (Deployments, StatefulSets, HPA, scheduling)
+- s37-s40: Storage (PV/PVC, StorageClass, local storage)
 
 ## All Scenarios
 

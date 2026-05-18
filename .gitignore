@@ -4,5 +4,18 @@
 *~
 node_modules/
 .env
+.env.local
+
+# Test artifacts
 labs/.state/
+labs/.kubeconfig*
+*.log
+
+# IDEs
 .vscode/
+.idea/
+*.iml
+
+# OS
+.AppleDouble/
+.LSOverride/
