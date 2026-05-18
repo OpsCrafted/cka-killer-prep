@@ -1,13 +1,43 @@
-# Hints for s19
+# Hints for s19: Audit Logging
 
-Audit logging is configured at the kube-apiserver level via flags:
-- \`--audit-log-path\` - path to audit log
-- \`--audit-policy-file\` - policy defining what to log
+## Problem
+API server audit logging not configured. No audit trail of API calls.
 
-For kind clusters, check:
-\`\`\`bash
-kubectl get pods -n kube-system -l component=kube-apiserver
-kubectl describe pod -n kube-system <apiserver-pod>
-\`\`\`
+## Note
+Audit logging is configured at the kube-apiserver level. In kind clusters, this requires recreating the control-plane pod, which is not typical for CKA exam scenarios.
 
-Key: Understand API server audit logging configuration.
+## Understanding Audit Logging
+
+Audit logging records API server activity for compliance and debugging.
+
+## Configuration (typical cluster setup)
+
+1. Create audit policy file (provided): `/tmp/audit-scenario/audit-policy.yaml`
+
+2. Configure kube-apiserver flags:
+   - `--audit-policy-file=/path/to/policy.yaml`
+   - `--audit-log-path=/var/log/audit.log`
+   - `--audit-log-max-age=30`
+   - `--audit-log-max-backup=10`
+
+3. Mount audit files in container
+
+## Verification
+
+```bash
+kubectl get pod -n kube-system -l component=kube-apiserver -o yaml
+# Look for: --audit-log-path and --audit-policy-file flags
+```
+
+## Key Concepts
+
+- **Audit Policy**: Defines what events to log
+- **Audit Levels**: None, Metadata, RequestResponse, Request
+- **Log Format**: JSON
+
+## Real-World Use
+
+- Compliance (HIPAA, PCI-DSS, SOC2)
+- Security investigation
+- Troubleshooting
+- Change tracking
