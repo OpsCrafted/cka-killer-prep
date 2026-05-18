@@ -1,6 +1,6 @@
 # 🎯 CKA Killer Prep
 
-**Interactive Certified Kubernetes Administrator exam preparation — study guide, 25 KillerShell simulator labs, break-and-fix scenarios, and progress tracking.**
+**Interactive Certified Kubernetes Administrator exam preparation — study guide, 40 KillerShell simulator labs, break-and-fix scenarios, and progress tracking.**
 
 [![GitHub Pages](https://img.shields.io/badge/Live_Site-GitHub_Pages-blue?style=flat-square&logo=github)](https://yourusername.github.io/cka-killer-prep)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
@@ -14,13 +14,13 @@ A hands-on CKA prep platform built by a Senior SRE running Kubernetes in product
 
 ### What's inside
 
-| Module | Description | Format |
-|--------|-------------|--------|
-| **Study Guide** | 6 chapters covering all CKA domains — lessons, exercises, quizzes, cheatsheets | Interactive HTML |
-| **KillerShell 25Q** | All 25 simulator questions with exam weights, solutions, and tips | Interactive HTML |
-| **JSONPath Drills** | 20 type-to-check drills for kubectl filtering — the skill most people skip | Interactive HTML |
-| **Break & Fix Labs** | Shell scripts that break a kind cluster — you diagnose and fix | Shell + kind |
-| **Quick Reference** | Node scheduling, RBAC, NetworkPolicy, etcd backup — visual explainers | Interactive HTML |
+| Module               | Description                                                                    | Format           |
+| -------------------- | ------------------------------------------------------------------------------ | ---------------- |
+| **Study Guide**      | 6 chapters covering all CKA domains — lessons, exercises, quizzes, cheatsheets | Interactive HTML |
+| **KillerShell 40Q**  | All 40 simulator questions with exam weights, solutions, and tips              | Interactive HTML |
+| **JSONPath Drills**  | 20 type-to-check drills for kubectl filtering — the skill most people skip     | Interactive HTML |
+| **Break & Fix Labs** | Shell scripts that break a kind cluster — you diagnose and fix                 | Shell + kind     |
+| **Quick Reference**  | Node scheduling, RBAC, NetworkPolicy, etcd backup — visual explainers          | Interactive HTML |
 
 ### Who is this for?
 
@@ -93,7 +93,37 @@ cka-killer-prep/
 │   │   ├── lab-07-pvc-pending.md
 │   │   ├── lab-08-rbac-denied.md
 │   │   ├── lab-09-etcd-restore.md
-│   │   └── lab-10-kubelet-misconfigured.md
+│   │   ├── lab-10-kubelet-misconfigured.md
+│   │   ├── lab-11-etcd-corruption.md
+│   │   ├── lab-12-kubelet-misconfigured.md
+│   │   ├── lab-13-cluster-upgrade.md
+│   │   ├── lab-14-node-join.md
+│   │   ├── lab-15-runtime-switch.md
+│   │   ├── lab-16-cni-migration.md
+│   │   ├── lab-17-custom-api.md
+│   │   ├── lab-18-webhook-config.md
+│   │   ├── lab-19-audit-logging.md
+│   │   ├── lab-20-rbac-design.md
+│   │   ├── lab-21-serviceaccount-binding.md
+│   │   ├── lab-22-backup-strategy.md
+│   │   ├── lab-23-ingress-tls.md
+│   │   ├── lab-24-gateway-api.md
+│   │   ├── lab-25-netpol-namespace.md
+│   │   ├── lab-26-loadbalancer-expose.md
+│   │   ├── lab-27-dns-debugging.md
+│   │   ├── lab-28-service-discovery.md
+│   │   ├── lab-29-gatewayclass-binding.md
+│   │   ├── lab-30-multi-tenancy.md
+│   │   ├── lab-31-deployment-rolling.md
+│   │   ├── lab-32-statefulset-storage.md
+│   │   ├── lab-33-resource-limits.md
+│   │   ├── lab-34-affinity-taints.md
+│   │   ├── lab-35-priority-preemption.md
+│   │   ├── lab-36-hpa-scaling.md
+│   │   ├── lab-37-pv-pvc-binding.md
+│   │   ├── lab-38-storageclass-default.md
+│   │   ├── lab-39-local-storage.md
+│   │   ├── lab-40-pvc-expansion.md
 │   └── scripts/
 │       ├── create-cluster.sh   # Spin up kind cluster
 │       ├── break.sh            # Introduce a failure
@@ -109,13 +139,13 @@ cka-killer-prep/
 
 ## 📊 CKA Exam Domains & Weights
 
-| Domain | Weight | Covered in |
-|--------|--------|------------|
-| Cluster Architecture, Installation & Configuration | 25% | Study Guide Ch1-2, Labs 4,5,9 |
-| Workloads & Scheduling | 15% | Study Guide Ch3, KillerShell Q2-4,9,11-13 |
-| Services & Networking | 20% | Study Guide Ch4, Labs 6, KillerShell Q24 |
-| Storage | 10% | Study Guide Ch5, KillerShell Q6, Lab 7 |
-| Troubleshooting | 30% | Study Guide Ch6, Labs 1-3,10, KillerShell Q7,15,17,18 |
+| Domain                                             | Weight | Covered in                                            |
+| -------------------------------------------------- | ------ | ----------------------------------------------------- |
+| Cluster Architecture, Installation & Configuration | 25%    | Study Guide Ch1-2, Labs 4,5,9,13                      |
+| Workloads & Scheduling                             | 15%    | Study Guide Ch3, KillerShell Q2-4,9,11-13             |
+| Services & Networking                              | 20%    | Study Guide Ch4, Labs 6, KillerShell Q24              |
+| Storage                                            | 10%    | Study Guide Ch5, KillerShell Q6, Lab 7,40             |
+| Troubleshooting                                    | 30%    | Study Guide Ch6, Labs 1-3,10, KillerShell Q7,15,17,18 |
 
 ---
 
@@ -158,18 +188,15 @@ kind create cluster --name cka-lab --config labs/kind-config.yaml
 # Verify
 kubectl get nodes
 # NAME                    STATUS   ROLES           AGE   VERSION
-# cka-lab-control-plane   Ready    control-plane   30s   v1.31.0
-# cka-lab-worker          Ready    <none>          20s   v1.31.0
-# cka-lab-worker2         Ready    <none>          20s   v1.31.0
 ```
 
 ### Resource requirements
 
-| Setup | RAM needed | Clusters |
-|-------|-----------|----------|
-| 1 cluster (1 CP + 2 workers) | ~2GB | All labs |
-| 3 clusters (exam simulation) | ~5GB | Multi-context practice |
-| 6 clusters (full KillerShell sim) | ~10GB | Full exam simulation |
+| Setup                             | RAM needed | Clusters               |
+| --------------------------------- | ---------- | ---------------------- |
+| 1 cluster (1 CP + 2 workers)      | ~2GB       | All labs               |
+| 3 clusters (exam simulation)      | ~5GB       | Multi-context practice |
+| 6 clusters (full KillerShell sim) | ~10GB      | Full exam simulation   |
 
 ---
 

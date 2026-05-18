@@ -14,19 +14,22 @@ Done. Cluster builds, scenario starts, you fix it.
 ## Requirements
 
 **All Platforms (macOS / Linux / Windows):**
+
 - Docker Desktop
 - kind
-- kubectl  
+- kubectl
 - Git Bash (Windows) or WSL2
 
 ### Install
 
 **macOS:**
+
 ```bash
 brew install docker kind kubectl
 ```
 
 **Linux (Ubuntu/Debian):**
+
 ```bash
 curl -fsSL https://get.docker.com | sh
 curl -Lo kind https://kind.sigs.k8s.io/dl/v0.20.0/kind-linux-amd64
@@ -35,6 +38,7 @@ sudo apt-get install -y kubectl
 ```
 
 **Windows (Git Bash / WSL):**
+
 ```powershell
 choco install docker-desktop kind kubectl
 # Then: git bash> ./run.sh 01
@@ -53,6 +57,7 @@ choco install docker-desktop kind kubectl
 ## All Scenarios
 
 ### See List
+
 ```bash
 ./run.sh list
 ```
@@ -77,6 +82,7 @@ s37 (pv-pvc), s38 (storageclass), s39 (local), s40 (expand)
 ## Scenario Structure
 
 Each scenario contains:
+
 - **TASK.md** — Problem description
 - **setup.sh** — Introduce failure
 - **verify.sh** — Check solution
