@@ -77,6 +77,7 @@ wait_cluster_ready() {
 
 test_scenario() {
   local scenario_id="$1"
+  local mode="${2:-setup}"
   local scenario_dir=$(ls -d "${SCRIPT_DIR}/scenarios/s${scenario_id}-"* 2>/dev/null | head -1)
 
   if [[ -z "$scenario_dir" ]]; then
@@ -93,16 +94,41 @@ test_scenario() {
   fi
 
   export KUBECONFIG
-  if bash "${scenario_dir}/setup.sh" "$CLUSTER_NAME" "$KUBECONFIG" &>/dev/null; then
-    log_ok "Setup complete"
-    return 0
-  else
+  if ! bash "${scenario_dir}/setup.sh" "$CLUSTER_NAME" "$KUBECONFIG" &>/dev/null; then
     log_err "Setup failed"
     return 1
   fi
+
+  log_ok "Setup complete"
+
+  # If verify mode, also run verify.sh
+  if [[ "$mode" == "verify" ]]; then
+    if [[ ! -f "${scenario_dir}/verify.sh" ]]; then
+      log_err "No verify.sh"
+      return 1
+    fi
+    if bash "${scenario_dir}/verify.sh" "$CLUSTER_NAME" "$KUBECONFIG" &>/dev/null; then
+      log_ok "Verification passed"
+      return 0
+    else
+      log_err "Verification failed"
+      return 1
+    fi
+  fi
+
+  return 0
 }
 
 main() {
+  local mode="${1:-setup}"
+
+  if [[ "$mode" != "setup" && "$mode" != "verify" ]]; then
+    echo "Usage: $0 [setup|verify]"
+    echo "  setup:  run setup.sh only (default)"
+    echo "  verify: run setup.sh then verify.sh"
+    exit 1
+  fi
+
   check_deps || exit 1
 
   log_info "Initializing test environment..."
@@ -113,11 +139,11 @@ main() {
   local failed=0
 
   echo -e "\n${BLUE}════════════════════════════════════════${NC}"
-  echo -e "${BLUE}Testing Scenarios 01-40${NC}"
+  echo -e "${BLUE}Testing Scenarios 01-40 (mode: $mode)${NC}"
   echo -e "${BLUE}════════════════════════════════════════${NC}"
 
   for i in $(seq -f '%02g' 1 40); do
-    if test_scenario "$i"; then
+    if test_scenario "$i" "$mode"; then
       ((passed++))
     else
       ((failed++))
