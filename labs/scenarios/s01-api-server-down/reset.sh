@@ -3,11 +3,11 @@ set -e
 
 CLUSTER_NAME="$1"
 KUBECONFIG="$2"
-
 export KUBECONFIG
 
-# Clean up
-# Example:
-# kubectl delete all --all -n default
+SCENARIO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-echo "✓ Scenario reset"
+# Delete all scenario resources
+kubectl delete -f "$SCENARIO_DIR/manifests/deployment.yaml" --ignore-not-found
+
+echo "✓ Scenario reset complete"
