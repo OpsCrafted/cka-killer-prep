@@ -7,6 +7,12 @@ export KUBECONFIG
 
 SCENARIO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+# Wait for API server to be responsive
+for i in {1..30}; do
+  kubectl get nodes &>/dev/null && break
+  sleep 1
+done
+
 # Deploy baseline manifests
 kubectl apply -f "$SCENARIO_DIR/manifests/deployment.yaml"
 
