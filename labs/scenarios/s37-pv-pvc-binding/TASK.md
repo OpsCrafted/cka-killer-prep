@@ -1,15 +1,12 @@
-# Scenario s37: Dynamic provisioning
+# Scenario s37: PV/PVC binding - dynamic provisioning
 
 ## Problem
-[Describe what's broken and symptoms]
+PersistentVolumeClaim not binding to PersistentVolume. StorageClass or provisioner missing.
 
 ## Expected State
-[Describe what success looks like]
+- PVC bound to PV
+- Dynamic provisioning working
+- Storage available to pods
 
 ## Time Limit
-15 minutes
-
-## Exam Notes
-- No external documentation allowed
-- Use only kubectl and ssh
-- Minimize cluster state changes
+10 minutes

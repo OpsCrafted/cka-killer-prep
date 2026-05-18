@@ -1,15 +1,12 @@
-# Scenario s29: Controller acknowledgment
+# Scenario s29: GatewayClass - controller acknowledgment
 
 ## Problem
-[Describe what's broken and symptoms]
+GatewayClass exists but isn't acknowledged by any controller. Gateway can't be created.
 
 ## Expected State
-[Describe what success looks like]
+- GatewayClass controller installed/configured
+- GatewayClass acknowledged
+- Gateways can be created
 
 ## Time Limit
 15 minutes
-
-## Exam Notes
-- No external documentation allowed
-- Use only kubectl and ssh
-- Minimize cluster state changes

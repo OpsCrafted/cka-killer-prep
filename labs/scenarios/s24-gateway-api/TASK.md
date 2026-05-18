@@ -1,15 +1,12 @@
-# Scenario s24: Gateway API with HTTPRoute
+# Scenario s24: Gateway API - advanced routing
 
 ## Problem
-[Describe what's broken and symptoms]
+Gateway API resources need to be configured for advanced routing scenarios. HTTPRoute rules not active.
 
 ## Expected State
-[Describe what success looks like]
+- Gateway created and ready
+- HTTPRoute configured
+- Traffic routing works via Gateway API
 
 ## Time Limit
 15 minutes
-
-## Exam Notes
-- No external documentation allowed
-- Use only kubectl and ssh
-- Minimize cluster state changes

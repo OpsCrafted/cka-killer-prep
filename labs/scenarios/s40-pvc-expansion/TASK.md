@@ -1,15 +1,12 @@
-# Scenario s40: Grow PersistentVolume
+# Scenario s40: PVC expansion - grow persistent volume
 
 ## Problem
-[Describe what's broken and symptoms]
+PVC needs to be expanded but resize not working. StorageClass doesn't allow expansion.
 
 ## Expected State
-[Describe what success looks like]
+- StorageClass allowVolumeExpansion enabled
+- PVC can be resized
+- Expanded capacity available to pod
 
 ## Time Limit
-15 minutes
-
-## Exam Notes
-- No external documentation allowed
-- Use only kubectl and ssh
-- Minimize cluster state changes
+10 minutes

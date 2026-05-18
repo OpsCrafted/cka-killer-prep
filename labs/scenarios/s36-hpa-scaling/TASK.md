@@ -1,15 +1,12 @@
-# Scenario s36: Auto-scale on metrics
+# Scenario s36: HPA - auto-scaling on metrics
 
 ## Problem
-[Describe what's broken and symptoms]
+Horizontal Pod Autoscaler configured but not working. Metrics not available or HPA rules incorrect.
 
 ## Expected State
-[Describe what success looks like]
+- HPA active and monitoring metrics
+- Pod replicas scale based on CPU/memory
+- Target metrics being tracked
 
 ## Time Limit
 15 minutes
-
-## Exam Notes
-- No external documentation allowed
-- Use only kubectl and ssh
-- Minimize cluster state changes

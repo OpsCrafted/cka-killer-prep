@@ -1,15 +1,12 @@
-# Scenario s28: Endpoints not registering
+# Scenario s28: Service discovery - endpoints registration
 
 ## Problem
-[Describe what's broken and symptoms]
+Service has no endpoints. Pods backing the service aren't registering or selector is wrong.
 
 ## Expected State
-[Describe what success looks like]
+- Endpoints created for service
+- Pods match selector
+- Service has ready endpoints
 
 ## Time Limit
-15 minutes
-
-## Exam Notes
-- No external documentation allowed
-- Use only kubectl and ssh
-- Minimize cluster state changes
+10 minutes

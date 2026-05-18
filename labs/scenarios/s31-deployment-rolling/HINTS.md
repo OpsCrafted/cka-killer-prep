@@ -1,18 +1,10 @@
-# Hints for s31
+# Hints
 
-## Step 1
-[First diagnostic step]
+Review TASK.md for expected state. Use kubectl to diagnose and fix.
 
-## Step 2
-[Next step]
-
-## Common Mistakes
-- [Pitfall 1]
-- [Pitfall 2]
-
-## Key Commands
+Key Commands:
 ```bash
-kubectl get nodes
-kubectl describe node <name>
-kubectl logs <pod> -n <ns>
+kubectl get <resource>
+kubectl describe <resource> <name>
+kubectl apply -f <file>
 ```

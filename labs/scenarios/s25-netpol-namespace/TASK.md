@@ -1,15 +1,12 @@
-# Scenario s25: Namespace isolation policy
+# Scenario s25: NetworkPolicy - namespace isolation
 
 ## Problem
-[Describe what's broken and symptoms]
+NetworkPolicy for namespace isolation is missing. All namespaces can communicate with each other.
 
 ## Expected State
-[Describe what success looks like]
+- NetworkPolicy created
+- Namespace isolation enforced
+- Only allowed traffic passes
 
 ## Time Limit
-15 minutes
-
-## Exam Notes
-- No external documentation allowed
-- Use only kubectl and ssh
-- Minimize cluster state changes
+10 minutes

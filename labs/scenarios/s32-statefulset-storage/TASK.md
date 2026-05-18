@@ -1,15 +1,12 @@
-# Scenario s32: Persistent pod identity
+# Scenario s32: StatefulSet - persistent pod identity
 
 ## Problem
-[Describe what's broken and symptoms]
+StatefulSet pods losing identity or persistent storage not bound. VolumeClaimTemplate misconfigured.
 
 ## Expected State
-[Describe what success looks like]
+- StatefulSet pods have stable identity
+- Persistent storage bound to pods
+- Pod restarts keep same identity
 
 ## Time Limit
 15 minutes
-
-## Exam Notes
-- No external documentation allowed
-- Use only kubectl and ssh
-- Minimize cluster state changes

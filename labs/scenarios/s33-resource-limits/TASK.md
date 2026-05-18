@@ -1,15 +1,12 @@
-# Scenario s33: CPU/memory enforcement
+# Scenario s33: Resource limits - CPU/memory enforcement
 
 ## Problem
-[Describe what's broken and symptoms]
+Resource limits not enforced. Pods can consume unlimited CPU/memory. LimitRange or requests missing.
 
 ## Expected State
-[Describe what success looks like]
+- Resource requests/limits configured
+- LimitRange enforcing defaults
+- Pods respect resource constraints
 
 ## Time Limit
-15 minutes
-
-## Exam Notes
-- No external documentation allowed
-- Use only kubectl and ssh
-- Minimize cluster state changes
+10 minutes

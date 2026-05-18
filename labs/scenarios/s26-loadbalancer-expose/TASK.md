@@ -1,15 +1,12 @@
-# Scenario s26: External LoadBalancer service
+# Scenario s26: LoadBalancer - external service exposure
 
 ## Problem
-[Describe what's broken and symptoms]
+Service needs external LoadBalancer exposure but is misconfigured or type is wrong.
 
 ## Expected State
-[Describe what success looks like]
+- Service type is LoadBalancer
+- External IP assigned
+- Service accessible externally
 
 ## Time Limit
-15 minutes
-
-## Exam Notes
-- No external documentation allowed
-- Use only kubectl and ssh
-- Minimize cluster state changes
+10 minutes

@@ -1,15 +1,12 @@
-# Scenario s39: Local path provisioning
+# Scenario s39: Local storage - local path provisioning
 
 ## Problem
-[Describe what's broken and symptoms]
+Local storage provisioning not working. LocalPV controller or volume not available.
 
 ## Expected State
-[Describe what success looks like]
+- Local storage volumes available
+- LocalPV provisioner working
+- Pods can use local storage
 
 ## Time Limit
 15 minutes
-
-## Exam Notes
-- No external documentation allowed
-- Use only kubectl and ssh
-- Minimize cluster state changes

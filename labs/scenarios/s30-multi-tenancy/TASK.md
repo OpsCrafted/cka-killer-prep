@@ -1,15 +1,12 @@
-# Scenario s30: Ingress across namespaces
+# Scenario s30: Multi-tenancy - ingress across namespaces
 
 ## Problem
-[Describe what's broken and symptoms]
+Ingress in one namespace needs to route to services in other namespaces. Multi-tenancy not configured.
 
 ## Expected State
-[Describe what success looks like]
+- Ingress routing to cross-namespace services
+- Service references work
+- Traffic reaches services in other namespaces
 
 ## Time Limit
 15 minutes
-
-## Exam Notes
-- No external documentation allowed
-- Use only kubectl and ssh
-- Minimize cluster state changes

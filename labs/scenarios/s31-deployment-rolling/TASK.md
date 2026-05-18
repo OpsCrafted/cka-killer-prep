@@ -1,15 +1,12 @@
-# Scenario s31: Blue-green update strategy
+# Scenario s31: Deployment rolling update - blue-green strategy
 
 ## Problem
-[Describe what's broken and symptoms]
+Deployment update needs to happen without downtime. Rolling strategy misconfigured or paused.
 
 ## Expected State
-[Describe what success looks like]
+- Deployment rolling update working
+- Old and new pods coexist during update
+- All pods ready after update
 
 ## Time Limit
 15 minutes
-
-## Exam Notes
-- No external documentation allowed
-- Use only kubectl and ssh
-- Minimize cluster state changes

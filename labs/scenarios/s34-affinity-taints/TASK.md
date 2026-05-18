@@ -1,15 +1,12 @@
-# Scenario s34: Schedule pod to specific nodes
+# Scenario s34: Pod affinity/taints - schedule to specific nodes
 
 ## Problem
-[Describe what's broken and symptoms]
+Pods need to be scheduled to specific nodes but affinity/taints misconfigured or missing.
 
 ## Expected State
-[Describe what success looks like]
+- Pods scheduled to correct nodes
+- Node affinity rules honored
+- Taints and tolerations working
 
 ## Time Limit
 15 minutes
-
-## Exam Notes
-- No external documentation allowed
-- Use only kubectl and ssh
-- Minimize cluster state changes

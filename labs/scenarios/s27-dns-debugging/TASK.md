@@ -1,15 +1,12 @@
-# Scenario s27: Broken DNS inside pods
+# Scenario s27: DNS debugging - broken DNS in pods
 
 ## Problem
-[Describe what's broken and symptoms]
+Pod DNS resolution is failing. CoreDNS may be misconfigured or pods can't reach it.
 
 ## Expected State
-[Describe what success looks like]
+- Pods can resolve service names
+- DNS queries work within cluster
+- CoreDNS running and healthy
 
 ## Time Limit
-15 minutes
-
-## Exam Notes
-- No external documentation allowed
-- Use only kubectl and ssh
-- Minimize cluster state changes
+10 minutes

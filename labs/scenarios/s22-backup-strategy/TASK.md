@@ -1,15 +1,12 @@
-# Scenario s22: Full cluster backup + restore
+# Scenario s22: Backup strategy - cluster backup/restore
 
 ## Problem
-[Describe what's broken and symptoms]
+Cluster backup needs to be configured. etcd data is at risk without proper backup strategy.
 
 ## Expected State
-[Describe what success looks like]
+- Backup mechanism configured
+- etcd backed up properly
+- Restore procedure documented and tested
 
 ## Time Limit
 15 minutes
-
-## Exam Notes
-- No external documentation allowed
-- Use only kubectl and ssh
-- Minimize cluster state changes

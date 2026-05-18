@@ -1,15 +1,12 @@
-# Scenario s23: HTTPS routing with certificates
+# Scenario s23: Ingress TLS - HTTPS routing with certs
 
 ## Problem
-[Describe what's broken and symptoms]
+Ingress is configured but TLS certificate is missing or misconfigured. HTTPS traffic fails.
 
 ## Expected State
-[Describe what success looks like]
+- TLS secret exists
+- Ingress configured with tls section
+- HTTPS traffic encrypted
 
 ## Time Limit
 15 minutes
-
-## Exam Notes
-- No external documentation allowed
-- Use only kubectl and ssh
-- Minimize cluster state changes

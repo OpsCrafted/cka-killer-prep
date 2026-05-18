@@ -1,15 +1,12 @@
-# Scenario s35: Critical workload priority
+# Scenario s35: Priority and preemption - critical workload priority
 
 ## Problem
-[Describe what's broken and symptoms]
+Critical workloads need higher priority to run before normal pods. PriorityClass not configured.
 
 ## Expected State
-[Describe what success looks like]
+- PriorityClass created
+- High-priority pods preempt lower-priority ones
+- Critical workloads guaranteed scheduling
 
 ## Time Limit
 15 minutes
-
-## Exam Notes
-- No external documentation allowed
-- Use only kubectl and ssh
-- Minimize cluster state changes

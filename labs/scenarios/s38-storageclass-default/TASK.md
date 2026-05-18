@@ -1,15 +1,12 @@
-# Scenario s38: StorageClass creation
+# Scenario s38: StorageClass - default storage configuration
 
 ## Problem
-[Describe what's broken and symptoms]
+StorageClass not set as default. PVCs fail to provision without explicit StorageClass reference.
 
 ## Expected State
-[Describe what success looks like]
+- StorageClass marked as default
+- PVCs use default StorageClass
+- Dynamic provisioning works without explicit reference
 
 ## Time Limit
-15 minutes
-
-## Exam Notes
-- No external documentation allowed
-- Use only kubectl and ssh
-- Minimize cluster state changes
+10 minutes

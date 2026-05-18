@@ -1,15 +1,12 @@
-# Scenario s21: Cross-namespace access
+# Scenario s21: ServiceAccount binding - cross-namespace access
 
 ## Problem
-[Describe what's broken and symptoms]
+ServiceAccount in one namespace needs to access resources in another. RoleBinding is missing or misconfigured.
 
 ## Expected State
-[Describe what success looks like]
+- ServiceAccount can access cross-namespace resources
+- RoleBinding grants correct permissions
+- Tests confirm resource access works
 
 ## Time Limit
-15 minutes
-
-## Exam Notes
-- No external documentation allowed
-- Use only kubectl and ssh
-- Minimize cluster state changes
+10 minutes
