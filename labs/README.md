@@ -1,89 +1,116 @@
-# Break & Fix Labs
+# CKA Labs — 40 Hands-On Scenarios
 
-10 hands-on labs that simulate real CKA exam scenarios. Each lab breaks something in your kind cluster — you diagnose and fix it.
+40 practical Kubernetes scenarios organized by CKA exam domain weights. One command builds & launches each lab.
 
-## Prerequisites
+## Quick Start
 
 ```bash
-brew install kind kubectl docker
+cd labs
+./run.sh 01
 ```
 
-## Setup
+Done. Cluster builds, scenario starts, you fix it.
 
+## Requirements
+
+**All Platforms (macOS / Linux / Windows):**
+- Docker Desktop
+- kind
+- kubectl  
+- Git Bash (Windows) or WSL2
+
+### Install
+
+**macOS:**
 ```bash
-# Create the practice cluster (1 control-plane + 2 workers)
-./scripts/create-cluster.sh
-
-# Verify it's working
-kubectl get nodes
+brew install docker kind kubectl
 ```
 
-## How to use
-
+**Linux (Ubuntu/Debian):**
 ```bash
-# 1. Break something
-./scripts/break.sh lab-01-node-not-ready
-
-# 2. Read the scenario, diagnose, fix
-# (use kubectl, docker exec to SSH into nodes)
-
-# 3. Verify your fix
-./scripts/verify.sh lab-01-node-not-ready
-
-# 4. Reset if needed
-./scripts/reset.sh
+curl -fsSL https://get.docker.com | sh
+curl -Lo kind https://kind.sigs.k8s.io/dl/v0.20.0/kind-linux-amd64
+chmod +x kind && sudo mv kind /usr/local/bin/
+sudo apt-get install -y kubectl
 ```
 
-## Labs by CKA Domain
+**Windows (Git Bash / WSL):**
+```powershell
+choco install docker-desktop kind kubectl
+# Then: git bash> ./run.sh 01
+```
 
-### Troubleshooting (30% of exam)
-| Lab | Scenario | Difficulty |
-|-----|----------|------------|
-| lab-01 | Node NotReady — kubelet stopped | Easy |
-| lab-02 | Service has no endpoints — selector mismatch | Easy |
-| lab-03 | Pod CrashLoopBackOff — missing config file | Medium |
-| lab-10 | Kubelet misconfigured — wrong config path | Hard |
-
-### Cluster Architecture (25% of exam)
-| Lab | Scenario | Difficulty |
-|-----|----------|------------|
-| lab-04 | Scheduler down — static pod removed | Medium |
-| lab-05 | Certificate inspection & renewal | Medium |
-| lab-09 | etcd backup & restore | Hard |
-
-### Services & Networking (20% of exam)
-| Lab | Scenario | Difficulty |
-|-----|----------|------------|
-| lab-06 | NetworkPolicy blocks traffic — fix the rule | Hard |
-
-### Storage (10% of exam)
-| Lab | Scenario | Difficulty |
-|-----|----------|------------|
-| lab-07 | PVC stuck Pending — capacity mismatch | Easy |
-
-### Security / RBAC
-| Lab | Scenario | Difficulty |
-|-----|----------|------------|
-| lab-08 | ServiceAccount missing permissions | Medium |
-
-## SSH into nodes
-
-kind nodes are Docker containers. "SSH" into them with:
+## Workflow
 
 ```bash
-# Control plane
-docker exec -it cka-lab-control-plane bash
+./run.sh 01                    # Start scenario 01
+# Inside shell, diagnose & fix with kubectl
+./run.sh verify 01             # Check if fixed
+./run.sh reset 01              # Clean and retry
+./run.sh clean                 # Delete cluster
+```
 
-# Worker 1
-docker exec -it cka-lab-worker bash
+## All Scenarios
 
-# Worker 2
-docker exec -it cka-lab-worker2 bash
+### See List
+```bash
+./run.sh list
+```
+
+### By Domain
+
+**Troubleshooting (30%) — 12 scenarios:**
+s01 (api-server), s02 (node-ready), s03 (coredns), s04 (service), s05 (crashloop), s06 (scheduler), s07 (cert), s08 (netpol), s09 (pvc), s10 (rbac), s11 (etcd), s12 (kubelet)
+
+**Cluster Arch (25%) — 10 scenarios:**
+s13 (upgrade), s14 (join), s15 (runtime), s16 (cni), s17 (crd), s18 (webhook), s19 (audit), s20 (rbac), s21 (sa), s22 (backup)
+
+**Networking (20%) — 8 scenarios:**
+s23 (ingress-tls), s24 (gateway), s25 (netpol), s26 (lb), s27 (dns), s28 (discovery), s29 (class), s30 (multi)
+
+**Workloads (15%) — 6 scenarios:**
+s31 (rolling), s32 (stateful), s33 (limits), s34 (affinity), s35 (priority), s36 (hpa)
+
+**Storage (10%) — 4 scenarios:**
+s37 (pv-pvc), s38 (storageclass), s39 (local), s40 (expand)
+
+## Scenario Structure
+
+Each scenario contains:
+- **TASK.md** — Problem description
+- **setup.sh** — Introduce failure
+- **verify.sh** — Check solution
+- **reset.sh** — Cleanup
+- **HINTS.md** — Tips & commands
+
+## Quick Commands
+
+```bash
+k get nodes
+k get pods -A
+k describe node <name>
+k logs <pod> -n <ns>
+k exec -it <pod> -n <ns> -- bash
 ```
 
 ## Tips
 
-- Always start with `kubectl get nodes` and `kubectl get pods -A` to see the big picture
-- Check events: `kubectl get events -A --sort-by=.metadata.creationTimestamp`
-- For node issues: `systemctl status kubelet` and `journalctl -u kubelet` inside the node
-- Time yourself — CKA gives ~6 minutes per question on average
+- Read TASK.md fully before diagnosing
+- Use `describe` before `logs`
+- Check node status via `docker exec` into node
+- Time yourself (avg 10-15 min per scenario)
+- Review hints only after attempting
+
+## SSH into Nodes
+
+```bash
+docker exec -it cka-lab-control-plane bash
+docker exec -it cka-lab-worker bash
+docker exec -it cka-lab-worker2 bash
+```
+
+## Reference
+
+- [Kubernetes Docs](https://kubernetes.io/docs)
+- [CKA Exam](https://www.cncf.io/certification/cka/)
+- [kind Docs](https://kind.sigs.k8s.io/)
