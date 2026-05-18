@@ -3,6 +3,16 @@ kind: Namespace
 metadata:
   name: critical-app
 ---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: critical-config
+  namespace: critical-app
+data:
+  database: "production-db"
+  replicas: "3"
+  maintenance: "false"
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:

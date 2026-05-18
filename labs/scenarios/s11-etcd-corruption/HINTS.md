@@ -1,21 +1,58 @@
-# Hints for s11: etcd Restore
+# Hints for s11: etcd Corruption & Restore
 
 ## Symptoms
-- Namespace or resources missing
-- etcd needs restoration from backup
+- Namespace `critical-app` is missing
+- Associated resources (Deployment, ConfigMap) are gone
+- etcd data has been deleted/corrupted
 
-## Debugging Path
-1. Check if namespace exists: `kubectl get namespace critical-app`
-2. Find etcd backup file: `/tmp/etcd-backup/backup.db`
-3. Restore from snapshot (complex — refer to kubeadm docs)
-4. Basic restore steps:
-   - Stop API server and etcd
-   - Run etcdctl snapshot restore --data-dir=/tmp/etcd-restore /tmp/etcd-backup/backup.db
-   - Move restored data
-   - Restart etcd and API server
-5. Verify namespace is back: `kubectl get namespace`
+## Investigation
+1. Confirm namespace is missing:
+   ```bash
+   kubectl get namespace critical-app
+   ```
 
-## Key Commands
-- `kubectl get namespace`
-- `docker exec <cluster>-control-plane etcdctl member list`
-- `docker exec <cluster>-control-plane etcdctl snapshot save <file>`
+2. Find the etcd backup in the control plane:
+   ```bash
+   docker exec <CLUSTER_NAME>-control-plane ls -la /tmp/etcd-backup/
+   ```
+
+## Recovery Steps
+
+### Restore using etcdctl snapshot restore
+```bash
+# Restore snapshot to temporary directory inside control plane
+docker exec <CLUSTER_NAME>-control-plane \
+  sh -c "ETCDCTL_API=3 etcdctl snapshot restore \
+    /tmp/etcd-backup/backup.db \
+    --data-dir=/var/lib/etcd-restore"
+
+# Stop kubelet to prevent API server from starting with old data
+docker exec <CLUSTER_NAME>-control-plane \
+  sh -c "systemctl stop kubelet"
+
+# Backup corrupted data and restore from snapshot
+docker exec <CLUSTER_NAME>-control-plane \
+  sh -c "mv /var/lib/etcd /var/lib/etcd-corrupted && \
+         mv /var/lib/etcd-restore /var/lib/etcd"
+
+# Restart kubelet (etcd and API server will restart automatically)
+docker exec <CLUSTER_NAME>-control-plane \
+  sh -c "systemctl start kubelet"
+
+# Wait for API server to become ready
+sleep 10
+kubectl get nodes
+```
+
+## Verification
+Once restored, check that resources are back:
+```bash
+kubectl get namespace critical-app
+kubectl get all -n critical-app
+kubectl get configmap critical-config -n critical-app -o jsonpath='{.data}'
+```
+
+## Key Learning
+- etcd is the source of truth for all cluster state
+- Always maintain current backups: `etcdctl snapshot save`
+- Practice restore procedures — this is critical operational knowledge

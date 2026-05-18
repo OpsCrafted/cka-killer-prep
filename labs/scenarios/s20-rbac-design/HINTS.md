@@ -1,31 +1,43 @@
-# Hints for s20
+# Hints for s20: RBAC Design
 
-Create a Role and RoleBinding for the ServiceAccount:
-\`\`\`bash
+## Problem
+The pod `app-reader` in the `rbac-test` namespace is trying to read a secret but doesn't have permissions.
+
+## Solution
+Create a Role that allows reading secrets, then bind it to the service account:
+
+```bash
 kubectl apply -f - << 'RBAC'
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: app-role
+  name: app-reader
   namespace: rbac-test
 rules:
 - apiGroups: [""]
-  resources: ["pods"]
-  verbs: ["get", "list"]
+  resources: ["secrets"]
+  verbs: ["get"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: app-rolebinding
+  name: app-reader
   namespace: rbac-test
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: app-role
+  name: app-reader
 subjects:
 - kind: ServiceAccount
   name: app-sa
+  namespace: rbac-test
 RBAC
-\`\`\`
+```
 
-Key: Know how to create Roles, ClusterRoles, and Bindings.
+## Verification
+Check pod logs to confirm it can now read the secret:
+```bash
+kubectl logs app-reader -n rbac-test
+```
+
+Key: Understand how Roles define permissions and RoleBindings connect them to service accounts.
