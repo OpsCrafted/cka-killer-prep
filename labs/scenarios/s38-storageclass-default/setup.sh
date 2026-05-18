@@ -10,9 +10,9 @@ apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
   name: standard
+  annotations:
+    storageclass.kubernetes.io/is-default-class: "true"
 provisioner: kubernetes.io/host-path
 MANIFEST
-
-kubectl patch storageclass standard -p "{\"metadata\": {\"annotations\":{\"storageclass.kubernetes.io/is-default-class\":\"true\"}}}" 2>/dev/null || true
 
 echo "✓ Scenario setup complete"
