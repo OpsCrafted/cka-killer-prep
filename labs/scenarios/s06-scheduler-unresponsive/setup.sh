@@ -1,13 +1,11 @@
 #!/bin/bash
 set -e
-
 CLUSTER_NAME="$1"
 KUBECONFIG="$2"
-
 export KUBECONFIG
+SCENARIO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# Introduce failure here
-# Example:
-# kubectl scale deployment app --replicas=0 -n default
+kubectl apply -f "$SCENARIO_DIR/manifests/deployment.yaml"
+sleep 2
 
-echo "✓ Scenario setup complete"
+echo "✓ Scenario setup complete: Pods pending due to unsatisfiable nodeSelector"
