@@ -1,15 +1,17 @@
-# Scenario s02: Worker node kernel panic recovery
+# Scenario s02: Worker Node Not Ready
 
 ## Problem
-[Describe what's broken and symptoms]
+
+One of your worker nodes has gone NotReady. Pods on that node are evicted, and new pods won't schedule there.
+
+Diagnose the issue and bring the node back to Ready state.
 
 ## Expected State
-[Describe what success looks like]
+
+- All nodes report Ready status
+- No NotReady, NotSchedulable, or MemoryPressure conditions
+- Kubelet is running and responsive
 
 ## Time Limit
-15 minutes
 
-## Exam Notes
-- No external documentation allowed
-- Use only kubectl and ssh
-- Minimize cluster state changes
+15 minutes
