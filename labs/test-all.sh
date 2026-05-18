@@ -30,19 +30,29 @@ init_cluster() {
 
   if kind get clusters 2>/dev/null | grep -q "^${CLUSTER_NAME}$"; then
     log_ok "Cluster running"
+    kind get kubeconfig --name "$CLUSTER_NAME" > "$KUBECONFIG" 2>/dev/null
     return 0
   fi
 
   log_info "Creating kind cluster..."
-  kind create cluster \
+  if kind create cluster \
     --name "$CLUSTER_NAME" \
     --config "$SCRIPT_DIR/kind-config.yaml" \
-    --kubeconfig "$KUBECONFIG" 2>/dev/null || {
-    log_err "Failed to create cluster"
-    return 1
-  }
+    --kubeconfig "$KUBECONFIG" 2>/dev/null; then
+    log_ok "Cluster created"
+    return 0
+  fi
 
-  log_ok "Cluster created"
+  log_info "Falling back to existing 'kind' cluster..."
+  if kind get clusters 2>/dev/null | grep -q "^kind$"; then
+    CLUSTER_NAME="kind"
+    kind get kubeconfig --name kind > "$KUBECONFIG" 2>/dev/null
+    log_ok "Using existing cluster"
+    return 0
+  fi
+
+  log_err "No cluster available"
+  return 1
 }
 
 wait_cluster_ready() {
@@ -106,7 +116,7 @@ main() {
   echo -e "${BLUE}Testing Scenarios 01-40${NC}"
   echo -e "${BLUE}════════════════════════════════════════${NC}"
 
-  for i in {01..40}; do
+  for i in $(seq -f '%02g' 1 40); do
     if test_scenario "$i"; then
       ((passed++))
     else
