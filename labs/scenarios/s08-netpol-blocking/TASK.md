@@ -1,15 +1,17 @@
-# Scenario s08: NetworkPolicy denying legitimate traffic
+# Scenario s08: NetworkPolicy Blocks Pod Communication
 
 ## Problem
-[Describe what's broken and symptoms]
+
+Pods can't reach each other. NetworkPolicy is too restrictive—it blocks all traffic by default.
+
+Add a NetworkPolicy that allows the required pod-to-pod communication.
 
 ## Expected State
-[Describe what success looks like]
+
+- Pods can communicate (curl between pods works)
+- NetworkPolicy allows ingress from same namespace
+- No traffic denied logs in events
 
 ## Time Limit
-15 minutes
 
-## Exam Notes
-- No external documentation allowed
-- Use only kubectl and ssh
-- Minimize cluster state changes
+15 minutes

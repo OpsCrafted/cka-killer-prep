@@ -1,18 +1,19 @@
-# Hints for s08
+# Hints for s08: NetworkPolicy Blocking
 
-## Step 1
-[First diagnostic step]
+## Symptoms
+- Pods can't reach each other
+- Connection timeouts between services
+- NetworkPolicy denies traffic
 
-## Step 2
-[Next step]
-
-## Common Mistakes
-- [Pitfall 1]
-- [Pitfall 2]
+## Debugging Path
+1. Check NetworkPolicy: `kubectl get networkpolicies`
+2. Describe it: `kubectl describe networkpolicy <name>`
+3. Look for: policyTypes, ingress/egress rules, podSelector
+4. Add allow rule or remove restrictive policy
+5. Verify connectivity: `kubectl exec <pod> -- wget -O- http://service:port`
 
 ## Key Commands
-```bash
-kubectl get nodes
-kubectl describe node <name>
-kubectl logs <pod> -n <ns>
-```
+- `kubectl get networkpolicies`
+- `kubectl describe networkpolicy <name>`
+- `kubectl edit networkpolicy <name>`
+- `kubectl delete networkpolicy <name>`
