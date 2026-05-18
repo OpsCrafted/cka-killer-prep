@@ -1,15 +1,17 @@
-# Scenario s09: PersistentVolumeClaim won't bind
+# Scenario s09: PersistentVolumeClaim Stuck in Pending
 
 ## Problem
-[Describe what's broken and symptoms]
+
+A PersistentVolumeClaim (PVC) is stuck in Pending state. No PersistentVolume (PV) is binding to it.
+
+Create or match a StorageClass so the PVC can bind to a PV.
 
 ## Expected State
-[Describe what success looks like]
+
+- PVC status is Bound
+- PV is created and Bound to PVC
+- Pod can mount the volume
 
 ## Time Limit
-15 minutes
 
-## Exam Notes
-- No external documentation allowed
-- Use only kubectl and ssh
-- Minimize cluster state changes
+15 minutes

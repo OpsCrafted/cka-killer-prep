@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: data-pvc
+  namespace: default
+spec:
+  accessModes:
+  - ReadWriteOnce
+  storageClassName: premium-storage
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-with-storage
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app-with-storage
+  template:
+    metadata:
+      labels:
+        app: app-with-storage
+    spec:
+      containers:
+      - name: app
+        image: nginx:1.21
+        volumeMounts:
+        - name: data
+          mountPath: /data
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: data-pvc
