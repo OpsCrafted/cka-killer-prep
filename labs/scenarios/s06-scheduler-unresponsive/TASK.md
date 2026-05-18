@@ -1,15 +1,15 @@
-# Scenario s06: Pods stuck in pending
+# Scenario s06: Scheduler Can't Schedule Pods
 
 ## Problem
-[Describe what's broken and symptoms]
+
+New pods are stuck in Pending state. The scheduler isn't picking them up. Check scheduler health.
 
 ## Expected State
-[Describe what success looks like]
+
+- New pods transition from Pending → Running
+- Scheduler logs show no errors
+- Pods evenly distributed across nodes
 
 ## Time Limit
-15 minutes
 
-## Exam Notes
-- No external documentation allowed
-- Use only kubectl and ssh
-- Minimize cluster state changes
+15 minutes
