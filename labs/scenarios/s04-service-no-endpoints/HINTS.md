@@ -1,18 +1,16 @@
-# Hints for s04
+# Hints for s04: Service No Endpoints
 
-## Step 1
-[First diagnostic step]
+## Symptoms
+- Service exists but shows no ENDPOINTS
+- Pods are Running but unreachable via service
 
-## Step 2
-[Next step]
-
-## Common Mistakes
-- [Pitfall 1]
-- [Pitfall 2]
+## Debugging Path
+1. Check service selector: `kubectl get svc backend -o yaml | grep selector`
+2. Check pod labels: `kubectl get pods --show-labels`
+3. They must match exactly (e.g., `app: backend` selector with `app: backend` label)
+4. Fix Service spec or pod labels
 
 ## Key Commands
-```bash
-kubectl get nodes
-kubectl describe node <name>
-kubectl logs <pod> -n <ns>
-```
+- `kubectl get svc` (shows ENDPOINTS column)
+- `kubectl get pods --show-labels`
+- `kubectl describe svc <name>`
