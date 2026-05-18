@@ -1,15 +1,18 @@
-# Scenario s07: TLS certificate validation failure
+# Scenario s07: API Server TLS Certificate Expired
 
 ## Problem
-[Describe what's broken and symptoms]
+
+Cluster components can't communicate. Logs show "certificate has expired". The API server TLS cert is past expiration.
+
+Check certificate status and renew if needed.
 
 ## Expected State
-[Describe what success looks like]
+
+- Certificate is not expired (check expiration date)
+- API server is responsive
+- kubectl commands work
+- All nodes report Ready
 
 ## Time Limit
-15 minutes
 
-## Exam Notes
-- No external documentation allowed
-- Use only kubectl and ssh
-- Minimize cluster state changes
+15 minutes
