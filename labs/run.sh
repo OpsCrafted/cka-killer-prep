@@ -63,7 +63,7 @@ validate_scenario_id() {
 check_deps() {
   local missing=0
 
-  for cmd in docker kind kubectl; do
+  for cmd in docker kind kubectl jq; do
     if ! command -v "$cmd" &>/dev/null; then
       log_err "Missing: $cmd"
       missing=1
@@ -75,16 +75,17 @@ check_deps() {
 ${RED}Missing dependencies.${NC} Install:
 
 macOS:
-  brew install docker kind kubectl
+  brew install docker kind kubectl jq
 
 Linux (Ubuntu/Debian):
   curl -fsSL https://get.docker.com | sh
   curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.20.0/kind-linux-amd64
   chmod +x ./kind && sudo mv ./kind /usr/local/bin/
+  sudo apt-get install -y jq
 
 Windows (Git Bash / WSL):
   Install Docker Desktop, then:
-  choco install kind kubectl
+  choco install kind kubectl jq
 
 EOF
     exit 1

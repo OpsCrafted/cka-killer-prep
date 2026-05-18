@@ -1,6 +1,6 @@
 # 🎯 CKA Killer Prep
 
-**Interactive Certified Kubernetes Administrator exam preparation — study guide, 40 KillerShell simulator labs, break-and-fix scenarios, and progress tracking.**
+**Interactive Certified Kubernetes Administrator exam preparation — study guide, 25-question KillerShell simulator, JSONPath drills, and 12 implemented break-and-fix labs (28 planned).**
 
 [![GitHub Pages](https://img.shields.io/badge/Live_Site-GitHub_Pages-blue?style=flat-square&logo=github)](https://yourusername.github.io/cka-killer-prep)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
@@ -17,7 +17,7 @@ A hands-on CKA prep platform built by a Senior SRE running Kubernetes in product
 | Module               | Description                                                                    | Format           |
 | -------------------- | ------------------------------------------------------------------------------ | ---------------- |
 | **Study Guide**      | 6 chapters covering all CKA domains — lessons, exercises, quizzes, cheatsheets | Interactive HTML |
-| **KillerShell 40Q**  | All 40 simulator questions with exam weights, solutions, and tips              | Interactive HTML |
+| **KillerShell 25Q**  | 25 simulator questions with exam weights, solutions, and tips                  | Interactive HTML |
 | **JSONPath Drills**  | 20 type-to-check drills for kubectl filtering — the skill most people skip     | Interactive HTML |
 | **Break & Fix Labs** | Shell scripts that break a kind cluster — you diagnose and fix                 | Shell + kind     |
 | **Quick Reference**  | Node scheduling, RBAC, NetworkPolicy, etcd backup — visual explainers          | Interactive HTML |
@@ -76,61 +76,17 @@ cka-killer-prep/
 ├── study-guide.html            # 6-chapter interactive study guide
 ├── killershell-25q.html        # KillerShell simulator question bank
 ├── jsonpath-drills.html        # JSONPath & bash filtering practice
-├── docs/
-│   ├── scheduling.md           # Node scheduling deep-dive
-│   ├── rbac.md                 # RBAC patterns
-│   ├── networkpolicy.md        # NetworkPolicy patterns
-│   └── etcd-backup.md          # etcd backup & restore
 ├── labs/
 │   ├── README.md               # Lab setup instructions
 │   ├── scenarios/
-│   │   ├── lab-01-node-not-ready.md
-│   │   ├── lab-02-broken-service.md
-│   │   ├── lab-03-crashloop.md
-│   │   ├── lab-04-scheduler-down.md
-│   │   ├── lab-05-certificate-expired.md
-│   │   ├── lab-06-network-policy.md
-│   │   ├── lab-07-pvc-pending.md
-│   │   ├── lab-08-rbac-denied.md
-│   │   ├── lab-09-etcd-restore.md
-│   │   ├── lab-10-kubelet-misconfigured.md
-│   │   ├── lab-11-etcd-corruption.md
-│   │   ├── lab-12-kubelet-misconfigured.md
-│   │   ├── lab-13-cluster-upgrade.md
-│   │   ├── lab-14-node-join.md
-│   │   ├── lab-15-runtime-switch.md
-│   │   ├── lab-16-cni-migration.md
-│   │   ├── lab-17-custom-api.md
-│   │   ├── lab-18-webhook-config.md
-│   │   ├── lab-19-audit-logging.md
-│   │   ├── lab-20-rbac-design.md
-│   │   ├── lab-21-serviceaccount-binding.md
-│   │   ├── lab-22-backup-strategy.md
-│   │   ├── lab-23-ingress-tls.md
-│   │   ├── lab-24-gateway-api.md
-│   │   ├── lab-25-netpol-namespace.md
-│   │   ├── lab-26-loadbalancer-expose.md
-│   │   ├── lab-27-dns-debugging.md
-│   │   ├── lab-28-service-discovery.md
-│   │   ├── lab-29-gatewayclass-binding.md
-│   │   ├── lab-30-multi-tenancy.md
-│   │   ├── lab-31-deployment-rolling.md
-│   │   ├── lab-32-statefulset-storage.md
-│   │   ├── lab-33-resource-limits.md
-│   │   ├── lab-34-affinity-taints.md
-│   │   ├── lab-35-priority-preemption.md
-│   │   ├── lab-36-hpa-scaling.md
-│   │   ├── lab-37-pv-pvc-binding.md
-│   │   ├── lab-38-storageclass-default.md
-│   │   ├── lab-39-local-storage.md
-│   │   ├── lab-40-pvc-expansion.md
-│   └── scripts/
-│       ├── create-cluster.sh   # Spin up kind cluster
-│       ├── break.sh            # Introduce a failure
-│       ├── verify.sh           # Check if fix is correct
-│       └── reset.sh            # Reset to clean state
-├── assets/
-│   └── og-image.png            # Social sharing image
+│   │   ├── s01-api-server-down/          # ✓ implemented
+│   │   ├── s02-node-not-ready/           # ✓ implemented
+│   │   ├── s03-coredns-broken/           # ✓ implemented
+│   │   ├── ... (s04-s12 implemented)
+│   │   ├── s13-cluster-upgrade/          # 📋 planned
+│   │   ├── s14-node-join/                # 📋 planned
+│   │   ├── ... (s15-s40 planned)
+│   └── run.sh                  # Lab runner (setup, verify, reset)
 ├── LICENSE
 └── README.md
 ```
@@ -243,4 +199,4 @@ MIT — use it, share it, learn from it.
 
 ---
 
-**Built by [Borislav Stancevic](https://linkedin.com/in/yourprofile) — Senior SRE running Kubernetes in production.**
+**Built by Borislav Stancevic — Senior SRE running Kubernetes in production.**
