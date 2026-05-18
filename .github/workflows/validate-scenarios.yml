@@ -1,0 +1,75 @@
+name: Validate Scenarios
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'labs/scenarios/**'
+      - '.github/workflows/validate-scenarios.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'labs/scenarios/**'
+
+jobs:
+  detect-stubs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check for placeholder text in TASK.md
+        run: |
+          echo "Checking for placeholder text..."
+          found=0
+          for task in labs/scenarios/*/TASK.md; do
+            if grep -q '\[Describe\|\[TODO\|\[FIXME' "$task"; then
+              echo "❌ $task contains placeholder text"
+              found=1
+            fi
+          done
+          [[ $found -eq 0 ]] && echo "✓ No placeholder text in TASK.md"
+          exit $found
+
+      - name: Check for incomplete setup.sh
+        run: |
+          echo "Checking setup.sh files..."
+          found=0
+          for setup in labs/scenarios/*/setup.sh; do
+            if grep -q 'Introduce failure here' "$setup"; then
+              echo "❌ $setup contains stub placeholder"
+              found=1
+            fi
+          done
+          [[ $found -eq 0 ]] && echo "✓ No incomplete setup.sh files"
+          exit $found
+
+      - name: Check for weak verify.sh
+        run: |
+          echo "Checking verify.sh files..."
+          found=0
+          for verify in labs/scenarios/*/verify.sh; do
+            # Weak verify: only has exit 0 or echo success, no actual checks
+            if grep -q 'exit 0' "$verify" && ! grep -qE 'kubectl|docker|test|if' "$verify"; then
+              echo "⚠ $verify may be incomplete (no checks found)"
+              found=1
+            fi
+          done
+          [[ $found -eq 0 ]] && echo "✓ All verify.sh files have checks"
+          exit $found
+
+      - name: Validate shell scripts
+        run: |
+          echo "Running shellcheck..."
+          for sh in labs/scenarios/*/setup.sh labs/scenarios/*/verify.sh labs/scenarios/*/reset.sh; do
+            [[ -f "$sh" ]] && bash -n "$sh" || (echo "❌ Syntax error: $sh"; exit 1)
+          done
+          echo "✓ All shell scripts valid"
+
+      - name: Report scenario status
+        if: always()
+        run: |
+          echo "## Scenario Status"
+          real=$(find labs/scenarios -name setup.sh ! -exec grep -l 'Introduce failure here' {} \; | wc -l)
+          stub=$(find labs/scenarios -name setup.sh -exec grep -l 'Introduce failure here' {} \; | wc -l)
+          echo "- Implemented: $real"
+          echo "- Planned: $stub"
