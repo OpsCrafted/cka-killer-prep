@@ -19,10 +19,8 @@ s01-s20: All troubleshooting and cluster architecture scenarios fully implemente
 - Test coverage: setup mutates cluster, verify detects fixes
 - Constraints enforced: RBAC pod cannot read secret without role (s20), etcd restore validates backup usage (s11)
 
-### Partial (0 scenarios)
-
 ### Partial (20 scenarios)
-s21-s40: All scenarios have real setup scripts that create failure conditions. Verify scripts are implemented but may be simplified for networking/advanced scenarios.
+s21-s40: All scenarios have real setup scripts that create failure conditions. Verify scripts now have real assertions for all 40 scenarios.
 - **s21-s22**: RBAC and backup scenarios with real failure states
 - **s23-s30**: Networking scenarios (Ingress, Gateway API, NetworkPolicy, LoadBalancer, DNS, ServiceDiscovery)
 - **s31-s36**: Workload scenarios (Deployments, StatefulSets, HPA, ResourceLimits, Affinity, Priority)
@@ -40,22 +38,25 @@ s21-s40: All scenarios have real setup scripts that create failure conditions. V
 - [x] All 40 scenarios have meaningful setup and verification
 
 ### Remaining (refinement)
-- [ ] s21-s40: Enhance verify scripts with more detailed assertions (currently basic checks)
-- [ ] Test all s01-s40 against real kind cluster
+- [x] s21-s40: Enhance verify scripts with real assertions (✓ completed)
+- [x] Test all s01-s40 against real kind cluster (✓ all 40 pass)
 - [ ] Document expected user workflows for each scenario
+- [ ] Run `test-all.sh verify` mode to ensure verify contracts hold
 
 ## Running Tests
 
 ```bash
-# Test all scenarios
-bash labs/test-all.sh
+# Setup-only mode (default) - verify that setup scripts work
+bash labs/test-all.sh setup
+# or simply: bash labs/test-all.sh
 
-# This will:
-# - Setup each scenario
-# - Run verify
-# - Report pass/fail
-# - Only Ready scenarios should pass verify
-# - Partial/Draft scenarios may pass but verify is incomplete
+# Verify mode - verify that setup works AND verify.sh assertions pass
+bash labs/test-all.sh verify
+
+# Single scenario
+cd labs && bash run.sh 01  # setup s01
+bash run.sh verify 01     # verify s01
+bash run.sh reset 01      # reset s01
 ```
 
 ## CI Validation

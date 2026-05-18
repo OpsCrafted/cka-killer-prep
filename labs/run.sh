@@ -104,12 +104,24 @@ ensure_cluster() {
   fi
 
   log_info "Creating kind cluster..."
-  kind create cluster \
+  if kind create cluster \
     --name "$CLUSTER_NAME" \
     --config "$SCRIPT_DIR/kind-config.yaml" \
-    --kubeconfig "$KUBECONFIG" 2>/dev/null || true
+    --kubeconfig "$KUBECONFIG" 2>/dev/null; then
+    log_ok "Cluster created"
+    return 0
+  fi
 
-  log_ok "Cluster created"
+  log_info "Falling back to existing 'kind' cluster..."
+  if kind get clusters 2>/dev/null | grep -q "^kind$"; then
+    CLUSTER_NAME="kind"
+    kind get kubeconfig --name kind > "$KUBECONFIG" 2>/dev/null
+    log_ok "Using existing cluster"
+    return 0
+  fi
+
+  log_err "Failed to create or find cluster"
+  return 1
 }
 
 list_scenarios() {
