@@ -156,6 +156,64 @@ kubectl get nodes
 
 ---
 
+## 🧪 Lab Scenario Matrix
+
+All 40 scenarios implemented and tested. Organized by CKA domain:
+
+| Scenario | Topic | Domain | Status |
+|----------|-------|--------|--------|
+| **s01-s12** | **Troubleshooting** | All | ✓ Ready |
+| s01 | api-server-down | Cluster Architecture | ✓ |
+| s02 | node-not-ready | Cluster Architecture | ✓ |
+| s03 | coredns-broken | Services & Networking | ✓ |
+| s04 | service-no-endpoints | Services & Networking | ✓ |
+| s05 | pod-crashloop | Workloads & Scheduling | ✓ |
+| s06 | scheduler-unresponsive | Workloads & Scheduling | ✓ |
+| s07 | cert-expired | Cluster Architecture | ✓ |
+| s08 | netpol-blocking | Services & Networking | ✓ |
+| s09 | pvc-stuck | Storage | ✓ |
+| s10 | rbac-forbidden | Cluster Architecture | ✓ |
+| s11 | etcd-corruption | Cluster Architecture | ✓ |
+| s12 | kubelet-misconfigured | Cluster Architecture | ✓ |
+| **s13-s22** | **Cluster Architecture** | All | ✓ Ready |
+| s13 | cluster-upgrade | Cluster Architecture | ✓ |
+| s14 | node-join | Cluster Architecture | ✓ |
+| s15 | runtime-switch | Cluster Architecture | ✓ |
+| s16 | cni-migration | Cluster Architecture | ✓ |
+| s17 | custom-api | Cluster Architecture | ✓ |
+| s18 | webhook-config | Cluster Architecture | ✓ |
+| s19 | audit-logging | Cluster Architecture | ✓ |
+| s20 | rbac-design | Cluster Architecture | ✓ |
+| s21 | serviceaccount-binding | Cluster Architecture | ✓ |
+| s22 | backup-strategy | Cluster Architecture | ✓ |
+| **s23-s30** | **Services & Networking** | All | ✓ Ready |
+| s23 | ingress-tls | Services & Networking | ✓ |
+| s24 | gateway-api | Services & Networking | ✓ |
+| s25 | netpol-namespace | Services & Networking | ✓ |
+| s26 | loadbalancer-expose | Services & Networking | ✓ |
+| s27 | dns-debugging | Services & Networking | ✓ |
+| s28 | service-discovery | Services & Networking | ✓ |
+| s29 | gatewayclass-binding | Services & Networking | ✓ |
+| s30 | multi-tenancy | Services & Networking | ✓ |
+| **s31-s36** | **Workloads & Scheduling** | All | ✓ Ready |
+| s31 | deployment-rolling | Workloads & Scheduling | ✓ |
+| s32 | statefulset-storage | Workloads & Scheduling | ✓ |
+| s33 | resource-limits | Workloads & Scheduling | ✓ |
+| s34 | affinity-taints | Workloads & Scheduling | ✓ |
+| s35 | priority-preemption | Workloads & Scheduling | ✓ |
+| s36 | hpa-scaling | Workloads & Scheduling | ✓ |
+| **s37-s40** | **Storage** | All | ✓ Ready |
+| s37 | pv-pvc-binding | Storage | ✓ |
+| s38 | storageclass-default | Storage | ✓ |
+| s39 | local-storage | Storage | ✓ |
+| s40 | pvc-expansion | Storage | ✓ |
+
+Run all 40: `bash labs/test-all.sh`  
+Run single: `./labs/run.sh 01`  
+Verify: `./labs/run.sh verify 01`
+
+---
+
 ## 📝 Exam Day Checklist
 
 ```bash

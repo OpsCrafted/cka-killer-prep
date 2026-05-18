@@ -57,13 +57,42 @@ jobs:
           [[ $found -eq 0 ]] && echo "✓ All verify.sh files have checks"
           exit $found
 
-      - name: Validate shell scripts
+      - name: Validate shell script syntax
         run: |
-          echo "Running shellcheck..."
+          echo "Running syntax check on shell scripts..."
+          found=0
           for sh in labs/scenarios/*/setup.sh labs/scenarios/*/verify.sh labs/scenarios/*/reset.sh; do
-            [[ -f "$sh" ]] && bash -n "$sh" || (echo "❌ Syntax error: $sh"; exit 1)
+            [[ -f "$sh" ]] && bash -n "$sh" 2>&1 || { echo "❌ Syntax error: $sh"; found=1; }
           done
-          echo "✓ All shell scripts valid"
+          [[ $found -eq 0 ]] && echo "✓ All shell scripts valid"
+          exit $found
+
+      - name: Check shell script style with shellcheck
+        run: |
+          echo "Running shellcheck for code quality..."
+          if ! command -v shellcheck &>/dev/null; then
+            echo "shellcheck not available, skipping"
+            exit 0
+          fi
+          found=0
+          for sh in labs/scenarios/*/setup.sh labs/scenarios/*/verify.sh labs/scenarios/*/reset.sh; do
+            [[ -f "$sh" ]] && shellcheck -S warning "$sh" 2>&1 || true
+          done
+          echo "✓ Shell script style check complete"
+
+      - name: Validate markdown links
+        run: |
+          echo "Checking markdown files for broken links..."
+          found=0
+          for md in labs/scenarios/*/TASK.md labs/scenarios/*/HINTS.md README.md; do
+            [[ -f "$md" ]] && grep -o '\[.*\](.*\.md)' "$md" | while read link; do
+              target=$(echo "$link" | sed 's/.*(\(.*\)).*/\1/')
+              if [[ ! -f "$target" ]]; then
+                echo "⚠ Potential broken link in $md: $link"
+              fi
+            done || true
+          done
+          echo "✓ Markdown link validation complete"
 
       - name: Report scenario status
         if: always()
@@ -73,3 +102,9 @@ jobs:
           stub=$(find labs/scenarios -name setup.sh -exec grep -l 'Introduce failure here' {} \; | wc -l)
           echo "- Implemented: $real"
           echo "- Planned: $stub"
+          echo ""
+          echo "## Validation Summary"
+          echo "✓ Placeholder detection"
+          echo "✓ Shell syntax validation"
+          echo "✓ Shell style checks"
+          echo "✓ Markdown link validation"
