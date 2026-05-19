@@ -1,0 +1,13 @@
+difficulty: medium
+domain: troubleshooting
+estimated_minutes: 15
+status: ready
+skills:
+  - dns
+  - coredns
+  - configmaps
+  - pod-logs
+learn_objectives:
+  - Debug DNS failures
+  - Identify Corefile syntax errors
+  - Update ConfigMaps and restart deployments

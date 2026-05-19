@@ -1,0 +1,12 @@
+difficulty: medium
+domain: networking
+estimated_minutes: 10
+status: partial
+skills:
+  - gateway-api
+  - gatewayclass
+  - controller-binding
+learn_objectives:
+  - Create GatewayClass with controller
+  - Understand controller acknowledgment
+  - Configure Gateway API controllers

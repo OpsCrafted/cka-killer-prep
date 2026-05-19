@@ -1,0 +1,12 @@
+difficulty: easy
+domain: networking
+estimated_minutes: 10
+status: partial
+skills:
+  - services
+  - loadbalancer
+  - external-access
+learn_objectives:
+  - Create LoadBalancer services
+  - Expose services externally
+  - Understand service types

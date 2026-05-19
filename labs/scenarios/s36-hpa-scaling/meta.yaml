@@ -1,0 +1,13 @@
+difficulty: medium
+domain: workloads
+estimated_minutes: 15
+status: partial
+skills:
+  - hpa
+  - autoscaling
+  - metrics
+  - scaling-policies
+learn_objectives:
+  - Configure HorizontalPodAutoscaler
+  - Set scaling metrics
+  - Monitor auto-scaling behavior

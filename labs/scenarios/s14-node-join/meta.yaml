@@ -1,0 +1,12 @@
+difficulty: easy
+domain: cluster-architecture
+estimated_minutes: 10
+status: ready
+skills:
+  - node-labels
+  - node-roles
+  - kubeadm
+learn_objectives:
+  - Label nodes with roles
+  - Understand node role conventions
+  - Make nodes discoverable

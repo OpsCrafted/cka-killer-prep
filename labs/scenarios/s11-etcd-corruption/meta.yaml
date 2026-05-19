@@ -1,0 +1,13 @@
+difficulty: hard
+domain: cluster-architecture
+estimated_minutes: 20
+status: ready
+skills:
+  - etcd
+  - backups
+  - disaster-recovery
+  - snapshots
+learn_objectives:
+  - Restore etcd from snapshot
+  - Understand etcd as source of truth
+  - Practice disaster recovery procedure

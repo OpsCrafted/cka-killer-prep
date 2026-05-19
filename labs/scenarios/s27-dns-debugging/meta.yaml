@@ -1,0 +1,13 @@
+difficulty: medium
+domain: networking
+estimated_minutes: 12
+status: partial
+skills:
+  - dns
+  - coredns
+  - service-discovery
+  - nameresolution
+learn_objectives:
+  - Debug DNS resolution
+  - Understand CoreDNS
+  - Troubleshoot nameserver issues

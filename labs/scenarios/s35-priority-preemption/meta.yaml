@@ -1,0 +1,13 @@
+difficulty: medium
+domain: workloads
+estimated_minutes: 12
+status: partial
+skills:
+  - priorityclasses
+  - preemption
+  - scheduling-priority
+  - critical-pods
+learn_objectives:
+  - Create PriorityClass
+  - Understand pod preemption
+  - Schedule critical workloads

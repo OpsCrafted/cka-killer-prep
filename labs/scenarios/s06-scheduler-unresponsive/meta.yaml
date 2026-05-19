@@ -1,0 +1,13 @@
+difficulty: medium
+domain: cluster-architecture
+estimated_minutes: 12
+status: ready
+skills:
+  - scheduler
+  - nodeselector
+  - node-labels
+  - pod-pending
+learn_objectives:
+  - Diagnose scheduling constraints
+  - Match nodeSelector to node labels
+  - Add labels to nodes

@@ -1,0 +1,13 @@
+difficulty: easy
+domain: networking
+estimated_minutes: 10
+status: partial
+skills:
+  - services
+  - endpoints
+  - service-discovery
+  - pod-labels
+learn_objectives:
+  - Understand service endpoints
+  - Verify pod label matching
+  - Enable service discovery

@@ -1,0 +1,13 @@
+difficulty: medium
+domain: cluster-architecture
+estimated_minutes: 12
+status: ready
+skills:
+  - rbac
+  - roles
+  - rolebindings
+  - serviceaccounts
+learn_objectives:
+  - Diagnose RBAC permission issues
+  - Create Roles and RoleBindings
+  - Grant specific permissions

@@ -1,0 +1,14 @@
+difficulty: medium
+domain: workloads
+estimated_minutes: 12
+status: partial
+skills:
+  - affinity
+  - taints
+  - tolerations
+  - pod-scheduling
+  - node-constraints
+learn_objectives:
+  - Use pod affinity rules
+  - Manage node taints
+  - Control pod placement

@@ -1,0 +1,14 @@
+difficulty: hard
+domain: cluster-architecture
+estimated_minutes: 15
+status: ready
+skills:
+  - rbac
+  - roles
+  - clusterroles
+  - rolebindings
+  - clusterrolebindings
+learn_objectives:
+  - Design RBAC policies
+  - Create roles at namespace and cluster scope
+  - Bind roles to users/groups/serviceaccounts

@@ -1,0 +1,13 @@
+difficulty: easy
+domain: workloads
+estimated_minutes: 10
+status: partial
+skills:
+  - deployments
+  - rolling-updates
+  - image-updates
+  - rollout-status
+learn_objectives:
+  - Update deployment images
+  - Monitor rolling updates
+  - Understand zero-downtime deployments

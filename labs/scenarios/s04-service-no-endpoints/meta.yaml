@@ -1,0 +1,13 @@
+difficulty: easy
+domain: troubleshooting
+estimated_minutes: 12
+status: ready
+skills:
+  - services
+  - endpoints
+  - labels
+  - selectors
+learn_objectives:
+  - Diagnose missing endpoints
+  - Match service selectors to pod labels
+  - Fix label mismatches

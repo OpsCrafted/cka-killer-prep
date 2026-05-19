@@ -1,0 +1,13 @@
+difficulty: medium
+domain: cluster-architecture
+estimated_minutes: 10
+status: ready
+skills:
+  - certificates
+  - kubeadm
+  - tls
+  - control-plane
+learn_objectives:
+  - Check certificate expiration
+  - Renew certificates with kubeadm
+  - Restart services to load new certs

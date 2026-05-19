@@ -1,0 +1,13 @@
+difficulty: medium
+domain: networking
+estimated_minutes: 12
+status: partial
+skills:
+  - gateway-api
+  - gateways
+  - gatewayclass
+  - advanced-routing
+learn_objectives:
+  - Understand Gateway API
+  - Create GatewayClass and Gateway
+  - Use Gateway for routing

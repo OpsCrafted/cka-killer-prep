@@ -1,0 +1,13 @@
+difficulty: medium
+domain: troubleshooting
+estimated_minutes: 15
+status: ready
+skills:
+  - pod-logs
+  - configmaps
+  - volume-mounts
+  - restart-policies
+learn_objectives:
+  - Diagnose CrashLoopBackOff
+  - Read previous container logs
+  - Create missing ConfigMaps

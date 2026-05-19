@@ -1,0 +1,13 @@
+difficulty: medium
+domain: cluster-architecture
+estimated_minutes: 10
+status: ready
+skills:
+  - cordoning
+  - draining
+  - pod-eviction
+  - rolling-updates
+learn_objectives:
+  - Understand node cordoning
+  - Uncordon nodes for pod rescheduling
+  - Manage cluster upgrades

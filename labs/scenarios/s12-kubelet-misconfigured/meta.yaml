@@ -1,0 +1,13 @@
+difficulty: medium
+domain: cluster-architecture
+estimated_minutes: 12
+status: ready
+skills:
+  - kubelet
+  - configuration
+  - systemd
+  - node-troubleshooting
+learn_objectives:
+  - Debug kubelet startup failures
+  - Fix configuration paths
+  - Understand kubelet config structure

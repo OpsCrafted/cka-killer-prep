@@ -1,0 +1,13 @@
+difficulty: hard
+domain: cluster-architecture
+estimated_minutes: 15
+status: ready
+skills:
+  - audit-logging
+  - api-server
+  - logging
+  - compliance
+learn_objectives:
+  - Configure audit logging
+  - Understand audit policy
+  - Track API requests

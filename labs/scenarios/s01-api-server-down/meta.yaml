@@ -1,0 +1,12 @@
+difficulty: easy
+domain: troubleshooting
+estimated_minutes: 15
+status: ready
+skills:
+  - static-pods
+  - kubelet
+  - control-plane-debugging
+learn_objectives:
+  - Diagnose API server outages
+  - Use docker exec to access control plane
+  - Restart static pods via kubelet

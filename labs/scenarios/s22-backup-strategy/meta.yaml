@@ -1,0 +1,13 @@
+difficulty: easy
+domain: rbac-security
+estimated_minutes: 10
+status: partial
+skills:
+  - etcd
+  - backups
+  - disaster-recovery
+  - etcdctl
+learn_objectives:
+  - Backup etcd cluster
+  - Use etcdctl snapshot command
+  - Establish backup procedures

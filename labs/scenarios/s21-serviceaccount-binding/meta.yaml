@@ -1,0 +1,13 @@
+difficulty: medium
+domain: rbac-security
+estimated_minutes: 10
+status: partial
+skills:
+  - serviceaccounts
+  - clusterroles
+  - clusterrolebindings
+  - cross-namespace-access
+learn_objectives:
+  - Grant cross-namespace access
+  - Understand ClusterRole scope
+  - Bind ServiceAccounts to ClusterRoles

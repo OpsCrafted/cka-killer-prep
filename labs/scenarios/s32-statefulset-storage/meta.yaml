@@ -1,0 +1,13 @@
+difficulty: medium
+domain: workloads
+estimated_minutes: 15
+status: partial
+skills:
+  - statefulsets
+  - persistent-identity
+  - headless-services
+  - ordered-startup
+learn_objectives:
+  - Create StatefulSets
+  - Understand pod identity
+  - Use headless services

@@ -1,0 +1,12 @@
+difficulty: easy
+domain: storage
+estimated_minutes: 10
+status: partial
+skills:
+  - pvc-expansion
+  - storage-growth
+  - capacity-management
+learn_objectives:
+  - Expand PVC size
+  - Understand growth limitations
+  - Manage storage capacity

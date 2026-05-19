@@ -1,0 +1,13 @@
+difficulty: medium
+domain: storage
+estimated_minutes: 12
+status: partial
+skills:
+  - persistent-volumes
+  - persistent-volume-claims
+  - storage-binding
+  - dynamic-provisioning
+learn_objectives:
+  - Create PV and PVC
+  - Understand binding
+  - Mount persistent storage

@@ -1,0 +1,14 @@
+difficulty: hard
+domain: networking
+estimated_minutes: 15
+status: partial
+skills:
+  - network-policies
+  - namespaces
+  - rbac
+  - multi-tenancy
+  - isolation
+learn_objectives:
+  - Enforce multi-tenant isolation
+  - Design namespace segregation
+  - Use NetworkPolicy for tenant boundaries

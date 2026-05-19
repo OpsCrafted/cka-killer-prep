@@ -1,0 +1,12 @@
+difficulty: easy
+domain: cluster-architecture
+estimated_minutes: 10
+status: ready
+skills:
+  - taints
+  - tolerations
+  - node-constraints
+learn_objectives:
+  - Manage taints on nodes
+  - Understand taint/toleration matching
+  - Control pod scheduling

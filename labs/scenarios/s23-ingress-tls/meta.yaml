@@ -1,0 +1,13 @@
+difficulty: medium
+domain: networking
+estimated_minutes: 12
+status: partial
+skills:
+  - ingress
+  - tls
+  - certificates
+  - https
+learn_objectives:
+  - Configure TLS on Ingress
+  - Create TLS secrets
+  - Manage HTTPS routing

@@ -1,0 +1,13 @@
+difficulty: easy
+domain: workloads
+estimated_minutes: 10
+status: partial
+skills:
+  - resource-limits
+  - cpu
+  - memory
+  - qos-classes
+learn_objectives:
+  - Set resource requests and limits
+  - Understand QoS classes
+  - Prevent resource starvation

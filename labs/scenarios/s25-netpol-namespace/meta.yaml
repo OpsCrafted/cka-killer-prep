@@ -1,0 +1,13 @@
+difficulty: medium
+domain: networking
+estimated_minutes: 12
+status: partial
+skills:
+  - network-policies
+  - namespace-isolation
+  - ingress-egress
+  - podselectors
+learn_objectives:
+  - Create namespace isolation policies
+  - Restrict inter-namespace traffic
+  - Design network security

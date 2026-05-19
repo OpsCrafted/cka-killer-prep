@@ -1,0 +1,12 @@
+difficulty: easy
+domain: troubleshooting
+estimated_minutes: 15
+status: ready
+skills:
+  - kubelet
+  - node-status
+  - systemctl
+learn_objectives:
+  - Identify NotReady nodes
+  - Diagnose kubelet failures
+  - Restart node services

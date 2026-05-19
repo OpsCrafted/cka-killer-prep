@@ -1,0 +1,13 @@
+difficulty: easy
+domain: storage
+estimated_minutes: 10
+status: partial
+skills:
+  - storageclasses
+  - provisioners
+  - default-storage
+  - pvc-provisioning
+learn_objectives:
+  - Create StorageClass
+  - Set default StorageClass
+  - Enable dynamic provisioning

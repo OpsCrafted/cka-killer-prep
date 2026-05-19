@@ -1,0 +1,13 @@
+difficulty: medium
+domain: storage
+estimated_minutes: 12
+status: partial
+skills:
+  - local-storage
+  - node-affinity
+  - local-provisioner
+  - fast-storage
+learn_objectives:
+  - Use local storage
+  - Understand node affinity for storage
+  - Provision local volumes
