@@ -54,16 +54,17 @@ python3 -m http.server 8080  # then visit localhost:8080
 
 ```bash
 # Prerequisites
-brew install kind kubectl kubectx
+brew install kind kubectl
 
-# Create a practice cluster
-./labs/scripts/create-cluster.sh
-
-# Run a specific lab scenario
-./labs/scripts/break.sh lab-01-node-not-ready
+# Run a specific lab scenario (auto-creates cluster)
+cd labs
+./run.sh 01
 
 # Fix it, then verify
-./labs/scripts/verify.sh lab-01-node-not-ready
+./run.sh verify 01
+
+# Reset and retry
+./run.sh reset 01
 ```
 
 ---
@@ -74,19 +75,20 @@ brew install kind kubectl kubectx
 cka-killer-prep/
 ├── index.html                  # Landing page (GitHub Pages entry point)
 ├── study-guide.html            # 6-chapter interactive study guide
-├── killershell-25q.html        # KillerShell simulator question bank
-├── jsonpath-drills.html        # JSONPath & bash filtering practice
+├── killershell-25q.html        # KillerShell simulator (25 questions, exam weighted)
+├── jsonpath-drills.html        # JSONPath & kubectl filtering (20 drills)
 ├── labs/
-│   ├── README.md               # Lab setup instructions
+│   ├── README.md               # Lab setup & commands
+│   ├── run.sh                  # Lab runner: setup, verify, reset one scenario
+│   ├── test-all.sh             # Run all 40 scenarios, generates reports (JSON + Markdown)
+│   ├── random-exam.sh          # Exam simulator: 8 random scenarios, 70%+ pass/fail
+│   ├── generate-readme-tables.sh  # Generate scenario matrix from metadata
+│   ├── kind-config.yaml        # kind cluster config
 │   ├── scenarios/
-│   │   ├── s01-api-server-down/          # ✓ implemented
-│   │   ├── s02-node-not-ready/           # ✓ implemented
-│   │   ├── s03-coredns-broken/           # ✓ implemented
-│   │   ├── ... (s04-s12 implemented)
-│   │   ├── s13-cluster-upgrade/          # ✓ ready
-│   │   ├── s14-node-join/                # ✓ ready
-│   │   ├── ... (s15-s40 implemented)
-│   └── run.sh                  # Lab runner (setup, verify, reset)
+│   │   ├── s01-s20/            # Ready (20 scenarios): full break/fix/verify
+│   │   ├── s21-s40/            # Partial (20 scenarios): setup + verify stubs
+│   │   └── each scenario has: TASK.md, SOLUTION.md, HINTS.md, setup.sh, verify.sh, reset.sh, meta.yaml
+│   └── .state/                 # Runtime: kubeconfig, reports (JSON + Markdown)
 ├── LICENSE
 └── README.md
 ```
@@ -97,11 +99,11 @@ cka-killer-prep/
 
 | Domain                                             | Weight | Covered in                                            |
 | -------------------------------------------------- | ------ | ----------------------------------------------------- |
-| Cluster Architecture, Installation & Configuration | 25%    | Study Guide Ch1-2, Labs 4,5,9,13                      |
-| Workloads & Scheduling                             | 15%    | Study Guide Ch3, KillerShell Q2-4,9,11-13             |
-| Services & Networking                              | 20%    | Study Guide Ch4, Labs 6, KillerShell Q24              |
-| Storage                                            | 10%    | Study Guide Ch5, KillerShell Q6, Lab 7,40             |
-| Troubleshooting                                    | 30%    | Study Guide Ch6, Labs 1-3,10, KillerShell Q7,15,17,18 |
+| Cluster Architecture, Installation & Configuration | 25%    | Study Guide Ch1-2, Labs s13-s20, KillerShell Q2-4    |
+| Workloads & Scheduling                             | 15%    | Study Guide Ch3, Labs s31-s36, KillerShell Q9,11-13  |
+| Services & Networking                              | 20%    | Study Guide Ch4, Labs s23-s30, KillerShell Q24       |
+| Storage                                            | 10%    | Study Guide Ch5, Labs s37-s40, KillerShell Q6        |
+| Troubleshooting                                    | 30%    | Study Guide Ch6, Labs s01-s12, KillerShell Q7,15,17  |
 
 ---
 
@@ -109,23 +111,28 @@ cka-killer-prep/
 
 Each lab follows the same pattern:
 
-1. **Read the scenario** — what's broken and what the expected state should be
+1. **Read the scenario** — what's broken and what the expected state should be (TASK.md)
 2. **Run the break script** — it introduces a realistic failure into your kind cluster
 3. **Diagnose and fix** — use only kubectl and ssh (like the real exam)
 4. **Run the verify script** — it checks if your fix is correct
-5. **Read the solution** — compare your approach
+5. **Read the solution** — compare your approach (SOLUTION.md)
 
 ```bash
-# Example: Lab 01 — Node Not Ready
-./labs/scripts/break.sh lab-01-node-not-ready
+cd labs
+
+# Example: s02 — Node Not Ready
+./run.sh 02          # setup breaks cluster
 
 # Now diagnose:
 kubectl get nodes          # one node is NotReady
-# SSH into the node, find the issue, fix it
+docker exec -it cka-lab-worker bash  # SSH into node to debug
 
 # When you think it's fixed:
-./labs/scripts/verify.sh lab-01-node-not-ready
-# ✅ PASS: All nodes are Ready
+./run.sh verify 02
+# ✅ PASS: Cluster healthy
+
+# Compare with solution
+cat scenarios/s02-node-not-ready/SOLUTION.md
 ```
 
 ---
