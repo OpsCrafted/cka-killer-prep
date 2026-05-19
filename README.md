@@ -2,7 +2,7 @@
 
 **Interactive Certified Kubernetes Administrator exam preparation — study guide, 25-question KillerShell simulator, JSONPath drills, and 40 break-and-fix labs (20 Ready, 20 Partial).**
 
-[![GitHub Pages](https://img.shields.io/badge/Live_Site-GitHub_Pages-blue?style=flat-square&logo=github)](https://yourusername.github.io/cka-killer-prep)
+[![GitHub Pages](https://img.shields.io/badge/Live_Site-GitHub_Pages-blue?style=flat-square&logo=github)](https://OpsCrafted.github.io/cka-killer-prep)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
 [![CKA Exam](https://img.shields.io/badge/CKA-v1.31-purple?style=flat-square&logo=kubernetes)](https://training.linuxfoundation.org/certification/certified-kubernetes-administrator-cka/)
 
