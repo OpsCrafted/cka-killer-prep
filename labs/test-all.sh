@@ -101,18 +101,18 @@ test_scenario() {
 
   log_ok "Setup complete"
 
-  # If verify mode, also run verify.sh
-  if [[ "$mode" == "verify" ]]; then
+  # If contract mode, verify that verify.sh fails on broken state (proving contract holds)
+  if [[ "$mode" == "contract" ]]; then
     if [[ ! -f "${scenario_dir}/verify.sh" ]]; then
       log_err "No verify.sh"
       return 1
     fi
     if bash "${scenario_dir}/verify.sh" "$CLUSTER_NAME" "$KUBECONFIG" &>/dev/null; then
-      log_ok "Verification passed"
-      return 0
-    else
-      log_err "Verification failed"
+      log_err "Contract broken: verify.sh should fail on broken state"
       return 1
+    else
+      log_ok "Contract verified (verify detects broken state)"
+      return 0
     fi
   fi
 

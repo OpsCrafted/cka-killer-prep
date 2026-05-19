@@ -50,8 +50,8 @@ s21-s40: All scenarios have real setup scripts that create failure conditions. V
 bash labs/test-all.sh setup
 # or simply: bash labs/test-all.sh
 
-# Verify mode - verify that setup works AND verify.sh assertions pass
-bash labs/test-all.sh verify
+# Contract mode - verify that setup works AND verify.sh detects broken state
+bash labs/test-all.sh contract
 
 # Single scenario
 cd labs && bash run.sh 01  # setup s01
