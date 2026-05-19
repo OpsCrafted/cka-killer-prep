@@ -14,8 +14,8 @@ Want to improve the course? All contributions welcome: scenarios, fixes, docs.
    - `HINTS.md`: Debugging tips & kubectl commands
 4. **Test locally:**
    ```bash
-   bash labs/test-all.sh setup    # Verify setup works
-   bash labs/test-all.sh verify   # Verify breaks on unbroken state
+   bash labs/test-all.sh setup      # Verify setup works
+   bash labs/test-all.sh contract   # Verify breaks on unbroken state
    ```
 5. **Update** `labs/SCENARIO_STATUS.md` with new scenario
 6. **Submit PR** with description of what scenario teaches

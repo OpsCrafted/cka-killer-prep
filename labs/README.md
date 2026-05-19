@@ -61,8 +61,8 @@ choco install docker-desktop kind kubectl
 bash test-all.sh setup
 # or: bash test-all.sh
 
-# Test setup + verify (verifies that setup breaks state properly)
-bash test-all.sh verify
+# Test setup + contract (verifies that setup breaks state, verify detects it)
+bash test-all.sh contract
 ```
 
 ## Scenario Status

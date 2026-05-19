@@ -41,7 +41,7 @@ s21-s40: All scenarios have real setup scripts that create failure conditions. V
 - [x] s21-s40: Enhance verify scripts with real assertions (✓ completed)
 - [x] Test all s01-s40 against real kind cluster (✓ all 40 pass)
 - [ ] Document expected user workflows for each scenario
-- [ ] Run `test-all.sh verify` mode to ensure verify contracts hold
+- [ ] Run `test-all.sh contract` mode to ensure verify contracts hold
 
 ## Running Tests
 
