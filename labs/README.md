@@ -138,6 +138,29 @@ docker exec -it cka-lab-worker bash
 docker exec -it cka-lab-worker2 bash
 ```
 
+## Scenario Metadata & Documentation
+
+Each scenario's metadata is stored in `scenarios/s##-*/meta.yaml`:
+
+```yaml
+difficulty: easy|medium|hard
+domain: troubleshooting|cluster-architecture|rbac-security|networking|workloads|storage
+status: ready|partial
+estimated_minutes: 10-20
+skills:
+  - list of covered skills
+learn_objectives:
+  - list of learning goals
+```
+
+The main README's scenario matrix table is **auto-generated** from this metadata:
+
+```bash
+./generate-readme-tables.sh
+```
+
+This keeps the table current with scenario status changes — no manual sync needed.
+
 ## Reference
 
 - [Kubernetes Docs](https://kubernetes.io/docs)
