@@ -1,0 +1,108 @@
+# Lab Tracks - Curated Learning Paths
+
+tracks:
+  first-repairs:
+    title: "First CKA Repair Path"
+    description: "Start here. Easy scenarios building core troubleshooting skills."
+    difficulty: easy
+    estimated_minutes: 90
+    scenarios: [s01, s02, s04, s14, s26, s28, s31, s33]
+    learning_objectives:
+      - Diagnose basic cluster issues
+      - Understand node, service, and pod health
+      - Fix simple configuration problems
+      - Deploy and update applications
+    prerequisites: []
+    next_track: troubleshooting-mastery
+
+  troubleshooting-mastery:
+    title: "Troubleshooting Mastery"
+    description: "Master debugging. All troubleshooting scenarios plus control plane config."
+    difficulty: medium
+    estimated_minutes: 180
+    scenarios: [s01, s02, s03, s04, s05, s06, s07, s08, s09, s10, s12, s13]
+    learning_objectives:
+      - Diagnose any cluster failure
+      - Read logs, describe resources, find root cause
+      - Fix DNS, networking, scheduling, RBAC issues
+      - Handle node and control plane problems
+    prerequisites: [first-repairs]
+    next_track: advanced-cluster-ops
+
+  networking-deep-dive:
+    title: "Networking Pain Path"
+    description: "Understand all networking. Ingress, Gateway API, policies, DNS."
+    difficulty: medium
+    estimated_minutes: 120
+    scenarios: [s03, s04, s23, s24, s25, s26, s27, s28, s29, s30]
+    learning_objectives:
+      - Design and troubleshoot service networking
+      - Configure Ingress and Gateway API
+      - Implement network policies for security
+      - Debug DNS and service discovery
+      - Support multi-tenant networking
+    prerequisites: [first-repairs]
+    next_track: advanced-cluster-ops
+
+  storage-and-persistence:
+    title: "Storage & Persistence"
+    description: "Master storage. PV/PVC, StorageClass, local storage, backups."
+    difficulty: medium
+    estimated_minutes: 80
+    scenarios: [s09, s22, s37, s38, s39, s40]
+    learning_objectives:
+      - Understand persistent storage architecture
+      - Create and manage PV/PVC
+      - Configure dynamic provisioning
+      - Backup and restore cluster state
+    prerequisites: [first-repairs]
+    next_track: null
+
+  workloads-and-scaling:
+    title: "Workloads & Scaling"
+    description: "Deploy and scale. Deployments, StatefulSets, HPA, resources."
+    difficulty: medium
+    estimated_minutes: 90
+    scenarios: [s05, s31, s32, s33, s34, s35, s36]
+    learning_objectives:
+      - Manage Deployment lifecycle
+      - Deploy stateful applications
+      - Set resource requests/limits
+      - Schedule pods on specific nodes
+      - Auto-scale based on metrics
+    prerequisites: [first-repairs]
+    next_track: null
+
+  advanced-cluster-ops:
+    title: "Advanced Cluster Operations"
+    description: "Control plane, RBAC, webhooks, audit, custom APIs."
+    difficulty: hard
+    estimated_minutes: 150
+    scenarios: [s11, s16, s17, s18, s19, s20, s21]
+    learning_objectives:
+      - Manage etcd and disaster recovery
+      - Extend Kubernetes API
+      - Configure admission control
+      - Design fine-grained RBAC
+      - Understand cluster security architecture
+    prerequisites: [troubleshooting-mastery]
+    next_track: null
+
+  exam-simulation:
+    title: "Exam Simulation (90 min)"
+    description: "Timed experience. 8 scenarios across all domains."
+    difficulty: mixed
+    estimated_minutes: 90
+    scenarios: [s02, s05, s10, s23, s31, s37, s08, s20]
+    learning_objectives:
+      - Work under time pressure
+      - Manage multiple domains
+      - Prioritize problems effectively
+      - Demonstrate exam readiness
+    prerequisites: [troubleshooting-mastery]
+    next_track: null
+
+categories:
+  beginner: [first-repairs]
+  intermediate: [troubleshooting-mastery, networking-deep-dive, storage-and-persistence, workloads-and-scaling]
+  advanced: [advanced-cluster-ops, exam-simulation]
