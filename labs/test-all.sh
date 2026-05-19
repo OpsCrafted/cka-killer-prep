@@ -75,6 +75,15 @@ wait_cluster_ready() {
   return 1
 }
 
+get_scenario_domain() {
+  local scenario_dir="$1"
+  if [[ -f "${scenario_dir}/meta.yaml" ]]; then
+    grep "^domain:" "${scenario_dir}/meta.yaml" | awk '{print $2}'
+  else
+    echo "unknown"
+  fi
+}
+
 test_scenario() {
   local scenario_id="$1"
   local mode="${2:-setup}"
@@ -86,7 +95,8 @@ test_scenario() {
   fi
 
   local name=$(basename "$scenario_dir" | sed 's/s[0-9]*-//')
-  echo -e "\n${BLUE}Testing s${scenario_id}: ${name}${NC}"
+  local domain=$(get_scenario_domain "$scenario_dir")
+  echo -e "\n${BLUE}Testing s${scenario_id}: ${name} (${domain})${NC}"
 
   if [[ ! -f "${scenario_dir}/setup.sh" ]]; then
     log_err "No setup.sh"
@@ -137,26 +147,50 @@ main() {
 
   local passed=0
   local failed=0
+  local start_time=$(date +%s)
+  declare -A domain_pass
+  declare -A domain_fail
 
   echo -e "\n${BLUE}════════════════════════════════════════${NC}"
   echo -e "${BLUE}Testing Scenarios 01-40 (mode: $mode)${NC}"
   echo -e "${BLUE}════════════════════════════════════════${NC}"
 
   for i in $(seq -f '%02g' 1 40); do
+    scenario_dir=$(ls -d "${SCRIPT_DIR}/scenarios/s${i}-"* 2>/dev/null | head -1)
+    domain=$(get_scenario_domain "$scenario_dir")
+
     if test_scenario "$i" "$mode"; then
       ((passed++))
+      ((domain_pass[$domain]++))
     else
       ((failed++))
+      ((domain_fail[$domain]++))
     fi
-    scenario_dir=$(ls -d "${SCRIPT_DIR}/scenarios/s${i}-"* 2>/dev/null | head -1)
+
     if [[ -f "${scenario_dir}/reset.sh" ]]; then
       bash "${scenario_dir}/reset.sh" "$CLUSTER_NAME" "$KUBECONFIG" &>/dev/null || true
     fi
   done
 
+  local end_time=$(date +%s)
+  local elapsed=$((end_time - start_time))
+  local minutes=$((elapsed / 60))
+  local seconds=$((elapsed % 60))
+
   echo -e "\n${BLUE}════════════════════════════════════════${NC}"
   echo -e "Results: ${GREEN}${passed} passed${NC}, ${RED}${failed} failed${NC}"
+  echo -e "Time: ${minutes}m ${seconds}s"
   echo -e "${BLUE}════════════════════════════════════════${NC}"
+
+  if [[ ${#domain_fail[@]} -gt 0 ]]; then
+    echo -e "\n${RED}Domains Needing Work:${NC}"
+    for domain in "${!domain_fail[@]}"; do
+      pass=${domain_pass[$domain]:-0}
+      fail=${domain_fail[$domain]}
+      total=$((pass + fail))
+      echo -e "  ${RED}✗${NC} $domain: $fail/$total failed"
+    done
+  fi
 
   if [[ $failed -eq 0 ]]; then
     log_ok "All tests passed"
