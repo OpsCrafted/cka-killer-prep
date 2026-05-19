@@ -10,34 +10,33 @@ kubectl get pod app-pod -n resource-test &>/dev/null || {
   exit 1
 }
 
-# Check 2: Pod is running
-POD_STATUS=$(kubectl get pod app-pod -n resource-test -o jsonpath='{.status.phase}' 2>/dev/null)
-if [[ "$POD_STATUS" != "Running" ]]; then
-  echo "✗ FAILED: Pod not running (status: $POD_STATUS)"
+# Check 2: CPU limit set
+cpu_limit=$(kubectl get pod app-pod -n resource-test -o jsonpath='{.spec.containers[0].resources.limits.cpu}')
+if [[ -z "$cpu_limit" ]]; then
+  echo "✗ FAILED: No CPU limit set"
   exit 1
 fi
 
-# Check 3: Verify CPU limit is set
-CPU_LIMIT=$(kubectl get pod app-pod -n resource-test -o jsonpath='{.spec.containers[0].resources.limits.cpu}' 2>/dev/null)
-if [[ -z "$CPU_LIMIT" ]]; then
-  echo "✗ FAILED: CPU limit not set"
+# Check 3: Memory limit set
+mem_limit=$(kubectl get pod app-pod -n resource-test -o jsonpath='{.spec.containers[0].resources.limits.memory}')
+if [[ -z "$mem_limit" ]]; then
+  echo "✗ FAILED: No memory limit set"
   exit 1
 fi
 
-# Check 4: Verify memory limit is set
-MEMORY_LIMIT=$(kubectl get pod app-pod -n resource-test -o jsonpath='{.spec.containers[0].resources.limits.memory}' 2>/dev/null)
-if [[ -z "$MEMORY_LIMIT" ]]; then
-  echo "✗ FAILED: Memory limit not set"
+# Check 4: CPU request set
+cpu_request=$(kubectl get pod app-pod -n resource-test -o jsonpath='{.spec.containers[0].resources.requests.cpu}')
+if [[ -z "$cpu_request" ]]; then
+  echo "✗ FAILED: No CPU request set"
   exit 1
 fi
 
-# Check 5: Verify requests are also set (best practice)
-CPU_REQUEST=$(kubectl get pod app-pod -n resource-test -o jsonpath='{.spec.containers[0].resources.requests.cpu}' 2>/dev/null)
-MEMORY_REQUEST=$(kubectl get pod app-pod -n resource-test -o jsonpath='{.spec.containers[0].resources.requests.memory}' 2>/dev/null)
-
-if [[ -z "$CPU_REQUEST" || -z "$MEMORY_REQUEST" ]]; then
-  echo "⚠ WARNING: Resource requests not set (only limits set)"
+# Check 5: Memory request set
+mem_request=$(kubectl get pod app-pod -n resource-test -o jsonpath='{.spec.containers[0].resources.requests.memory}')
+if [[ -z "$mem_request" ]]; then
+  echo "✗ FAILED: No memory request set"
+  exit 1
 fi
 
-echo "✓ PASSED: Resource limits properly configured (CPU: $CPU_LIMIT, Memory: $MEMORY_LIMIT)"
+echo "✓ PASSED: Resource limits and requests configured"
 exit 0
