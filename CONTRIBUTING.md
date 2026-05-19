@@ -63,8 +63,8 @@ bash run.sh verify 01                  # verify
 bash run.sh reset 01                   # cleanup
 
 # All scenarios
-bash test-all.sh setup                 # all 40 setup
-bash test-all.sh verify                # all 40 setup + verify
+bash test-all.sh setup                 # all 40 setup (verifies setup works)
+bash test-all.sh contract              # all 40 setup + contract (verifies verify detects broken state)
 
 # CI will run before merge
 # Check: no placeholder TODOs, shell syntax, verify scripts exist

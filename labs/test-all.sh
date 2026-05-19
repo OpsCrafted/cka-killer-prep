@@ -122,10 +122,10 @@ test_scenario() {
 main() {
   local mode="${1:-setup}"
 
-  if [[ "$mode" != "setup" && "$mode" != "verify" ]]; then
-    echo "Usage: $0 [setup|verify]"
-    echo "  setup:  run setup.sh only (default)"
-    echo "  verify: run setup.sh then verify.sh"
+  if [[ "$mode" != "setup" && "$mode" != "contract" ]]; then
+    echo "Usage: $0 [setup|contract]"
+    echo "  setup:    run setup.sh only (default) — verifies setup introduces failure"
+    echo "  contract: run setup.sh then verify.sh — verifies verify detects broken state"
     exit 1
   fi
 

@@ -83,9 +83,9 @@ cka-killer-prep/
 │   │   ├── s02-node-not-ready/           # ✓ implemented
 │   │   ├── s03-coredns-broken/           # ✓ implemented
 │   │   ├── ... (s04-s12 implemented)
-│   │   ├── s13-cluster-upgrade/          # 📋 planned
-│   │   ├── s14-node-join/                # 📋 planned
-│   │   ├── ... (s15-s40 planned)
+│   │   ├── s13-cluster-upgrade/          # ✓ ready
+│   │   ├── s14-node-join/                # ✓ ready
+│   │   ├── ... (s15-s40 implemented)
 │   └── run.sh                  # Lab runner (setup, verify, reset)
 ├── LICENSE
 └── README.md

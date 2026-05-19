@@ -67,4 +67,4 @@ CI detects:
 - Weak verify scripts
 - Shell syntax errors
 
-Currently passes all checks, but s21-s40 no-op verifies still pass CI.
+All scenarios now pass CI validation with real setup/verify logic.
