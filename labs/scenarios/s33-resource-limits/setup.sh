@@ -23,4 +23,7 @@ spec:
         memory: "128Mi"
 MANIFEST
 
+# Wait for pod to start
+timeout 30 kubectl wait --for=condition=ready pod/app-pod -n resource-test 2>/dev/null || true
+
 echo "✓ Scenario setup complete"

@@ -18,15 +18,14 @@ kubectl create secret tls tls-secret -n ingress-test --cert=/tmp/tls.crt --key=/
 # Create backend deployment and service
 kubectl create deployment web -n ingress-test --image=nginx 2>/dev/null || true
 
-# Wait for pod to be ready
-for i in {1..30}; do
-  READY=$(kubectl get deployment web -n ingress-test -o jsonpath='{.status.readyReplicas}' 2>/dev/null || echo 0)
-  [[ "$READY" -gt 0 ]] && break
-  sleep 1
-done
+# Wait for deployment to have ready replicas
+timeout 60 kubectl rollout status deployment/web -n ingress-test 2>/dev/null || true
 
+# Expose deployment as service
 kubectl expose deployment web -n ingress-test --port=80 --target-port=80 2>/dev/null || true
-sleep 1
+
+# Short wait for endpoints
+sleep 2
 
 # Create Ingress with TLS
 kubectl apply -f - <<'MANIFEST'

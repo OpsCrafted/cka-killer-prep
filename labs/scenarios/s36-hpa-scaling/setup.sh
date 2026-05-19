@@ -8,7 +8,10 @@ for i in {1..30}; do kubectl get nodes &>/dev/null && break; sleep 1; done
 # HPA
 kubectl create namespace hpa-test 2>/dev/null || true
 kubectl create deployment app -n hpa-test --image=nginx 2>/dev/null || true
-sleep 2
+
+# Wait for deployment replicas
+timeout 30 kubectl rollout status deployment/app -n hpa-test 2>/dev/null || true
+
 kubectl apply -f - <<'MANIFEST'
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
