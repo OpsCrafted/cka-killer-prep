@@ -148,8 +148,7 @@ main() {
   local passed=0
   local failed=0
   local start_time=$(date +%s)
-  declare -A domain_pass
-  declare -A domain_fail
+  local failed_scenarios=""
 
   echo -e "\n${BLUE}════════════════════════════════════════${NC}"
   echo -e "${BLUE}Testing Scenarios 01-40 (mode: $mode)${NC}"
@@ -161,10 +160,10 @@ main() {
 
     if test_scenario "$i" "$mode"; then
       ((passed++))
-      ((domain_pass[$domain]++))
     else
       ((failed++))
-      ((domain_fail[$domain]++))
+      failed_scenarios="$failed_scenarios
+  s$i ($domain)"
     fi
 
     if [[ -f "${scenario_dir}/reset.sh" ]]; then
@@ -182,14 +181,8 @@ main() {
   echo -e "Time: ${minutes}m ${seconds}s"
   echo -e "${BLUE}════════════════════════════════════════${NC}"
 
-  if [[ ${#domain_fail[@]} -gt 0 ]]; then
-    echo -e "\n${RED}Domains Needing Work:${NC}"
-    for domain in "${!domain_fail[@]}"; do
-      pass=${domain_pass[$domain]:-0}
-      fail=${domain_fail[$domain]}
-      total=$((pass + fail))
-      echo -e "  ${RED}✗${NC} $domain: $fail/$total failed"
-    done
+  if [[ -n "$failed_scenarios" ]]; then
+    echo -e "\n${RED}Failed Scenarios:${NC}$failed_scenarios"
   fi
 
   if [[ $failed -eq 0 ]]; then
