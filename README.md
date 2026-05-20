@@ -325,6 +325,149 @@ Found an error? Want to add a lab? PRs welcome.
 
 ---
 
+## 🔧 Troubleshooting Common Lab Issues
+
+**Docker permission denied**
+```bash
+# Fix: Add user to docker group
+sudo usermod -aG docker $USER
+newgrp docker
+docker ps  # verify
+```
+
+**kind cluster stuck/not responding**
+```bash
+# Reset cluster
+kind delete cluster --name cka-lab
+./run.sh 01  # recreate
+```
+
+**cgroup v2 issues (Linux)**
+```bash
+# Check cgroup version
+stat -fc %T /sys/fs/cgroup/
+
+# If v2, kind needs Docker with cgroup driver set
+docker info | grep "Cgroup Driver"
+# Should be "systemd" or "cgroupfs"
+```
+
+**kubectl not found / kubeconfig issues**
+```bash
+# Verify kubeconfig
+export KUBECONFIG="${HOME}/.kube/config"
+kubectl cluster-info
+
+# Reset kubeconfig from kind
+kind get kubeconfig --name cka-lab > ~/.kube/config
+```
+
+**Lab verify fails but cluster looks healthy**
+```bash
+# Check pod/service status
+kubectl get all -A
+kubectl describe node
+
+# Re-run setup
+./run.sh reset 01
+./run.sh 01
+```
+
+**WSL2 Docker not accessible**
+```bash
+# Ensure Docker Desktop is running and WSL2 integration enabled
+# Settings → Resources → WSL integration → toggle on
+
+# Inside WSL2
+docker ps  # should work
+```
+
+---
+
+## 📋 Exam Day Pro Tips
+
+**Terminal & Command Efficiency**
+
+1. **Set aliases FIRST** (allowed in exam)
+```bash
+alias k=kubectl
+alias kgp='kubectl get pod'
+alias kgs='kubectl get svc'
+alias kgd='kubectl get deploy'
+alias kn='kubectl config set-context --current --namespace'
+export do="--dry-run=client -o yaml"
+export now="--force --grace-period 0"
+```
+
+2. **Use kubectl autocomplete**
+```bash
+source <(kubectl completion bash)
+complete -o default -F __start_kubectl k
+```
+
+3. **Vim keybindings in kubectl edit**
+```bash
+export EDITOR=vim
+# Now: kubectl edit pod <name>
+```
+
+**Time Management (3 hours, 17 questions)**
+
+- **Budget 10-11 min per question** (includes context switching)
+- **Read questions fully** before starting (avoid re-reading)
+- **Skip, don't re-do** — mark hard ones, come back if time remains
+- **Last 15 min:** Review skipped questions, don't second-guess solved ones
+
+**Official K8s Documentation Strategy**
+
+- **Bookmark these sections** (they're allowed):
+  - kubectl cheatsheet
+  - API reference (v1 core, apps, batch, networking)
+  - Task pages (RBAC, scheduling, storage)
+  - kubectl explain (use in exam: `kubectl explain pod.spec.containers`)
+
+- **kubectl explain saves time**
+```bash
+kubectl explain pod.spec.containers.resources
+# Shows structure without searching docs
+```
+
+**Cluster Navigation**
+
+- **Always know your context/namespace**
+```bash
+# Check current
+kubectl config current-context
+kubectl config view --minify
+```
+
+- **Label queries are faster than grep**
+```bash
+# Better than: kubectl get all | grep...
+kubectl get pod -l app=myapp
+kubectl get pod --all-namespaces -l tier=database
+```
+
+**Common Exam Gotchas**
+
+| Mistake | Prevention |
+|---------|-----------|
+| Forgot to set namespace | Use `kn <namespace>` alias immediately |
+| Pod image pull failed | Check `kubectl describe pod` before troubleshooting |
+| RBAC: command forbidden | Verify ServiceAccount context with `kubectl auth can-i` |
+| ConfigMap data typo | Use `kubectl get configmap <name> -o yaml` to verify |
+| Network policy blocking | Test connectivity: `kubectl exec <pod> -- nc -zv <svc>` |
+| PVC pending | Check StorageClass: `kubectl get sc` |
+
+**Before Submitting Each Answer**
+
+1. Verify resource exists: `kubectl get <type> <name>`
+2. Check status: `kubectl describe <type> <name>`
+3. Tail logs if applicable: `kubectl logs <pod>`
+4. Confirm labels/selectors match: `kubectl get <type> <name> -o yaml`
+
+---
+
 ## Support
 
 If this course helped you pass the CKA exam (or you survived the debugging), consider buying me a coffee ☕:
