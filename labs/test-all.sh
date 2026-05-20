@@ -266,6 +266,13 @@ main() {
 
   for i in $(seq -f '%02g' 1 40); do
     scenario_dir=$(ls -d "${SCRIPT_DIR}/scenarios/s${i}-"* 2>/dev/null | head -1)
+    scenario_status=$(grep "^status:" "$scenario_dir/meta.yaml" 2>/dev/null | awk '{print $2}')
+
+    # Skip design scenarios (conceptual labs, not executable)
+    if [[ "$scenario_status" == "design" ]]; then
+      continue
+    fi
+
     domain=$(get_scenario_domain "$scenario_dir")
     difficulty=$(get_scenario_difficulty "$scenario_dir")
     name=$(basename "$scenario_dir" | sed 's/s[0-9]*-//')

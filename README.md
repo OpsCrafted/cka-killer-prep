@@ -1,6 +1,6 @@
 # 🎯 CKA Killer Prep
 
-**Interactive Certified Kubernetes Administrator exam preparation — study guide, 25-question KillerShell simulator, JSONPath drills, and 40 break-and-fix labs (20 Ready, 20 Partial).**
+**Interactive Certified Kubernetes Administrator exam preparation — study guide, 25-question KillerShell simulator, JSONPath drills, and 40 scenarios (37 hands-on labs, 3 design labs).**
 
 [![GitHub Pages](https://img.shields.io/badge/Live_Site-GitHub_Pages-blue?style=flat-square&logo=github)](https://OpsCrafted.github.io/cka-killer-prep)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
@@ -85,8 +85,8 @@ cka-killer-prep/
 │   ├── generate-readme-tables.sh  # Generate scenario matrix from metadata
 │   ├── kind-config.yaml        # kind cluster config
 │   ├── scenarios/
-│   │   ├── s01-s20/            # Ready (20 scenarios): full break/fix/verify
-│   │   ├── s21-s40/            # Partial (20 scenarios): setup + verify stubs
+│   │   ├── s01-s20/            # Ready (20 scenarios): API troubleshooting, debugging
+│   │   ├── s21-s40/            # Ready (17 scenarios) + Design (3 scenarios): workloads, storage, RBAC
 │   │   └── each scenario has: TASK.md, SOLUTION.md, HINTS.md, setup.sh, verify.sh, reset.sh, meta.yaml
 │   └── .state/                 # Runtime: kubeconfig, reports (JSON + Markdown)
 ├── LICENSE

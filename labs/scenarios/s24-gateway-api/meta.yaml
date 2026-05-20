@@ -1,7 +1,7 @@
 difficulty: medium
 domain: networking
 estimated_minutes: 12
-status: partial
+status: design
 skills:
   - gateway-api
   - gateways

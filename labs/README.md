@@ -67,14 +67,18 @@ bash test-all.sh contract
 
 ## Scenario Status
 
-**Ready (20 scenarios):** s01-s20 — Full implementation, setup breaks state, verify checks fix
-- Troubleshooting (s01-s13): Real failures (api-server down, node crashed, dns broken, etc)
-- Cluster Architecture (s14-s20): Node/runtime/network/webhook/RBAC config issues
+**Ready (37 scenarios):** Full break/fix with executable verify checks
+- s01-s20: Troubleshooting & cluster architecture (api-server, nodes, networking, RBAC)
+- s21-s22: RBAC & backups (ServiceAccount binding, etcd snapshots)
+- s23-s30: Networking (Ingress, LoadBalancer, NetworkPolicy, DNS, service discovery)
+- s31-s36: Workloads (Deployments, StatefulSets, scheduling, resource limits, HPA)
+- s37-s40: Storage (PV/PVC, StorageClass, local volumes, PVC expansion)
+- s25-s27: Network isolation (NetworkPolicy, DNS endpoint discovery)
 
-**Partial (20 scenarios):** s21-s40 — Real setup, verify checks resources exist
-- s21-s22: RBAC, backups
-- s23-s30: Networking (Ingress, Gateway, NetworkPolicy, LoadBalancer, etc)
-- s31-s36: Workloads (Deployments, StatefulSets, HPA, scheduling)
+**Design (3 scenarios):** Conceptual labs with DESIGN.md guides (no executable verify)
+- s24: Gateway API architecture & controller binding
+- s29: GatewayClass controller reconciliation
+- s30: Multi-tenancy isolation layers (RBAC, network, quota)
 - s37-s40: Storage (PV/PVC, StorageClass, local storage)
 
 ## All Scenarios
