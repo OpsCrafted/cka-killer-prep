@@ -1,7 +1,7 @@
 difficulty: medium
 domain: workloads
 estimated_minutes: 12
-status: partial
+status: ready
 skills:
   - priorityclasses
   - preemption

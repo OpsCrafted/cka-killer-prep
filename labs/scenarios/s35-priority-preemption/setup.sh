@@ -5,15 +5,43 @@ KUBECONFIG="$2"
 export KUBECONFIG
 for i in {1..30}; do kubectl get nodes &>/dev/null && break; sleep 1; done
 
-# PriorityClass
+kubectl create namespace priority-test 2>/dev/null || true
+kubectl delete pod -n priority-test low-priority high-priority 2>/dev/null || true
+
+# Low-priority pod (reserves CPU to force contention)
 kubectl apply -f - <<'MANIFEST'
-apiVersion: scheduling.k8s.io/v1
-kind: PriorityClass
+apiVersion: v1
+kind: Pod
+metadata:
+  name: low-priority
+  namespace: priority-test
+spec:
+  containers:
+  - name: app
+    image: nginx
+    resources:
+      requests:
+        cpu: 700m
+      limits:
+        cpu: 700m
+MANIFEST
+
+# High-priority pod (without priority class — will be Pending)
+kubectl apply -f - <<'MANIFEST'
+apiVersion: v1
+kind: Pod
 metadata:
   name: high-priority
-value: 1000
-globalDefault: false
-description: "High priority class"
+  namespace: priority-test
+spec:
+  containers:
+  - name: app
+    image: nginx
+    resources:
+      requests:
+        cpu: 500m
+      limits:
+        cpu: 500m
 MANIFEST
 
 echo "✓ Scenario setup complete"
