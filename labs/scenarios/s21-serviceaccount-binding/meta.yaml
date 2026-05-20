@@ -1,7 +1,7 @@
 difficulty: medium
 domain: rbac-security
 estimated_minutes: 10
-status: partial
+status: ready
 skills:
   - serviceaccounts
   - clusterroles

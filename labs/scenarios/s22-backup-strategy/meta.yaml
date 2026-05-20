@@ -1,7 +1,7 @@
 difficulty: easy
 domain: rbac-security
 estimated_minutes: 10
-status: partial
+status: ready
 skills:
   - etcd
   - backups
