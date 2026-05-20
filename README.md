@@ -137,6 +137,49 @@ cat scenarios/s02-node-not-ready/SOLUTION.md
 
 ---
 
+## 📊 Scenario Status
+
+**37 Ready (Hands-On Labs):** Fully executable break/fix scenarios
+- Each lab breaks a Kubernetes cluster, you diagnose & fix it
+- Verify script checks if your fix is correct
+- Solutions provided for comparison
+
+**3 Design Labs:** Conceptual guides (not executable)
+- s24: Gateway API architecture & controller binding
+- s29: GatewayClass controller reconciliation  
+- s30: Multi-tenancy isolation layers
+- Include DESIGN.md with architecture, debugging flow, and key concepts
+
+---
+
+## 🔧 Practice Environment Setup
+
+### System Requirements
+
+- **Docker or Podman** (for kind cluster)
+- **kind** (Kubernetes in Docker)
+- **kubectl**
+- **jq** (for reporting)
+- **macOS:** Bash 3.2+ (builtin), or newer via `brew install bash`
+- **Linux:** Bash 4.0+
+- **RAM:** 16GB+ (8GB minimum for single cluster)
+
+### Dependencies
+
+```bash
+# macOS
+brew install docker kind kubectl jq
+
+# Linux (Ubuntu/Debian)
+sudo apt-get install docker.io kind kubectl jq
+
+# Verify
+kind --version
+kubectl version --client
+```
+
+---
+
 ## 🔧 Practice Environment Setup
 
 ### Using kind (recommended)
