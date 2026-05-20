@@ -2,18 +2,26 @@
 
 ## Diagnosis
 
+Pod is Pending. Check node taints and pod status:
+
 ```bash
-kubectl get nodes --show-labels
-kubectl describe node <name>
+kubectl get nodes
+kubectl describe node <node-name>
+kubectl describe pod affinity-pod
 ```
+
+Expected: nodes have taint `reserved=true:NoSchedule`. Pod cannot schedule because it lacks matching toleration.
 
 ## Fix
 
-**Add nodeAffinity to deployment:**
+Add toleration to pod to tolerate the taint:
+
 ```bash
-kubectl patch deployment <name> -p '{"spec":{"template":{"spec":{"affinity":{"nodeAffinity":{"requiredDuringSchedulingIgnoredDuringExecution":{"nodeSelectorTerms":[{"matchExpressions":[{"key":"disktype","operator":"In","values":["ssd"]}]}]}}}}}}}'
+kubectl patch pod affinity-pod -p '{"spec":{"tolerations":[{"key":"reserved","operator":"Equal","value":"true","effect":"NoSchedule"}]}}'
 ```
+
+Or delete and recreate pod with toleration in manifest.
 
 ## Why
 
-Affinity constrains scheduling by node labels.
+Taints on nodes repel pods unless pod has matching toleration. Tolerations permit pods to schedule on tainted nodes.
