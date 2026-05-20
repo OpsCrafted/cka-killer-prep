@@ -258,8 +258,7 @@ main() {
   local failed=0
   local start_time=$(date +%s)
   local failed_scenarios=""
-  local -a scenarios_data=()
-  local -A domain_stats
+  local scenarios_data=""
 
   echo -e "\n${BLUE}════════════════════════════════════════${NC}"
   echo -e "${BLUE}Testing Scenarios 01-40 (mode: $mode)${NC}"
@@ -288,20 +287,9 @@ main() {
     local elapsed_sec=$(( elapsed_ms / 1000 ))
 
     # Track per-scenario data
-    scenarios_data+=("{\"id\": \"$i\", \"name\": \"$name\", \"domain\": \"$domain\", \"difficulty\": \"$difficulty\", \"status\": \"$status\", \"elapsed_seconds\": $elapsed_sec}")
-
-    # Track domain stats
-    local domain_entry="${domain_stats[$domain]:-}"
-    if [[ -z "$domain_entry" ]]; then
-      domain_stats[$domain]="0,0"
-    fi
-
-    IFS=',' read -r p_count f_count <<< "${domain_stats[$domain]}"
-    if [[ "$status" == "passed" ]]; then
-      domain_stats[$domain]="$((p_count + 1)),$f_count"
-    else
-      domain_stats[$domain]="$p_count,$((f_count + 1))"
-    fi
+    scenarios_data+=$'{\n'
+    scenarios_data+="\"id\": \"$i\", \"name\": \"$name\", \"domain\": \"$domain\", \"difficulty\": \"$difficulty\", \"status\": \"$status\", \"elapsed_seconds\": $elapsed_sec"$'\n'
+    scenarios_data+=$'}\n'
 
     if [[ -f "${scenario_dir}/reset.sh" ]]; then
       bash "${scenario_dir}/reset.sh" "$CLUSTER_NAME" "$KUBECONFIG" &>/dev/null || true
@@ -313,13 +301,15 @@ main() {
   local minutes=$((elapsed / 60))
   local seconds=$((elapsed % 60))
 
-  # Build JSON structures
-  local scenarios_json="["$(IFS=,; echo "${scenarios_data[*]}")"]"
+  # Build JSON structures (bash 3.2 compatible - no arrays/associative arrays)
+  local scenarios_json="[$(echo "$scenarios_data" | grep -v '^$')]"
 
+  # Calculate domain stats from scenarios_data
   local domains_json="{"
   local first=true
-  for domain in "${!domain_stats[@]}"; do
-    IFS=',' read -r p_count f_count <<< "${domain_stats[$domain]}"
+  for domain in $(echo "$scenarios_data" | grep '"domain"' | sed 's/.*"domain": "\([^"]*\)".*/\1/' | sort -u); do
+    local p_count=$(echo "$scenarios_data" | grep "\"domain\": \"$domain\"" | grep '"status": "passed"' | wc -l)
+    local f_count=$(echo "$scenarios_data" | grep "\"domain\": \"$domain\"" | grep '"status": "failed"' | wc -l)
     if [[ "$first" == false ]]; then
       domains_json+=","
     fi

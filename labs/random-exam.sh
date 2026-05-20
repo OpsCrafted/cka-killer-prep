@@ -19,12 +19,13 @@ log_err() { echo -e "${RED}✗${NC} $1"; }
 log_warn() { echo -e "${YELLOW}!${NC} $1"; }
 
 check_deps() {
-  for cmd in docker kind kubectl jq shuf; do
+  for cmd in docker kind kubectl jq; do
     if ! command -v "$cmd" &>/dev/null; then
       log_err "Missing: $cmd"
       return 1
     fi
   done
+  # shuf is optional; sort -R fallback used if unavailable
   return 0
 }
 
@@ -176,8 +177,8 @@ main() {
   local passed=0
   local failed=0
   local exam_start=$(date +%s)
-  local -A domain_results
-  local -a exam_scenarios=()
+  local domain_results=""
+  local exam_scenarios=""
 
   echo -e "\n${BLUE}════════════════════════════════════════${NC}"
   echo -e "${BLUE}CKA Random Exam — 8 Scenarios${NC}"
@@ -207,19 +208,10 @@ main() {
     local scenario_end=$(date +%s)
     local elapsed=$((scenario_end - scenario_start))
 
-    exam_scenarios+=("$scenario_id|$name|$domain|$difficulty|$status|$elapsed")
+    exam_scenarios+=$'|\n'"$scenario_id|$name|$domain|$difficulty|$status|$elapsed"$'\n'
 
-    # Track by domain
-    if [[ -z "${domain_results[$domain]:-}" ]]; then
-      domain_results[$domain]="0,0"
-    fi
-
-    IFS=',' read -r p_count f_count <<< "${domain_results[$domain]}"
-    if [[ "$status" == "passed" ]]; then
-      domain_results[$domain]="$((p_count + 1)),$f_count"
-    else
-      domain_results[$domain]="$p_count,$((f_count + 1))"
-    fi
+    # Track by domain (bash 3.2 compatible string format)
+    domain_results+=$'\n'"$domain|$status"
 
     if [[ -f "${scenario_dir}/reset.sh" ]]; then
       bash "${scenario_dir}/reset.sh" "$CLUSTER_NAME" "$KUBECONFIG" &>/dev/null || true
@@ -255,8 +247,9 @@ main() {
   fi
 
   echo -e "\n${GREEN}By Domain:${NC}"
-  for domain in $(printf '%s\n' "${!domain_results[@]}" | sort); do
-    IFS=',' read -r p_count f_count <<< "${domain_results[$domain]}"
+  for domain in $(echo "$domain_results" | grep -v '^$' | awk -F'|' '{print $1}' | sort -u); do
+    local p_count=$(echo "$domain_results" | grep "^$domain|passed$" | wc -l)
+    local f_count=$(echo "$domain_results" | grep "^$domain|failed$" | wc -l)
     local total=$((p_count + f_count))
     local d_percent=$((p_count * 100 / total))
     printf "  %-20s %d/%d (%d%%)\n" "$domain:" "$p_count" "$total" "$d_percent"
@@ -264,19 +257,13 @@ main() {
 
   if [[ $failed -gt 0 ]]; then
     echo -e "\n${RED}Failed Scenarios:${NC}"
-    for scenario in "${exam_scenarios[@]}"; do
-      IFS='|' read -r id name domain diff status elapsed <<< "$scenario"
-      if [[ "$status" == "failed" ]]; then
-        printf "  s%s (%s): %s\n" "$id" "$domain" "$name"
-      fi
+    echo "$exam_scenarios" | grep -v '^$' | while IFS='|' read -r blank id name domain diff status elapsed; do
+      [[ "$status" == "failed" ]] && printf "  s%s (%s): %s\n" "$id" "$domain" "$name"
     done
 
     echo -e "\n${YELLOW}Retry:${NC}"
-    for scenario in "${exam_scenarios[@]}"; do
-      IFS='|' read -r id name domain diff status elapsed <<< "$scenario"
-      if [[ "$status" == "failed" ]]; then
-        echo "  ./run.sh $id"
-      fi
+    echo "$exam_scenarios" | grep -v '^$' | while IFS='|' read -r blank id name domain diff status elapsed; do
+      [[ "$status" == "failed" ]] && echo "  ./run.sh $id"
     done
   fi
 
