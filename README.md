@@ -173,10 +173,42 @@ brew install docker kind kubectl jq
 # Linux (Ubuntu/Debian)
 sudo apt-get install docker.io kind kubectl jq
 
+# Windows (via Chocolatey)
+choco install docker-desktop kind kubernetes-cli jq
+
+# Windows (via winget)
+winget install Docker.DockerDesktop
+winget install kubernetes-cli
+winget install jqlang.jq
+# kind: download from https://kind.sigs.k8s.io/docs/user/quick-start/#installation
+
 # Verify
 kind --version
 kubectl version --client
 ```
+
+### Windows-Specific Setup
+
+**Recommended: WSL2 (Windows Subsystem for Linux 2)**
+
+```powershell
+# PowerShell (Admin)
+wsl --install -d Ubuntu-22.04
+
+# Inside WSL2:
+sudo apt-get update
+sudo apt-get install docker.io kind kubectl jq
+
+# Start Docker daemon
+sudo dockerd &
+```
+
+**Alternative: Docker Desktop on Windows**
+
+1. Install [Docker Desktop for Windows](https://docs.docker.com/desktop/install/windows-install/)
+2. Enable WSL2 backend (Settings → Resources → WSL integration)
+3. Install kubectl, kind, jq via Chocolatey (see above)
+4. Use PowerShell or Git Bash terminal
 
 ---
 
