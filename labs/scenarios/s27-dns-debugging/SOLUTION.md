@@ -2,28 +2,31 @@
 
 ## Diagnosis
 
+Service exists but has no endpoints (DNS can resolve name but no backend):
+
 ```bash
-kubectl get svc -n kube-system -l k8s-app=kube-dns
-kubectl logs -n kube-system <dns-pod>
+kubectl get svc -n dns-test
+kubectl get endpoints -n dns-test
+kubectl get pods -n dns-test --show-labels
 ```
+
+Expected: Service selector doesn't match pod labels, so no endpoints.
 
 ## Fix
 
-**Check CoreDNS ConfigMap:**
+Patch Service selector to match backend pod labels:
+
 ```bash
-kubectl get configmap coredns -n kube-system -o yaml | grep -A 20 Corefile
+kubectl patch service -n dns-test test-svc -p '{"spec":{"selector":{"app":"test-backend"}}}'
 ```
 
-**Fix config and restart:**
-```bash
-kubectl rollout restart deployment/coredns -n kube-system
-```
+Or recreate Service with correct selector:
 
-**Verify DNS:**
 ```bash
-kubectl exec <pod> -- nslookup kubernetes.default
+kubectl delete svc -n dns-test test-svc
+kubectl expose deployment -n dns-test test-backend --name=test-svc --port=80 --target-port=80
 ```
 
 ## Why
 
-DNS pod may crash or ConfigMap broken. Restart forces reload.
+Service uses selector to find backing pods. Wrong selector = no endpoints = DNS resolves but traffic fails. Endpoint discovery is key to service DNS working.
