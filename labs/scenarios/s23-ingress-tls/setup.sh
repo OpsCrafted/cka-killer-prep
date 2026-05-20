@@ -5,15 +5,8 @@ KUBECONFIG="$2"
 export KUBECONFIG
 for i in {1..30}; do kubectl get nodes &>/dev/null && break; sleep 1; done
 
-# Ingress with TLS
+# Ingress with TLS (broken state)
 kubectl create namespace ingress-test 2>/dev/null || true
-
-# Generate self-signed certificate inline
-openssl req -x509 -newkey rsa:2048 -keyout /tmp/tls.key -out /tmp/tls.crt -days 365 -nodes \
-  -subj "/CN=example.com" 2>/dev/null || true
-
-# Create TLS secret from cert
-kubectl create secret tls tls-secret -n ingress-test --cert=/tmp/tls.crt --key=/tmp/tls.key 2>/dev/null || true
 
 # Create backend deployment and service
 kubectl create deployment web -n ingress-test --image=nginx 2>/dev/null || true
@@ -27,7 +20,7 @@ kubectl expose deployment web -n ingress-test --port=80 --target-port=80 2>/dev/
 # Short wait for endpoints
 sleep 2
 
-# Create Ingress with TLS
+# Create Ingress with TLS reference but NO TLS secret (broken)
 kubectl apply -f - <<'MANIFEST'
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -52,4 +45,4 @@ spec:
               number: 80
 MANIFEST
 
-echo "✓ Scenario setup complete"
+echo "✓ Scenario setup complete (TLS secret missing - learner must create it)"
