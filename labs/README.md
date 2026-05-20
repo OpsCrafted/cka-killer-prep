@@ -79,7 +79,6 @@ bash test-all.sh contract
 - s24: Gateway API architecture & controller binding
 - s29: GatewayClass controller reconciliation
 - s30: Multi-tenancy isolation layers (RBAC, network, quota)
-- s37-s40: Storage (PV/PVC, StorageClass, local storage)
 
 ## All Scenarios
 

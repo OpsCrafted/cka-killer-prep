@@ -139,9 +139,14 @@ pick_random_scenarios() {
   local count=8
   local all_scenarios=()
 
-  # Collect all valid scenario numbers
+  # Collect all valid scenario numbers (skip design labs)
   for scenario_dir in "${SCRIPT_DIR}"/scenarios/s*; do
     if [[ -d "$scenario_dir" && -f "${scenario_dir}/setup.sh" && -f "${scenario_dir}/verify.sh" ]]; then
+      local status=$(grep "^status:" "${scenario_dir}/meta.yaml" 2>/dev/null | awk '{print $2}')
+      # Skip design labs (conceptual, not executable)
+      if [[ "$status" == "design" ]]; then
+        continue
+      fi
       local num=$(basename "$scenario_dir" | sed 's/^s0*//' | sed 's/-.*//')
       all_scenarios+=("$num")
     fi
@@ -153,12 +158,13 @@ pick_random_scenarios() {
     count=${#all_scenarios[@]}
   fi
 
-  # Use shuf to randomize (fallback to sort -R if shuf unavailable)
+  # Use shuf to randomize (fallback to awk for BSD-safe shuffle)
   local shuffled
   if command -v shuf &>/dev/null; then
     shuffled=$(printf '%s\n' "${all_scenarios[@]}" | shuf | head -n $count)
   else
-    shuffled=$(printf '%s\n' "${all_scenarios[@]}" | sort -R | head -n $count)
+    # BSD-safe shuffle using awk (works on macOS)
+    shuffled=$(printf '%s\n' "${all_scenarios[@]}" | awk 'BEGIN{srand()} {print rand(), $0}' | sort -n | cut -d' ' -f2 | head -n $count)
   fi
 
   echo "$shuffled"

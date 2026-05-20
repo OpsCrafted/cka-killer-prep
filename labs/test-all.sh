@@ -16,7 +16,7 @@ log_ok() { echo -e "${GREEN}✓${NC} $1"; }
 log_err() { echo -e "${RED}✗${NC} $1"; }
 
 check_deps() {
-  for cmd in docker kind kubectl; do
+  for cmd in docker kind kubectl jq; do
     if ! command -v "$cmd" &>/dev/null; then
       log_err "Missing: $cmd"
       return 1
