@@ -267,28 +267,28 @@ All 40 scenarios implemented and tested. Generated from `labs/scenarios/*/meta.y
 | s19-audit-logging | audit-logging | Cluster Architecture | ✓ |
 | s20-rbac-design | rbac-design | Cluster Architecture | ✓ |
 | **Services & Networking** | | | |
-| s21-serviceaccount-binding | serviceaccount-binding | Cluster Architecture | ◐ |
-| s22-backup-strategy | backup-strategy | Cluster Architecture | ◐ |
-| s23-ingress-tls | ingress-tls | Services & Networking | ◐ |
+| s21-serviceaccount-binding | serviceaccount-binding | Cluster Architecture | ✓ |
+| s22-backup-strategy | backup-strategy | Cluster Architecture | ✓ |
+| s23-ingress-tls | ingress-tls | Services & Networking | ✓ |
 | s24-gateway-api | gateway-api | Services & Networking | ◐ |
-| s25-netpol-namespace | netpol-namespace | Services & Networking | ◐ |
-| s26-loadbalancer-expose | loadbalancer-expose | Services & Networking | ◐ |
-| s27-dns-debugging | dns-debugging | Services & Networking | ◐ |
-| s28-service-discovery | service-discovery | Services & Networking | ◐ |
+| s25-netpol-namespace | netpol-namespace | Services & Networking | ✓ |
+| s26-loadbalancer-expose | loadbalancer-expose | Services & Networking | ✓ |
+| s27-dns-debugging | dns-debugging | Services & Networking | ✓ |
+| s28-service-discovery | service-discovery | Services & Networking | ✓ |
 | s29-gatewayclass-binding | gatewayclass-binding | Services & Networking | ◐ |
 | s30-multi-tenancy | multi-tenancy | Services & Networking | ◐ |
 | **Workloads & Scheduling** | | | |
-| s31-deployment-rolling | deployment-rolling | Workloads & Scheduling | ◐ |
-| s32-statefulset-storage | statefulset-storage | Workloads & Scheduling | ◐ |
-| s33-resource-limits | resource-limits | Workloads & Scheduling | ◐ |
-| s34-affinity-taints | affinity-taints | Workloads & Scheduling | ◐ |
-| s35-priority-preemption | priority-preemption | Workloads & Scheduling | ◐ |
-| s36-hpa-scaling | hpa-scaling | Workloads & Scheduling | ◐ |
+| s31-deployment-rolling | deployment-rolling | Workloads & Scheduling | ✓ |
+| s32-statefulset-storage | statefulset-storage | Workloads & Scheduling | ✓ |
+| s33-resource-limits | resource-limits | Workloads & Scheduling | ✓ |
+| s34-affinity-taints | affinity-taints | Workloads & Scheduling | ✓ |
+| s35-priority-preemption | priority-preemption | Workloads & Scheduling | ✓ |
+| s36-hpa-scaling | hpa-scaling | Workloads & Scheduling | ✓ |
 | **Storage** | | | |
-| s37-pv-pvc-binding | pv-pvc-binding | Storage | ◐ |
-| s38-storageclass-default | storageclass-default | Storage | ◐ |
-| s39-local-storage | local-storage | Storage | ◐ |
-| s40-pvc-expansion | pvc-expansion | Storage | ◐ |
+| s37-pv-pvc-binding | pv-pvc-binding | Storage | ✓ |
+| s38-storageclass-default | storageclass-default | Storage | ✓ |
+| s39-local-storage | local-storage | Storage | ✓ |
+| s40-pvc-expansion | pvc-expansion | Storage | ✓ |
 
 Run all 40: `bash labs/test-all.sh`
 Run single: `./labs/run.sh 01`
