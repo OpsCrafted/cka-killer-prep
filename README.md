@@ -250,6 +250,14 @@ Found an error? Want to add a lab? PRs welcome.
 
 ---
 
+## Support
+
+If this course helped you pass the CKA exam, consider buying me a coffee:
+
+[![Buy Me a Coffee](https://img.shields.io/badge/Buy_Me_A_Coffee-FFDD00?style=flat-square&logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/opscrafted)
+
+---
+
 ## License
 
 MIT — use it, share it, learn from it.
