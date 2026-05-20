@@ -2,23 +2,47 @@
 
 ## Diagnosis
 
+Check service and endpoints:
 ```bash
-kubectl get svc
-kubectl get endpoints
+kubectl get service app -n svc-test
+kubectl get endpoints app -n svc-test
+# No addresses listed (service has no backends)
+```
+
+Check pod labels vs service selector:
+```bash
+kubectl get pod -n svc-test --show-labels
+# Pods have: app=app
+kubectl get service app -n svc-test -o jsonpath='{.spec.selector}'
+# Service selector: tier=backend (MISMATCH!)
 ```
 
 ## Fix
 
-**Ensure pods have matching labels:**
+Option 1: Label pods to match service selector:
 ```bash
-kubectl label pod <pod> app=backend
+kubectl label pod -l app=app -n svc-test tier=backend
+# Now service will discover pods
 ```
 
-**Verify endpoints:**
+Option 2: Patch service selector to match deployment:
 ```bash
-kubectl get endpoints <svc>
+kubectl patch service app -n svc-test -p '{"spec":{"selector":{"app":"app"}}}'
+```
+
+Verify endpoints now exist:
+```bash
+kubectl get endpoints app -n svc-test
+# Should show pod IPs in ENDPOINTS column
 ```
 
 ## Why
 
-Endpoints controller matches service selectors to pod labels. No match = no endpoints.
+Endpoints controller automatically discovers pods matching service selector labels. Wrong selector = no endpoints discovered = no traffic routed.
+
+## Key Concept
+
+Service discovery works by:
+1. Service defines selector labels
+2. Endpoints controller finds pods with matching labels
+3. Service uses endpoints for traffic routing
