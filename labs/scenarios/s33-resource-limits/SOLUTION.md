@@ -2,23 +2,58 @@
 
 ## Diagnosis
 
+Check current pod resources:
 ```bash
-kubectl describe pod <name>
+kubectl describe pod app-pod -n resource-test
+# Shows: Limits (cpu, memory) but NO Requests
+```
+
+Check container spec:
+```bash
+kubectl get pod app-pod -n resource-test -o jsonpath='{.spec.containers[0].resources}'
+# Only has: limits, missing: requests
 ```
 
 ## Fix
 
-**Add resource limits:**
+Delete pod and recreate with requests:
 ```bash
-kubectl set resources deployment/<name> --limits=cpu=500m,memory=512Mi --requests=cpu=250m,memory=256Mi
+kubectl delete pod app-pod -n resource-test
+
+kubectl apply -f - <<'EOF'
+apiVersion: v1
+kind: Pod
+metadata:
+  name: app-pod
+  namespace: resource-test
+spec:
+  containers:
+  - name: app
+    image: nginx
+    resources:
+      requests:
+        cpu: "50m"
+        memory: "64Mi"
+      limits:
+        cpu: "100m"
+        memory: "128Mi"
+EOF
 ```
 
-**Or edit deployment:**
+Verify both requests and limits exist:
 ```bash
-kubectl edit deployment <name>
-# Add: resources: limits: cpu: 500m, memory: 512Mi
+kubectl get pod app-pod -n resource-test -o jsonpath='{.spec.containers[0].resources}'
+# Should have both requests and limits
 ```
 
 ## Why
 
-Limits prevent runaway usage. Requests guarantee resources.
+- **Requests**: guarantee minimum resources for pod scheduling + operation
+- **Limits**: prevent pod from consuming too many resources
+- Both needed: requests for scheduler, limits for stability
+
+## Key Points
+
+- Requests < Limits always
+- Requests affect node scheduling decisions
+- Limits enforce hard caps via cgroup

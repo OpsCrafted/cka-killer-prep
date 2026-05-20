@@ -1,7 +1,7 @@
 difficulty: easy
 domain: workloads
 estimated_minutes: 10
-status: partial
+status: ready
 skills:
   - resource-limits
   - cpu

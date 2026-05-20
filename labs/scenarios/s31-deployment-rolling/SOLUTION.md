@@ -2,35 +2,40 @@
 
 ## Diagnosis
 
+Check rolling update strategy:
 ```bash
-kubectl get deployment
-kubectl get pods -o wide
-kubectl describe deployment <name>
+kubectl get deployment web-app -n rollout-test -o jsonpath='{.spec.strategy.rollingUpdate}'
+# maxSurge: 0, maxUnavailable: 1 (causes downtime!)
+```
+
+Check pod status during updates:
+```bash
+kubectl get pods -n rollout-test -w
+# With current strategy: pods go down one at a time
 ```
 
 ## Fix
 
-**Update image:**
+Patch deployment with zero-downtime rolling strategy:
 ```bash
-kubectl set image deployment/<name> <container>=<new-image>
+kubectl patch deployment web-app -n rollout-test -p '{"spec":{"strategy":{"rollingUpdate":{"maxSurge":1,"maxUnavailable":0}}}}'
 ```
 
-**Monitor rollout:**
+Verify strategy is fixed:
 ```bash
-kubectl rollout status deployment/<name>
-```
-
-**Verify:**
-```bash
-kubectl get pods
-kubectl describe pod <name> | grep Image
+kubectl get deployment web-app -n rollout-test -o jsonpath='{.spec.strategy.rollingUpdate}'
+# Should show: maxSurge: 1, maxUnavailable: 0
 ```
 
 ## Why
 
-Rolling update replaces old pods with new ones gradually. No downtime.
+Rolling update strategy controls how pods are replaced:
+- **maxSurge**: extra pods allowed during update (speeds up, uses more resources)
+- **maxUnavailable**: pods allowed to be down (setting to 0 = zero downtime)
 
-## Mistakes
+Current settings (0, 1) = 1 pod down at a time = downtime during updates.
+Fixed settings (1, 0) = 1 new pod up, old pod removed = zero downtime.
 
-- Not checking rollout status
-- Wrong image name
+## Zero-Downtime Best Practice
+
+Always use: `maxSurge > 0` AND `maxUnavailable = 0`
