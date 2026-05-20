@@ -1,7 +1,7 @@
 difficulty: medium
 domain: storage
 estimated_minutes: 12
-status: partial
+status: ready
 skills:
   - persistent-volumes
   - persistent-volume-claims
