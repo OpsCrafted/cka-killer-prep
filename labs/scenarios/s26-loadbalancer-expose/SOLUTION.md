@@ -2,35 +2,38 @@
 
 ## Diagnosis
 
+Check service type:
 ```bash
-kubectl get svc -A
-kubectl describe svc <name>
+kubectl get svc app-lb -n lb-test
+kubectl describe svc app-lb -n lb-test
+# Service type: ClusterIP (should be LoadBalancer)
 ```
 
 ## Fix
 
-**Create LoadBalancer service:**
+Patch service type to LoadBalancer:
 ```bash
-kubectl apply -f - << 'LBEOF'
-apiVersion: v1
-kind: Service
-metadata:
-  name: app-lb
-spec:
-  type: LoadBalancer
-  selector:
-    app: backend
-  ports:
-  - port: 80
-    targetPort: 8080
-LBEOF
+kubectl patch service app-lb -n lb-test -p '{"spec":{"type":"LoadBalancer"}}'
 ```
 
-**Verify:**
+Or recreate with correct type:
 ```bash
-kubectl get svc app-lb
+kubectl delete service app-lb -n lb-test
+kubectl expose deployment app -n lb-test --type=LoadBalancer --port=80 --name=app-lb
+```
+
+Verify external IP assigned (may be pending in kind):
+```bash
+kubectl get svc app-lb -n lb-test
+# EXTERNAL-IP: <pending> or actual IP (depends on LB controller)
 ```
 
 ## Why
 
-LoadBalancer type exposes service externally. Requires external LB controller (cloud provider).
+Service needs LoadBalancer type for external exposure. ClusterIP only works within cluster.
+
+## Key Points
+
+- ClusterIP: internal only
+- NodePort: external on node IPs (31000+ port range)
+- LoadBalancer: external via cloud LB (or pending in local cluster)

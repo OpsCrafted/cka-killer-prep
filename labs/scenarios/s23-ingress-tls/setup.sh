@@ -6,7 +6,9 @@ export KUBECONFIG
 for i in {1..30}; do kubectl get nodes &>/dev/null && break; sleep 1; done
 
 # Ingress with TLS (broken state)
-kubectl create namespace ingress-test 2>/dev/null || true
+kubectl delete namespace ingress-test 2>/dev/null || true
+sleep 1
+kubectl create namespace ingress-test
 
 # Create backend deployment and service
 kubectl create deployment web -n ingress-test --image=nginx 2>/dev/null || true

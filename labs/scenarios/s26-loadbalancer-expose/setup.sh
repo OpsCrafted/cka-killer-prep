@@ -5,7 +5,7 @@ KUBECONFIG="$2"
 export KUBECONFIG
 for i in {1..30}; do kubectl get nodes &>/dev/null && break; sleep 1; done
 
-# LoadBalancer Service
+# LoadBalancer Service (broken: created as ClusterIP instead)
 kubectl create namespace lb-test 2>/dev/null || true
 kubectl create deployment app -n lb-test --image=nginx 2>/dev/null || true
 sleep 2
@@ -18,7 +18,7 @@ metadata:
 spec:
   selector:
     app: app
-  type: LoadBalancer
+  type: ClusterIP
   ports:
   - port: 80
 MANIFEST

@@ -1,7 +1,7 @@
 difficulty: easy
 domain: networking
 estimated_minutes: 10
-status: partial
+status: ready
 skills:
   - services
   - loadbalancer
