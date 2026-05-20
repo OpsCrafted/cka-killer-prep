@@ -218,6 +218,29 @@ footer a:hover { text-decoration: underline; }
   main { padding: 24px 20px; }
   .concept-grid { grid-template-columns: 1fr; }
 }
+
+.task-text {
+  font-size: 14px;
+  color: var(--heading);
+  margin: 12px 0 0;
+  font-weight: 500;
+}
+.hints-btn {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 5px 12px;
+  cursor: pointer;
+  margin: 16px 0 0;
+  letter-spacing: 0.3px;
+  display: inline-block;
+}
+.hints-btn:hover { border-color: var(--accent); color: var(--accent); }
+.hints-content { display: none; margin-top: 16px; }
+.hints-content.open { display: block; }
 </style>
 </head>
 <body>
@@ -239,6 +262,11 @@ footer a:hover { text-decoration: underline; }
   <div class="lab-number">Lab 01 of 40</div>
   <div class="lab-title">Node NotReady</div>
 
+  <p class="task-text">Worker node shows NotReady. Fix it.</p>
+
+  <button class="hints-btn" onclick="toggleHints(this)">Show hints</button>
+  <div class="hints-content">
+
   <div class="callout tip"><strong>Mental model</strong> Node is like a worker who clocked out — kubelet is the time card. No heartbeat, no work.</div>
 
   <div class="concept-grid">
@@ -252,8 +280,6 @@ footer a:hover { text-decoration: underline; }
     </div>
   </div>
 
-  <div class="scenario-text"><strong>Scenario:</strong> Worker node is NotReady. SSH in, find kubelet crashed, restart it via systemd. Verify node returns to Ready.</div>
-
   <div class="code-block">
     <div class="code-header">
       <div class="code-label">bash — diagnose</div>
@@ -265,12 +291,18 @@ ssh &lt;node-ip&gt;
 sudo systemctl status kubelet
 sudo systemctl restart kubelet</pre>
   </div>
+  </div>
 </div>
 
 <!-- LAB 02 -->
 <div class="lab-section">
   <div class="lab-number">Lab 02 of 40</div>
   <div class="lab-title">Broken Service</div>
+
+  <p class="task-text">Service has no endpoints. Fix it.</p>
+
+  <button class="hints-btn" onclick="toggleHints(this)">Show hints</button>
+  <div class="hints-content">
 
   <div class="callout tip"><strong>Mental model</strong> Service selector is a postal address. Pod labels are the house number. Mismatch = mail never arrives.</div>
 
@@ -285,8 +317,6 @@ sudo systemctl restart kubelet</pre>
     </div>
   </div>
 
-  <div class="scenario-text"><strong>Scenario:</strong> Service web-svc gets connection refused despite pods running. Fix the service selector or pod labels to match. Verify endpoints appear and traffic works.</div>
-
   <div class="code-block">
     <div class="code-header">
       <div class="code-label">bash — diagnose</div>
@@ -298,12 +328,18 @@ kubectl describe svc web-svc
 kubectl get pods --show-labels
 kubectl edit svc web-svc</pre>
   </div>
+  </div>
 </div>
 
 <!-- LAB 03 -->
 <div class="lab-section">
   <div class="lab-number">Lab 03 of 40</div>
   <div class="lab-title">CrashLoopBackOff</div>
+
+  <p class="task-text">Pod is in CrashLoopBackOff. Fix it.</p>
+
+  <button class="hints-btn" onclick="toggleHints(this)">Show hints</button>
+  <div class="hints-content">
 
   <div class="callout tip"><strong>Mental model</strong> Container starts, looks for config file, finds nothing, crashes. Kubernetes retries—same wall, same crash.</div>
 
@@ -318,8 +354,6 @@ kubectl edit svc web-svc</pre>
     </div>
   </div>
 
-  <div class="scenario-text"><strong>Scenario:</strong> Pod app-server crashes because config file /etc/app/config.yaml is missing. Mount the ConfigMap or fix the pod command. Verify pod runs and stays Running.</div>
-
   <div class="code-block">
     <div class="code-header">
       <div class="code-label">bash — diagnose</div>
@@ -330,12 +364,18 @@ kubectl describe pod &lt;pod&gt;
 kubectl get cm
 kubectl edit pod &lt;pod&gt;</pre>
   </div>
+  </div>
 </div>
 
 <!-- LAB 04 -->
 <div class="lab-section">
   <div class="lab-number">Lab 04 of 40</div>
   <div class="lab-title">Scheduler Down</div>
+
+  <p class="task-text">New pods are stuck in Pending. Fix it.</p>
+
+  <button class="hints-btn" onclick="toggleHints(this)">Show hints</button>
+  <div class="hints-content">
 
   <div class="callout tip"><strong>Mental model</strong> Pods are planes waiting for a gate assignment. No scheduler = planes circle forever, never land.</div>
 
@@ -350,8 +390,6 @@ kubectl edit pod &lt;pod&gt;</pre>
     </div>
   </div>
 
-  <div class="scenario-text"><strong>Scenario:</strong> Scheduler manifest deleted from /etc/kubernetes/manifests/. SSH to control plane, restore the manifest. Kubelet recreates the pod. Verify new pods now schedule.</div>
-
   <div class="code-block">
     <div class="code-header">
       <div class="code-label">bash — diagnose</div>
@@ -362,12 +400,18 @@ kubectl describe pod &lt;scheduler&gt; -n kube-system
 ssh &lt;control-plane-ip&gt;
 ls /etc/kubernetes/manifests/</pre>
   </div>
+  </div>
 </div>
 
 <!-- LAB 05 -->
 <div class="lab-section">
   <div class="lab-number">Lab 05 of 40</div>
   <div class="lab-title">Certificate Expiry</div>
+
+  <p class="task-text">API server TLS certificate is expired. Investigate.</p>
+
+  <button class="hints-btn" onclick="toggleHints(this)">Show hints</button>
+  <div class="hints-content">
 
   <div class="callout tip"><strong>Mental model</strong> Cluster components check each other's certificates like a border agent checks passports. Expired = denied.</div>
 
@@ -382,8 +426,6 @@ ls /etc/kubernetes/manifests/</pre>
     </div>
   </div>
 
-  <div class="scenario-text"><strong>Scenario:</strong> Inspect TLS certificate expiry using openssl and kubeadm. Document the expiry date and steps to renew. This is a detection + documentation task, not a fix.</div>
-
   <div class="code-block">
     <div class="code-header">
       <div class="code-label">bash — diagnose</div>
@@ -393,12 +435,18 @@ ls /etc/kubernetes/manifests/</pre>
 kubeadm certs check-expiration
 openssl x509 -in /etc/kubernetes/pki/apiserver.crt -noout -dates</pre>
   </div>
+  </div>
 </div>
 
 <!-- LAB 06 -->
 <div class="lab-section">
   <div class="lab-number">Lab 06 of 40</div>
   <div class="lab-title">NetworkPolicy</div>
+
+  <p class="task-text">Pod cannot reach another pod. Fix it.</p>
+
+  <button class="hints-btn" onclick="toggleHints(this)">Show hints</button>
+  <div class="hints-content">
 
   <div class="callout tip"><strong>Mental model</strong> By default every pod talks to every pod. NetworkPolicy is the bouncer—you only get in if you're on the list.</div>
 
@@ -413,8 +461,6 @@ openssl x509 -in /etc/kubernetes/pki/apiserver.crt -noout -dates</pre>
     </div>
   </div>
 
-  <div class="scenario-text"><strong>Scenario:</strong> Pod client-app can't reach server-app. NetworkPolicy is in place but has a misconfigured selector or missing port rule. Fix the policy and verify traffic flows.</div>
-
   <div class="code-block">
     <div class="code-header">
       <div class="code-label">bash — diagnose</div>
@@ -425,12 +471,18 @@ kubectl describe networkpolicy &lt;name&gt;
 kubectl exec &lt;pod&gt; -- curl &lt;target-pod&gt;:8080
 kubectl edit networkpolicy &lt;name&gt;</pre>
   </div>
+  </div>
 </div>
 
 <!-- LAB 07 -->
 <div class="lab-section">
   <div class="lab-number">Lab 07 of 40</div>
   <div class="lab-title">PVC Pending</div>
+
+  <p class="task-text">PVC is stuck in Pending. Fix it.</p>
+
+  <button class="hints-btn" onclick="toggleHints(this)">Show hints</button>
+  <div class="hints-content">
 
   <div class="callout tip"><strong>Mental model</strong> PVC is your rental contract. PV is the apartment. If no apartment matches your requirements, you wait indefinitely.</div>
 
@@ -445,8 +497,6 @@ kubectl edit networkpolicy &lt;name&gt;</pre>
     </div>
   </div>
 
-  <div class="scenario-text"><strong>Scenario:</strong> PVC data-pvc stuck in Pending. StorageClass name in PVC doesn't match any StorageClass. Fix the PVC spec or create the matching StorageClass. Verify PVC binds to a PV.</div>
-
   <div class="code-block">
     <div class="code-header">
       <div class="code-label">bash — diagnose</div>
@@ -458,12 +508,18 @@ kubectl get storageclass
 kubectl get pv
 kubectl edit pvc &lt;pvc-name&gt;</pre>
   </div>
+  </div>
 </div>
 
 <!-- LAB 08 -->
 <div class="lab-section">
   <div class="lab-number">Lab 08 of 40</div>
   <div class="lab-title">RBAC Denied</div>
+
+  <p class="task-text">Pod gets Forbidden errors from the API. Fix it.</p>
+
+  <button class="hints-btn" onclick="toggleHints(this)">Show hints</button>
+  <div class="hints-content">
 
   <div class="callout tip"><strong>Mental model</strong> ServiceAccount is your employee badge. Role is the access level. Without the right binding, the door scanner says no.</div>
 
@@ -478,8 +534,6 @@ kubectl edit pvc &lt;pvc-name&gt;</pre>
     </div>
   </div>
 
-  <div class="scenario-text"><strong>Scenario:</strong> Pod app tries to list pods in the namespace via API. Gets forbidden. ServiceAccount exists but RoleBinding is missing. Create the RoleBinding to grant the role to the ServiceAccount.</div>
-
   <div class="code-block">
     <div class="code-header">
       <div class="code-label">bash — diagnose</div>
@@ -491,12 +545,18 @@ kubectl get rolebinding
 kubectl auth can-i list pods --as=system:serviceaccount:default:app
 kubectl create rolebinding &lt;name&gt; --role=&lt;role&gt; --serviceaccount=default:&lt;sa&gt;</pre>
   </div>
+  </div>
 </div>
 
 <!-- LAB 09 -->
 <div class="lab-section">
   <div class="lab-number">Lab 09 of 40</div>
   <div class="lab-title">etcd Restore</div>
+
+  <p class="task-text">Critical namespace was deleted. Recover it.</p>
+
+  <button class="hints-btn" onclick="toggleHints(this)">Show hints</button>
+  <div class="hints-content">
 
   <div class="callout tip"><strong>Mental model</strong> etcd is the cluster's memory. Restore is like loading a brain backup—everything snaps back to that point in time.</div>
 
@@ -510,8 +570,6 @@ kubectl create rolebinding &lt;name&gt; --role=&lt;role&gt; --serviceaccount=def
       <div class="concept-card-body">Namespace or resources gone. etcd is running fine. You have an etcd snapshot from before the deletion.</div>
     </div>
   </div>
-
-  <div class="scenario-text"><strong>Scenario:</strong> A namespace was accidentally deleted. Restore etcd from a snapshot backup to recover the deleted resources. Verify the namespace and its pods are back.</div>
 
   <div class="code-block">
     <div class="code-header">
@@ -527,12 +585,18 @@ sudo rm -rf /var/lib/etcd && mv /var/lib/etcd-restore /var/lib/etcd
 sudo mv /tmp/kube-apiserver.yaml /etc/kubernetes/manifests/
 sudo systemctl start kubelet</pre>
   </div>
+  </div>
 </div>
 
 <!-- LAB 10 -->
 <div class="lab-section">
   <div class="lab-number">Lab 10 of 40</div>
   <div class="lab-title">Kubelet Misconfigured</div>
+
+  <p class="task-text">Node is NotReady. Fix it.</p>
+
+  <button class="hints-btn" onclick="toggleHints(this)">Show hints</button>
+  <div class="hints-content">
 
   <div class="callout tip"><strong>Mental model</strong> Kubelet is the engine of each node. Wrong config = engine misfires. Pods won't start, node reports garbage.</div>
 
@@ -547,8 +611,6 @@ sudo systemctl start kubelet</pre>
     </div>
   </div>
 
-  <div class="scenario-text"><strong>Scenario:</strong> Node kubelet is misconfigured. The --config flag points to a non-existent file or has syntax errors. Find the correct config path or fix the kubeconfig. Restart kubelet and verify node returns to Ready.</div>
-
   <div class="code-block">
     <div class="code-header">
       <div class="code-label">bash — diagnose</div>
@@ -561,12 +623,18 @@ ps aux | grep kubelet
 sudo cat /etc/kubernetes/kubelet.conf
 sudo systemctl restart kubelet</pre>
   </div>
+  </div>
 </div>
 
 <!-- LAB 11 -->
 <div class="lab-section">
   <div class="lab-number">Lab 11 of 40</div>
   <div class="lab-title">etcd Restore</div>
+
+  <p class="task-text">Critical namespace was accidentally deleted. Recover it.</p>
+
+  <button class="hints-btn" onclick="toggleHints(this)">Show hints</button>
+  <div class="hints-content">
 
   <div class="callout tip"><strong>Mental model</strong> etcd is the cluster's brain. Snapshot is a brain freeze—a point-in-time copy. Restore thaws it back to exactly that moment.</div>
 
@@ -581,8 +649,6 @@ sudo systemctl restart kubelet</pre>
     </div>
   </div>
 
-  <div class="scenario-text"><strong>Scenario:</strong> A namespace was accidentally deleted. Use <code>etcdctl snapshot restore</code> to recover the deleted namespace and its resources. Verify namespace and pods are back.</div>
-
   <div class="code-block">
     <div class="code-header">
       <div class="code-label">bash — restore</div>
@@ -596,12 +662,18 @@ sudo rm -rf /var/lib/etcd && sudo mv /var/lib/etcd-restore /var/lib/etcd
 sudo mv /tmp/kube-apiserver.yaml /etc/kubernetes/manifests/
 sudo systemctl start kubelet</pre>
   </div>
+  </div>
 </div>
 
 <!-- LAB 12 -->
 <div class="lab-section">
   <div class="lab-number">Lab 12 of 40</div>
   <div class="lab-title">Kubelet Misconfigured</div>
+
+  <p class="task-text">Node is NotReady with kubelet errors. Fix it.</p>
+
+  <button class="hints-btn" onclick="toggleHints(this)">Show hints</button>
+  <div class="hints-content">
 
   <div class="callout tip"><strong>Mental model</strong> Kubelet reads config like a car reads a GPS file. Wrong path = driving blind. Find the right file, restart the engine.</div>
 
@@ -616,8 +688,6 @@ sudo systemctl start kubelet</pre>
     </div>
   </div>
 
-  <div class="scenario-text"><strong>Scenario:</strong> Node kubelet is misconfigured. Fix the --config path or correct the kubelet config file. Restart kubelet and verify node returns to Ready.</div>
-
   <div class="code-block">
     <div class="code-header">
       <div class="code-label">bash — diagnose</div>
@@ -630,12 +700,18 @@ ps aux | grep kubelet
 cat /etc/kubernetes/kubelet.conf
 sudo systemctl restart kubelet</pre>
   </div>
+  </div>
 </div>
 
 <!-- LAB 13 -->
 <div class="lab-section">
   <div class="lab-number">Lab 13 of 40</div>
   <div class="lab-title">Node Cordon &amp; Drain</div>
+
+  <p class="task-text">Deployment has missing replicas due to a scheduling issue. Fix it.</p>
+
+  <button class="hints-btn" onclick="toggleHints(this)">Show hints</button>
+  <div class="hints-content">
 
   <div class="callout tip"><strong>Mental model</strong> Cordoned node is a closed lane on a highway. Drain evacuates the cars. Uncordon reopens the lane.</div>
 
@@ -650,8 +726,6 @@ sudo systemctl restart kubelet</pre>
     </div>
   </div>
 
-  <div class="scenario-text"><strong>Scenario:</strong> One worker node is cordoned and pods are stuck. Drain the node safely and uncordon it. Verify all deployment pods are Running and Ready.</div>
-
   <div class="code-block">
     <div class="code-header">
       <div class="code-label">bash — fix</div>
@@ -662,12 +736,18 @@ kubectl drain &lt;node-name&gt; --ignore-daemonsets --delete-emptydir-data
 kubectl uncordon &lt;node-name&gt;
 kubectl get pods -o wide</pre>
   </div>
+  </div>
 </div>
 
 <!-- LAB 14 -->
 <div class="lab-section">
   <div class="lab-number">Lab 14 of 40</div>
   <div class="lab-title">Node Role Label</div>
+
+  <p class="task-text">New node shows no role. Fix it.</p>
+
+  <button class="hints-btn" onclick="toggleHints(this)">Show hints</button>
+  <div class="hints-content">
 
   <div class="callout tip"><strong>Mental model</strong> Labels are nametags. Worker node without a role label is an employee with no ID badge — present but unidentified.</div>
 
@@ -682,8 +762,6 @@ kubectl get pods -o wide</pre>
     </div>
   </div>
 
-  <div class="scenario-text"><strong>Scenario:</strong> New worker node joined but has no role label. Add the worker role label and verify it appears correctly in node listing.</div>
-
   <div class="code-block">
     <div class="code-header">
       <div class="code-label">bash — fix</div>
@@ -693,12 +771,18 @@ kubectl get pods -o wide</pre>
 kubectl label node &lt;node-name&gt; node-role.kubernetes.io/worker=
 kubectl get nodes</pre>
   </div>
+  </div>
 </div>
 
 <!-- LAB 15 -->
 <div class="lab-section">
   <div class="lab-number">Lab 15 of 40</div>
   <div class="lab-title">Taints &amp; Tolerations</div>
+
+  <p class="task-text">Node is NotReady. Fix it.</p>
+
+  <button class="hints-btn" onclick="toggleHints(this)">Show hints</button>
+  <div class="hints-content">
 
   <div class="callout tip"><strong>Mental model</strong> Taint = node wearing a "keep out" sign. Toleration = pod's immunity badge. No badge = pod refused at the door.</div>
 
@@ -713,8 +797,6 @@ kubectl get nodes</pre>
     </div>
   </div>
 
-  <div class="scenario-text"><strong>Scenario:</strong> Node has a taint but pods lack the matching toleration. Add the toleration to the pod spec or remove the taint. Verify pods schedule and run.</div>
-
   <div class="code-block">
     <div class="code-header">
       <div class="code-label">bash — diagnose</div>
@@ -726,12 +808,18 @@ kubectl describe pod &lt;pod-name&gt; | grep -A5 Events
 kubectl taint node &lt;node-name&gt; &lt;key&gt;:NoSchedule-
 # or add toleration to pod spec tolerations field</pre>
   </div>
+  </div>
 </div>
 
 <!-- LAB 16 -->
 <div class="lab-section">
   <div class="lab-number">Lab 16 of 40</div>
   <div class="lab-title">CNI Migration</div>
+
+  <p class="task-text">Pods have no IP addresses. Fix it.</p>
+
+  <button class="hints-btn" onclick="toggleHints(this)">Show hints</button>
+  <div class="hints-content">
 
   <div class="callout tip"><strong>Mental model</strong> CNI is the plumbing. Swap pipes = no water until new pipes are connected and leak-tested.</div>
 
@@ -746,8 +834,6 @@ kubectl taint node &lt;node-name&gt; &lt;key&gt;:NoSchedule-
     </div>
   </div>
 
-  <div class="scenario-text"><strong>Scenario:</strong> Cluster CNI is broken. Apply the new CNI DaemonSet manifests and verify pods get IP addresses and pod-to-pod communication works.</div>
-
   <div class="code-block">
     <div class="code-header">
       <div class="code-label">bash — fix</div>
@@ -758,12 +844,18 @@ kubectl apply -f /path/to/new-cni.yaml
 kubectl get pods -n kube-system -w
 kubectl get pods -o wide  # verify IPs assigned</pre>
   </div>
+  </div>
 </div>
 
 <!-- LAB 17 -->
 <div class="lab-section">
   <div class="lab-number">Lab 17 of 40</div>
   <div class="lab-title">CRD Setup</div>
+
+  <p class="task-text">Custom resource type is not recognized. Fix it.</p>
+
+  <button class="hints-btn" onclick="toggleHints(this)">Show hints</button>
+  <div class="hints-content">
 
   <div class="callout tip"><strong>Mental model</strong> CRD teaches the API server a new vocabulary word. Until registered, any kubectl command for that type gets "I don't know what that is."</div>
 
@@ -778,8 +870,6 @@ kubectl get pods -o wide  # verify IPs assigned</pre>
     </div>
   </div>
 
-  <div class="scenario-text"><strong>Scenario:</strong> Application needs a Custom Resource Definition. Apply the CRD manifest and verify custom resources can be created and listed.</div>
-
   <div class="code-block">
     <div class="code-header">
       <div class="code-label">bash — fix</div>
@@ -791,12 +881,18 @@ kubectl get crd
 kubectl create -f /path/to/custom-resource.yaml
 kubectl get &lt;customresource&gt;</pre>
   </div>
+  </div>
 </div>
 
 <!-- LAB 18 -->
 <div class="lab-section">
   <div class="lab-number">Lab 18 of 40</div>
   <div class="lab-title">Admission Webhook</div>
+
+  <p class="task-text">Mutating webhook rules are not being applied. Fix it.</p>
+
+  <button class="hints-btn" onclick="toggleHints(this)">Show hints</button>
+  <div class="hints-content">
 
   <div class="callout tip"><strong>Mental model</strong> Webhook is a gatekeeper the API server phones before accepting objects. Wrong phone number = call never goes through, mutations don't apply.</div>
 
@@ -811,8 +907,6 @@ kubectl get &lt;customresource&gt;</pre>
     </div>
   </div>
 
-  <div class="scenario-text"><strong>Scenario:</strong> Mutating webhook is registered but inactive. Fix the webhook service endpoint or CA bundle. Verify mutations are applied on new object creation.</div>
-
   <div class="code-block">
     <div class="code-header">
       <div class="code-label">bash — diagnose</div>
@@ -823,12 +917,18 @@ kubectl describe mutatingwebhookconfiguration &lt;name&gt;
 kubectl get svc -n &lt;webhook-namespace&gt;
 kubectl logs -n &lt;namespace&gt; &lt;webhook-pod&gt;</pre>
   </div>
+  </div>
 </div>
 
 <!-- LAB 19 -->
 <div class="lab-section">
   <div class="lab-number">Lab 19 of 40</div>
   <div class="lab-title">Audit Logging</div>
+
+  <p class="task-text">API server is not recording audit events. Fix it.</p>
+
+  <button class="hints-btn" onclick="toggleHints(this)">Show hints</button>
+  <div class="hints-content">
 
   <div class="callout tip"><strong>Mental model</strong> Audit log is the security camera. No camera = no recording of who did what. Enable it on the API server, define the policy, verify the tape rolls.</div>
 
@@ -842,8 +942,6 @@ kubectl logs -n &lt;namespace&gt; &lt;webhook-pod&gt;</pre>
       <div class="concept-card-body">No audit log file exists. API requests aren't recorded. Compliance and forensics requirements unmet.</div>
     </div>
   </div>
-
-  <div class="scenario-text"><strong>Scenario:</strong> Configure API server audit logging. Create an audit policy file and add the --audit-policy-file and --audit-log-path flags to the kube-apiserver static pod manifest.</div>
 
   <div class="code-block">
     <div class="code-header">
@@ -863,12 +961,18 @@ EOF
 # --audit-log-path=/var/log/kubernetes/audit.log
 sudo vi /etc/kubernetes/manifests/kube-apiserver.yaml</pre>
   </div>
+  </div>
 </div>
 
 <!-- LAB 20 -->
 <div class="lab-section">
   <div class="lab-number">Lab 20 of 40</div>
   <div class="lab-title">RBAC Design</div>
+
+  <p class="task-text">ServiceAccount is getting Forbidden errors. Fix it.</p>
+
+  <button class="hints-btn" onclick="toggleHints(this)">Show hints</button>
+  <div class="hints-content">
 
   <div class="callout tip"><strong>Mental model</strong> ClusterRole = a global access pass. RoleBinding = handing that pass to a specific person. Both must exist and point to each other.</div>
 
@@ -883,8 +987,6 @@ sudo vi /etc/kubernetes/manifests/kube-apiserver.yaml</pre>
     </div>
   </div>
 
-  <div class="scenario-text"><strong>Scenario:</strong> ServiceAccount has insufficient permissions. Create the missing ClusterRole and ClusterRoleBinding (or Role/RoleBinding) to grant required API access. Verify with <code>kubectl auth can-i</code>.</div>
-
   <div class="code-block">
     <div class="code-header">
       <div class="code-label">bash — diagnose &amp; fix</div>
@@ -897,12 +999,18 @@ kubectl create clusterrolebinding &lt;name&gt; \
   --clusterrole=&lt;name&gt; \
   --serviceaccount=&lt;namespace&gt;:&lt;sa-name&gt;</pre>
   </div>
+  </div>
 </div>
 
 <!-- LAB 21 -->
 <div class="lab-section">
   <div class="lab-number">Lab 21 of 40</div>
   <div class="lab-title">Cross-Namespace RBAC</div>
+
+  <p class="task-text">ServiceAccount gets 403 Forbidden across namespaces. Fix it.</p>
+
+  <button class="hints-btn" onclick="toggleHints(this)">Show hints</button>
+  <div class="hints-content">
 
   <div class="callout tip"><strong>Mental model</strong> ClusterRoleBinding is a master key that works in every namespace. RoleBinding only opens one door in one namespace.</div>
 
@@ -917,8 +1025,6 @@ kubectl create clusterrolebinding &lt;name&gt; \
     </div>
   </div>
 
-  <div class="scenario-text"><strong>Scenario:</strong> ServiceAccount in one namespace needs cross-namespace resource access. Create a ClusterRoleBinding to grant the required permissions cluster-wide. Verify access works.</div>
-
   <div class="code-block">
     <div class="code-header">
       <div class="code-label">bash — fix</div>
@@ -930,12 +1036,18 @@ kubectl create clusterrolebinding &lt;name&gt; \
   --serviceaccount=&lt;source-ns&gt;:&lt;sa-name&gt;
 kubectl auth can-i list pods --as=system:serviceaccount:&lt;ns&gt;:&lt;sa&gt; -n &lt;target-ns&gt;</pre>
   </div>
+  </div>
 </div>
 
 <!-- LAB 22 -->
 <div class="lab-section">
   <div class="lab-number">Lab 22 of 40</div>
   <div class="lab-title">etcd Backup</div>
+
+  <p class="task-text">No etcd backup exists. Create one.</p>
+
+  <button class="hints-btn" onclick="toggleHints(this)">Show hints</button>
+  <div class="hints-content">
 
   <div class="callout tip"><strong>Mental model</strong> etcd snapshot is a database export. No backup = no recovery. Run it before every change. Store it somewhere safe.</div>
 
@@ -950,8 +1062,6 @@ kubectl auth can-i list pods --as=system:serviceaccount:&lt;ns&gt;:&lt;sa&gt; -n
     </div>
   </div>
 
-  <div class="scenario-text"><strong>Scenario:</strong> Create an etcd snapshot backup. Use etcdctl to snapshot the cluster state. Verify the snapshot file exists and is valid.</div>
-
   <div class="code-block">
     <div class="code-header">
       <div class="code-label">bash — backup</div>
@@ -965,12 +1075,18 @@ ETCDCTL_API=3 etcdctl snapshot save /tmp/etcd-backup.db \
   --key=/etc/kubernetes/pki/etcd/server.key
 etcdctl snapshot status /tmp/etcd-backup.db</pre>
   </div>
+  </div>
 </div>
 
 <!-- LAB 23 -->
 <div class="lab-section">
   <div class="lab-number">Lab 23 of 40</div>
   <div class="lab-title">Ingress TLS</div>
+
+  <p class="task-text">HTTPS traffic to the ingress fails. Fix it.</p>
+
+  <button class="hints-btn" onclick="toggleHints(this)">Show hints</button>
+  <div class="hints-content">
 
   <div class="callout tip"><strong>Mental model</strong> TLS secret is the SSL certificate stapled to the Ingress. Without it, HTTPS claims to be secure but has no keys.</div>
 
@@ -985,8 +1101,6 @@ etcdctl snapshot status /tmp/etcd-backup.db</pre>
     </div>
   </div>
 
-  <div class="scenario-text"><strong>Scenario:</strong> Ingress is configured for HTTPS but TLS fails. Create the TLS secret and wire it to the Ingress spec. Verify HTTPS traffic is encrypted and the cert is valid.</div>
-
   <div class="code-block">
     <div class="code-header">
       <div class="code-label">bash — fix</div>
@@ -999,12 +1113,18 @@ kubectl create secret tls &lt;tls-secret&gt; \
   --key=path/to/tls.key
 kubectl get secret &lt;tls-secret&gt;</pre>
   </div>
+  </div>
 </div>
 
 <!-- LAB 24 -->
 <div class="lab-section">
   <div class="lab-number">Lab 24 of 40</div>
   <div class="lab-title">Gateway API</div>
+
+  <p class="task-text">Gateway API routing is not working. Fix it.</p>
+
+  <button class="hints-btn" onclick="toggleHints(this)">Show hints</button>
+  <div class="hints-content">
 
   <div class="callout tip"><strong>Mental model</strong> Gateway API is Ingress v2. GatewayClass = vendor. Gateway = the load balancer. HTTPRoute = the routing rules. All three must exist.</div>
 
@@ -1019,8 +1139,6 @@ kubectl get secret &lt;tls-secret&gt;</pre>
     </div>
   </div>
 
-  <div class="scenario-text"><strong>Scenario:</strong> Gateway API resources are in place but routing doesn't work. Fix the HTTPRoute parentRef or backend service reference. Verify traffic reaches the backend.</div>
-
   <div class="code-block">
     <div class="code-header">
       <div class="code-label">bash — diagnose</div>
@@ -1031,12 +1149,18 @@ kubectl describe gateway &lt;name&gt;
 kubectl describe httproute &lt;name&gt;
 kubectl get svc &lt;backend-service&gt;</pre>
   </div>
+  </div>
 </div>
 
 <!-- LAB 25 -->
 <div class="lab-section">
   <div class="lab-number">Lab 25 of 40</div>
   <div class="lab-title">Namespace Isolation</div>
+
+  <p class="task-text">Namespaces can freely reach each other. Isolate them.</p>
+
+  <button class="hints-btn" onclick="toggleHints(this)">Show hints</button>
+  <div class="hints-content">
 
   <div class="callout tip"><strong>Mental model</strong> Default Kubernetes = open office, everyone hears everything. NetworkPolicy = glass walls. Add them to isolate tenants from each other.</div>
 
@@ -1050,8 +1174,6 @@ kubectl get svc &lt;backend-service&gt;</pre>
       <div class="concept-card-body">Pods in namespace A can curl pods in namespace B without restriction. Security boundary doesn't exist.</div>
     </div>
   </div>
-
-  <div class="scenario-text"><strong>Scenario:</strong> Create a NetworkPolicy that enforces namespace isolation—deny all ingress from other namespaces while allowing intra-namespace traffic. Verify cross-namespace traffic is blocked.</div>
 
   <div class="code-block">
     <div class="code-header">
@@ -1071,12 +1193,18 @@ spec:
   - from:
     - podSelector: {}  # only same namespace</pre>
   </div>
+  </div>
 </div>
 
 <!-- LAB 26 -->
 <div class="lab-section">
   <div class="lab-number">Lab 26 of 40</div>
   <div class="lab-title">LoadBalancer Service</div>
+
+  <p class="task-text">Service has no external IP. Fix it.</p>
+
+  <button class="hints-btn" onclick="toggleHints(this)">Show hints</button>
+  <div class="hints-content">
 
   <div class="callout tip"><strong>Mental model</strong> ClusterIP stays inside the cluster. NodePort punches a hole on each node. LoadBalancer provisions a cloud IP—the front door to the internet.</div>
 
@@ -1091,8 +1219,6 @@ spec:
     </div>
   </div>
 
-  <div class="scenario-text"><strong>Scenario:</strong> Service needs external access but is the wrong type. Patch it to LoadBalancer type. Verify an external IP is assigned and service is reachable from outside the cluster.</div>
-
   <div class="code-block">
     <div class="code-header">
       <div class="code-label">bash — fix</div>
@@ -1102,12 +1228,18 @@ spec:
 kubectl patch svc &lt;name&gt; -p '{"spec":{"type":"LoadBalancer"}}'
 kubectl get svc &lt;name&gt; -w  # wait for EXTERNAL-IP</pre>
   </div>
+  </div>
 </div>
 
 <!-- LAB 27 -->
 <div class="lab-section">
   <div class="lab-number">Lab 27 of 40</div>
   <div class="lab-title">DNS Debugging</div>
+
+  <p class="task-text">Pods cannot resolve service names by DNS. Fix it.</p>
+
+  <button class="hints-btn" onclick="toggleHints(this)">Show hints</button>
+  <div class="hints-content">
 
   <div class="callout tip"><strong>Mental model</strong> CoreDNS is the cluster's phone book. Pod can't resolve names = check if the phone book is alive and the pod can reach it.</div>
 
@@ -1122,8 +1254,6 @@ kubectl get svc &lt;name&gt; -w  # wait for EXTERNAL-IP</pre>
     </div>
   </div>
 
-  <div class="scenario-text"><strong>Scenario:</strong> Pod DNS resolution is failing. Debug CoreDNS pods, check the Corefile ConfigMap for syntax errors, and verify name resolution works inside a pod.</div>
-
   <div class="code-block">
     <div class="code-header">
       <div class="code-label">bash — diagnose</div>
@@ -1134,12 +1264,18 @@ kubectl logs -n kube-system &lt;coredns-pod&gt;
 kubectl get cm coredns -n kube-system -o yaml
 kubectl exec &lt;test-pod&gt; -- nslookup kubernetes.default</pre>
   </div>
+  </div>
 </div>
 
 <!-- LAB 28 -->
 <div class="lab-section">
   <div class="lab-number">Lab 28 of 40</div>
   <div class="lab-title">Service Endpoints</div>
+
+  <p class="task-text">Service has no endpoints. Fix it.</p>
+
+  <button class="hints-btn" onclick="toggleHints(this)">Show hints</button>
+  <div class="hints-content">
 
   <div class="callout tip"><strong>Mental model</strong> Endpoints object is the phone book entry. Empty endpoints = no employees are registered to take calls. Labels must match the selector.</div>
 
@@ -1154,8 +1290,6 @@ kubectl exec &lt;test-pod&gt; -- nslookup kubernetes.default</pre>
     </div>
   </div>
 
-  <div class="scenario-text"><strong>Scenario:</strong> Service has no endpoints despite pods running. Fix the label mismatch between service selector and pod labels. Verify endpoints populate and traffic routes correctly.</div>
-
   <div class="code-block">
     <div class="code-header">
       <div class="code-label">bash — diagnose</div>
@@ -1167,12 +1301,18 @@ kubectl get pods --show-labels
 kubectl label pod &lt;pod&gt; &lt;key&gt;=&lt;value&gt;  # fix label
 kubectl get endpoints &lt;svc-name&gt;</pre>
   </div>
+  </div>
 </div>
 
 <!-- LAB 29 -->
 <div class="lab-section">
   <div class="lab-number">Lab 29 of 40</div>
   <div class="lab-title">GatewayClass Controller</div>
+
+  <p class="task-text">GatewayClass is not acknowledged by any controller. Fix it.</p>
+
+  <button class="hints-btn" onclick="toggleHints(this)">Show hints</button>
+  <div class="hints-content">
 
   <div class="callout tip"><strong>Mental model</strong> GatewayClass needs a controller to claim ownership. No controller = no one builds the actual Gateway infrastructure. It just sits there unacknowledged.</div>
 
@@ -1187,8 +1327,6 @@ kubectl get endpoints &lt;svc-name&gt;</pre>
     </div>
   </div>
 
-  <div class="scenario-text"><strong>Scenario:</strong> GatewayClass exists but isn't acknowledged. Install or fix the controller that manages this GatewayClass. Verify GatewayClass status shows Accepted and Gateways can be created.</div>
-
   <div class="code-block">
     <div class="code-header">
       <div class="code-label">bash — diagnose</div>
@@ -1199,12 +1337,18 @@ kubectl describe gatewayclass &lt;name&gt;
 kubectl get pods -A | grep gateway
 kubectl apply -f /path/to/gateway-controller.yaml</pre>
   </div>
+  </div>
 </div>
 
 <!-- LAB 30 -->
 <div class="lab-section">
   <div class="lab-number">Lab 30 of 40</div>
   <div class="lab-title">Multi-Tenancy Isolation</div>
+
+  <p class="task-text">Tenants can access each other's workloads. Isolate them.</p>
+
+  <button class="hints-btn" onclick="toggleHints(this)">Show hints</button>
+  <div class="hints-content">
 
   <div class="callout tip"><strong>Mental model</strong> Namespaces are apartment units. Multi-tenancy isolation = soundproof walls. NetworkPolicy + RBAC = both acoustic and access control.</div>
 
@@ -1219,8 +1363,6 @@ kubectl apply -f /path/to/gateway-controller.yaml</pre>
     </div>
   </div>
 
-  <div class="scenario-text"><strong>Scenario:</strong> Configure multi-tenant isolation. Apply NetworkPolicies for namespace segregation and verify RBAC prevents cross-tenant API access. Test that tenant traffic boundaries are enforced.</div>
-
   <div class="code-block">
     <div class="code-header">
       <div class="code-label">bash — verify isolation</div>
@@ -1230,12 +1372,18 @@ kubectl apply -f /path/to/gateway-controller.yaml</pre>
 kubectl auth can-i list pods --as=system:serviceaccount:tenant-a:default -n tenant-b
 kubectl exec -n tenant-a &lt;pod&gt; -- curl &lt;tenant-b-pod-ip&gt;  # should fail</pre>
   </div>
+  </div>
 </div>
 
 <!-- LAB 31 -->
 <div class="lab-section">
   <div class="lab-number">Lab 31 of 40</div>
   <div class="lab-title">Deployment Rolling Update</div>
+
+  <p class="task-text">Deployment update is not progressing. Fix it.</p>
+
+  <button class="hints-btn" onclick="toggleHints(this)">Show hints</button>
+  <div class="hints-content">
 
   <div class="callout tip"><strong>Mental model</strong> Rolling update swaps pods one at a time. Paused rollout = renovation stopped halfway. Old and new pods coexist until you resume.</div>
 
@@ -1250,8 +1398,6 @@ kubectl exec -n tenant-a &lt;pod&gt; -- curl &lt;tenant-b-pod-ip&gt;  # should f
     </div>
   </div>
 
-  <div class="scenario-text"><strong>Scenario:</strong> Update the deployment image and monitor the rolling update. If rollout is paused, resume it. Verify all pods run the new image and deployment shows fully updated.</div>
-
   <div class="code-block">
     <div class="code-header">
       <div class="code-label">bash — update</div>
@@ -1262,12 +1408,18 @@ kubectl rollout status deployment/&lt;name&gt;
 kubectl rollout resume deployment/&lt;name&gt;  # if paused
 kubectl get pods -l &lt;selector&gt; -w</pre>
   </div>
+  </div>
 </div>
 
 <!-- LAB 32 -->
 <div class="lab-section">
   <div class="lab-number">Lab 32 of 40</div>
   <div class="lab-title">StatefulSet Storage</div>
+
+  <p class="task-text">StatefulSet pods cannot get persistent storage. Fix it.</p>
+
+  <button class="hints-btn" onclick="toggleHints(this)">Show hints</button>
+  <div class="hints-content">
 
   <div class="callout tip"><strong>Mental model</strong> StatefulSet gives each pod a permanent name badge. Pod-0, Pod-1 always come back as themselves, with the same persistent volume attached.</div>
 
@@ -1282,8 +1434,6 @@ kubectl get pods -l &lt;selector&gt; -w</pre>
     </div>
   </div>
 
-  <div class="scenario-text"><strong>Scenario:</strong> StatefulSet pods can't get stable storage. Fix the VolumeClaimTemplate StorageClass or headless service spec. Verify pods have stable identity and persistent storage survives restarts.</div>
-
   <div class="code-block">
     <div class="code-header">
       <div class="code-label">bash — diagnose</div>
@@ -1295,12 +1445,18 @@ kubectl get pvc  # one per pod expected
 kubectl get svc  # headless service (clusterIP: None)
 kubectl describe pod &lt;sts-pod&gt;</pre>
   </div>
+  </div>
 </div>
 
 <!-- LAB 33 -->
 <div class="lab-section">
   <div class="lab-number">Lab 33 of 40</div>
   <div class="lab-title">Resource Limits</div>
+
+  <p class="task-text">Pods have no resource limits. Fix it.</p>
+
+  <button class="hints-btn" onclick="toggleHints(this)">Show hints</button>
+  <div class="hints-content">
 
   <div class="callout tip"><strong>Mental model</strong> Requests = the seat reservation. Limits = the hard cap. No limits = one pod can eat the whole buffet and starve every other guest.</div>
 
@@ -1314,8 +1470,6 @@ kubectl describe pod &lt;sts-pod&gt;</pre>
       <div class="concept-card-body">Node resource pressure. Other pods OOMKilled or CPU throttled. <code>kubectl top pods</code> shows runaway consumption.</div>
     </div>
   </div>
-
-  <div class="scenario-text"><strong>Scenario:</strong> Pods have no resource limits. Create a LimitRange in the namespace and add requests/limits to the deployment. Verify pods are constrained and namespace defaults apply to new pods.</div>
 
   <div class="code-block">
     <div class="code-header">
@@ -1336,12 +1490,18 @@ spec:
     defaultRequest: {cpu: 100m, memory: 64Mi}
 EOF</pre>
   </div>
+  </div>
 </div>
 
 <!-- LAB 34 -->
 <div class="lab-section">
   <div class="lab-number">Lab 34 of 40</div>
   <div class="lab-title">Pod Affinity &amp; Taints</div>
+
+  <p class="task-text">Pods are stuck in Pending. Fix it.</p>
+
+  <button class="hints-btn" onclick="toggleHints(this)">Show hints</button>
+  <div class="hints-content">
 
   <div class="callout tip"><strong>Mental model</strong> Affinity = pod's preferences for neighbors. Taint = node's preference to repel pods. Both must align for the pod to land.</div>
 
@@ -1356,8 +1516,6 @@ EOF</pre>
     </div>
   </div>
 
-  <div class="scenario-text"><strong>Scenario:</strong> Pods won't schedule due to affinity/taint mismatch. Add the required node label or toleration to match the pod's scheduling constraints. Verify pods land on correct nodes.</div>
-
   <div class="code-block">
     <div class="code-header">
       <div class="code-label">bash — fix</div>
@@ -1370,12 +1528,18 @@ kubectl label node &lt;node&gt; &lt;key&gt;=&lt;value&gt;
 # tolerations:
 # - key: &lt;taint-key&gt; operator: Exists effect: NoSchedule</pre>
   </div>
+  </div>
 </div>
 
 <!-- LAB 35 -->
 <div class="lab-section">
   <div class="lab-number">Lab 35 of 40</div>
   <div class="lab-title">Priority &amp; Preemption</div>
+
+  <p class="task-text">Critical pods are stuck behind low-priority workloads. Fix it.</p>
+
+  <button class="hints-btn" onclick="toggleHints(this)">Show hints</button>
+  <div class="hints-content">
 
   <div class="callout tip"><strong>Mental model</strong> PriorityClass is first class vs coach. High-priority pod gets a seat even if the flight is full—lower-priority pod gets bumped.</div>
 
@@ -1389,8 +1553,6 @@ kubectl label node &lt;node&gt; &lt;key&gt;=&lt;value&gt;
       <div class="concept-card-body">Critical workload stuck in Pending while low-priority pods run. No preemption events in scheduler logs.</div>
     </div>
   </div>
-
-  <div class="scenario-text"><strong>Scenario:</strong> Critical pods are stuck behind batch workloads. Create a PriorityClass with high value and assign it to the critical deployment. Verify critical pods preempt and schedule first.</div>
 
   <div class="code-block">
     <div class="code-header">
@@ -1409,12 +1571,18 @@ EOF
 kubectl patch deployment &lt;name&gt; -p \
   '{"spec":{"template":{"spec":{"priorityClassName":"high-priority"}}}}'</pre>
   </div>
+  </div>
 </div>
 
 <!-- LAB 36 -->
 <div class="lab-section">
   <div class="lab-number">Lab 36 of 40</div>
   <div class="lab-title">HPA Autoscaling</div>
+
+  <p class="task-text">HPA shows unknown targets and pods are not scaling. Fix it.</p>
+
+  <button class="hints-btn" onclick="toggleHints(this)">Show hints</button>
+  <div class="hints-content">
 
   <div class="callout tip"><strong>Mental model</strong> HPA watches metrics like a thermostat. CPU above threshold → add pods. CPU below → remove pods. No metrics server = thermostat is blind.</div>
 
@@ -1429,8 +1597,6 @@ kubectl patch deployment &lt;name&gt; -p \
     </div>
   </div>
 
-  <div class="scenario-text"><strong>Scenario:</strong> HPA is configured but not scaling. Verify metrics-server is running and HPA target reference is correct. Generate load and verify pods scale up automatically.</div>
-
   <div class="code-block">
     <div class="code-header">
       <div class="code-label">bash — diagnose</div>
@@ -1442,12 +1608,18 @@ kubectl top pods  # verify metrics server works
 kubectl get pods -n kube-system | grep metrics-server
 kubectl get hpa -w  # watch scaling</pre>
   </div>
+  </div>
 </div>
 
 <!-- LAB 37 -->
 <div class="lab-section">
   <div class="lab-number">Lab 37 of 40</div>
   <div class="lab-title">PV/PVC Binding</div>
+
+  <p class="task-text">PVC is not binding to a PV. Fix it.</p>
+
+  <button class="hints-btn" onclick="toggleHints(this)">Show hints</button>
+  <div class="hints-content">
 
   <div class="callout tip"><strong>Mental model</strong> PV is the warehouse. PVC is the rental request. Dynamic provisioning auto-builds a new warehouse the moment you submit the request.</div>
 
@@ -1462,8 +1634,6 @@ kubectl get hpa -w  # watch scaling</pre>
     </div>
   </div>
 
-  <div class="scenario-text"><strong>Scenario:</strong> PVC isn't binding to a PV. Diagnose whether the issue is a missing StorageClass, wrong provisioner, or access mode mismatch. Fix and verify PVC reaches Bound state.</div>
-
   <div class="code-block">
     <div class="code-header">
       <div class="code-label">bash — diagnose</div>
@@ -1475,12 +1645,18 @@ kubectl get pv
 kubectl get storageclass
 kubectl get events --sort-by=.metadata.creationTimestamp</pre>
   </div>
+  </div>
 </div>
 
 <!-- LAB 38 -->
 <div class="lab-section">
   <div class="lab-number">Lab 38 of 40</div>
   <div class="lab-title">Default StorageClass</div>
+
+  <p class="task-text">PVCs fail to provision automatically. Fix it.</p>
+
+  <button class="hints-btn" onclick="toggleHints(this)">Show hints</button>
+  <div class="hints-content">
 
   <div class="callout tip"><strong>Mental model</strong> Default StorageClass = the default printer. PVCs that don't name one will use it automatically. Only one StorageClass can be the default.</div>
 
@@ -1495,8 +1671,6 @@ kubectl get events --sort-by=.metadata.creationTimestamp</pre>
     </div>
   </div>
 
-  <div class="scenario-text"><strong>Scenario:</strong> PVCs failing because no default StorageClass exists. Annotate an existing StorageClass as the default. Verify new PVCs without storageClassName provision successfully.</div>
-
   <div class="code-block">
     <div class="code-header">
       <div class="code-label">bash — fix</div>
@@ -1507,12 +1681,18 @@ kubectl annotate sc &lt;name&gt; \
   storageclass.kubernetes.io/is-default-class=true
 kubectl get sc  # verify (default) label appears</pre>
   </div>
+  </div>
 </div>
 
 <!-- LAB 39 -->
 <div class="lab-section">
   <div class="lab-number">Lab 39 of 40</div>
   <div class="lab-title">Local Storage</div>
+
+  <p class="task-text">Local storage volumes are not available. Fix it.</p>
+
+  <button class="hints-btn" onclick="toggleHints(this)">Show hints</button>
+  <div class="hints-content">
 
   <div class="callout tip"><strong>Mental model</strong> Local storage = data lives on one specific node. Fast I/O, but that pod is permanently tied to that node. Node fails = data unavailable.</div>
 
@@ -1527,8 +1707,6 @@ kubectl get sc  # verify (default) label appears</pre>
     </div>
   </div>
 
-  <div class="scenario-text"><strong>Scenario:</strong> Local storage provisioning isn't working. Verify the local-path-provisioner is running, the node path exists, and PV nodeAffinity matches the correct node. Verify PVC binds and pod runs.</div>
-
   <div class="code-block">
     <div class="code-header">
       <div class="code-label">bash — diagnose</div>
@@ -1540,12 +1718,18 @@ kubectl describe pv &lt;local-pv&gt;  # check nodeAffinity
 ssh &lt;node&gt; ls /path/to/local/storage  # verify path exists
 kubectl describe pvc &lt;name&gt;</pre>
   </div>
+  </div>
 </div>
 
 <!-- LAB 40 -->
 <div class="lab-section">
   <div class="lab-number">Lab 40 of 40</div>
   <div class="lab-title">PVC Expansion</div>
+
+  <p class="task-text">PVC resize request is failing. Fix it.</p>
+
+  <button class="hints-btn" onclick="toggleHints(this)">Show hints</button>
+  <div class="hints-content">
 
   <div class="callout tip"><strong>Mental model</strong> Expanding a PVC is like adding lanes to a highway. The StorageClass must explicitly allow it. Without permission, the request is silently ignored.</div>
 
@@ -1560,8 +1744,6 @@ kubectl describe pvc &lt;name&gt;</pre>
     </div>
   </div>
 
-  <div class="scenario-text"><strong>Scenario:</strong> PVC needs to grow but resize is blocked. Enable <code>allowVolumeExpansion: true</code> on the StorageClass, then edit the PVC to request more storage. Verify expanded capacity is available to the pod.</div>
-
   <div class="code-block">
     <div class="code-header">
       <div class="code-label">bash — fix</div>
@@ -1574,6 +1756,7 @@ kubectl edit pvc &lt;pvc-name&gt;
 # change spec.resources.requests.storage to new size
 kubectl get pvc &lt;pvc-name&gt;  # verify new capacity</pre>
   </div>
+  </div>
 </div>
 
 </main>
@@ -1584,6 +1767,13 @@ kubectl get pvc &lt;pvc-name&gt;  # verify new capacity</pre>
 </footer>
 
 <script>
+
+function toggleHints(btn) {
+  const content = btn.nextElementSibling;
+  const open = content.classList.toggle('open');
+  btn.textContent = open ? 'Hide hints' : 'Show hints';
+}
+
 function copyCode(btn) {
   const pre = btn.closest('.code-block').querySelector('pre');
   const text = pre.innerText;
