@@ -13,12 +13,6 @@ for i in {1..30}; do
   sleep 1
 done
 
-# Install CNI if not already present
-if ! kubectl get ns kube-flannel &>/dev/null 2>&1; then
-  kubectl apply -f https://raw.githubusercontent.com/flannel-io/flannel/master/Documentation/kube-flannel.yml
-  kubectl rollout status daemonset/kube-flannel-ds -n kube-flannel --timeout=120s || true
-fi
-
 # Wait for nodes to be Ready
 kubectl wait --for=condition=Ready nodes --all --timeout=120s || true
 
