@@ -3,46 +3,32 @@ apiVersion: kind.x-k8s.io/v1alpha4
 name: cka-lab
 nodes:
   - role: control-plane
-    image: kindest/node:v1.31.0
+    image: kindest/node:v1.35.0
     extraPortMappings:
       - containerPort: 80
-        hostPort: 80
+        hostPort: 8080
         protocol: TCP
       - containerPort: 443
-        hostPort: 443
+        hostPort: 8443
         protocol: TCP
     kubeadmConfigPatches:
       - |
-        kind: InitConfiguration
-        nodeRegistration:
-          kubeletExtraArgs:
-            node-labels: "node-role.kubernetes.io/control-plane=true"
-      - |
         kind: ClusterConfiguration
+        apiVersion: kubeadm.k8s.io/v1beta4
         controllerManager:
           extraArgs:
-            bind-address: 0.0.0.0
+            - name: bind-address
+              value: "0.0.0.0"
         scheduler:
           extraArgs:
-            bind-address: 0.0.0.0
+            - name: bind-address
+              value: "0.0.0.0"
 
   - role: worker
-    image: kindest/node:v1.31.0
-    kubeadmConfigPatches:
-      - |
-        kind: JoinConfiguration
-        nodeRegistration:
-          kubeletExtraArgs:
-            node-labels: "node-role.kubernetes.io/worker=true"
+    image: kindest/node:v1.35.0
 
   - role: worker
-    image: kindest/node:v1.31.0
-    kubeadmConfigPatches:
-      - |
-        kind: JoinConfiguration
-        nodeRegistration:
-          kubeletExtraArgs:
-            node-labels: "node-role.kubernetes.io/worker=true"
+    image: kindest/node:v1.35.0
 
 networking:
   podSubnet: "10.244.0.0/16"

@@ -1,36 +1,31 @@
 # Hints for s01: API Server Down
 
-## Symptoms to Look For
+## Hint 1 — Where to start
 
-- kubectl commands hang or return connection errors
-- Nodes may show NotReady status
-- New pods won't be scheduled
+The API server is a static pod managed by kubelet. It lives in:
+```
+/etc/kubernetes/manifests/kube-apiserver.yaml
+```
+Access the control plane node: `docker exec -it <cluster>-control-plane bash`
 
-## Debugging Path
+## Hint 2 — Check why it's crashlooping
 
-1. **Check if API server pod is running:**
-   ```
-   docker exec <cluster-name>-control-plane kubectl get pods -n kube-system | grep kube-apiserver
-   ```
+Inside the control plane node:
+```bash
+crictl ps -a | grep apiserver        # see restart count
+crictl logs <container-id>           # read the error
+```
+Or via kubelet: `journalctl -u kubelet -n 50`
 
-2. **Look for API server crashes:**
-   ```
-   docker exec <cluster-name>-control-plane journalctl -u kubelet | tail -50
-   ```
+## Hint 3 — What to look for in the logs
 
-3. **If API server process is gone, restart kubelet:**
-   ```
-   docker exec <cluster-name>-control-plane systemctl restart kubelet
-   ```
+Look for connection errors to a specific address and port.
+The API server depends on etcd — what port does etcd listen on?
 
-4. **Verify API server is responding:**
-   ```
-   kubectl get nodes
-   kubectl get pods -A
-   ```
+## Hint 4 — Fix it
 
-## Key Commands
-
-- `kubectl cluster-info` — shows API server endpoint
-- `kubectl get events -A` — system events
-- `docker logs <container>` — container logs
+Edit the static pod manifest. Kubelet watches that directory and restarts the pod automatically within ~10s.
+```bash
+vi /etc/kubernetes/manifests/kube-apiserver.yaml
+```
+After saving, watch: `crictl ps | grep apiserver` until STATUS = Running

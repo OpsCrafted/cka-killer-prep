@@ -2,23 +2,22 @@
 
 ## Problem
 
-Your monitoring alerts fired: "API server unreachable (5xx errors)." Kubectl commands hang, new pods won't schedule, and users report timeout errors.
+Your monitoring alerts fired: "API server unreachable." `kubectl` commands hang with connection refused. The cluster was working 10 minutes ago — no deployments changed, but someone was doing maintenance on the control plane node.
 
-Check what happened to the Kubernetes API server. Restart it if needed.
+Diagnose why the API server is not starting and fix it.
 
 ## Expected State
 
-- Control plane API server is Running
-- kubectl commands respond immediately
-- All nodes report Ready status
-- New pods can be scheduled
+- `kubectl get nodes` responds immediately
+- All nodes report `Ready`
+- `demo-app` deployment has 2/2 pods Running
 
 ## Time Limit
 
 15 minutes
 
-## Exam Notes
+## Constraints
 
-- No external documentation allowed
-- Use only kubectl and docker exec
-- Minimize changes to cluster state
+- Do not delete or recreate the cluster
+- Fix the root cause — do not just restart services blindly
+- Use `docker exec` to access nodes
